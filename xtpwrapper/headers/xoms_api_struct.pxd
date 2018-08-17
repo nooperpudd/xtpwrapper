@@ -1,8 +1,15 @@
-
-from .xtp_api_data_type cimport (XTP_PRICE_TYPE,XTP_MARKET_TYPE,
-XTP_BUSINESS_TYPE,XTP_ORDER_STATUS_TYPE,
-XTP_ORDER_SUBMIT_STATUS_TYPE,TXTPOrderTypeType,
-TXTPTradeTypeType)
+from .xtp_api_data_type cimport (XTP_PRICE_TYPE,
+XTP_MARKET_TYPE,
+XTP_BUSINESS_TYPE,
+XTP_ORDER_STATUS_TYPE,
+XTP_ORDER_SUBMIT_STATUS_TYPE,
+TXTPOrderTypeType,
+XTP_ACCOUNT_TYPE,
+TXTPTradeTypeType,
+XTP_POSITION_DIRECTION_TYPE,
+XTP_FUND_OPER_STATUS,
+XTP_FUND_TRANSFER_TYPE,
+XTP_EXCHANGE_TYPE)
 
 # typedef signed char        int8_t;
 # typedef short              int16_t;
@@ -14,9 +21,7 @@ TXTPTradeTypeType)
 # typedef unsigned long long uint64_t;
 
 cdef extern from "xoms_api_struct.h":
-
     cdef struct XTPOrderInsertInfo:
-
         unsigned int  order_xtp_id
         #报单引用，由客户自定义
         unsigned int order_client_id
@@ -46,7 +51,6 @@ cdef extern from "xoms_api_struct.h":
         #         #预留字段2
         #         uint8_t                     reserved2
 
-
         #业务类型
         XTP_BUSINESS_TYPE       business_type
 
@@ -54,20 +58,19 @@ cdef extern from "xoms_api_struct.h":
     cdef struct XTPOrderCancelInfo:
         #撤单XTPID
         unsigned long long           order_cancel_xtp_id
-         #原始订单XTPID
+        #原始订单XTPID
         unsigned long long                 order_xtp_id
 
-
     cdef struct XTPOrderInfo:
-            #     #XTP系统订单ID，在XTP系统中唯一
+    #     #XTP系统订单ID，在XTP系统中唯一
         unsigned long long                order_xtp_id
-            # 	#报单引用，用户自定义
-        unsigned int 	            order_client_id
-            #     #报单操作引用，用户自定义（暂未使用）
+        # 	#报单引用，用户自定义
+        unsigned int                order_client_id
+        #     #报单操作引用，用户自定义（暂未使用）
         unsigned int               order_cancel_client_id
-            #     #撤单在XTP系统中的id，在XTP系统中唯一
+        #     #撤单在XTP系统中的id，在XTP系统中唯一
         unsigned long long                order_cancel_xtp_id
-            # 	#合约代码
+        # 	#合约代码
         char   ticker[16]
         # 	#交易市场
         XTP_MARKET_TYPE         market
@@ -114,7 +117,6 @@ cdef extern from "xoms_api_struct.h":
         TXTPOrderTypeType   order_type
 
     cdef struct XTPTradeReport:
-
         #XTP系统订单ID，此成交回报相关的订单ID，在XTP系统中唯一
         unsigned long long                 order_xtp_id
         #报单引用
@@ -148,20 +150,20 @@ cdef extern from "xoms_api_struct.h":
         #         XTP_SIDE_TYPE               side
         #         #开平标志
         #         XTP_POSITION_EFFECT_TYPE    position_effect
-    	# 		#预留字段1
-    	# 		uint8_t                     reserved1
-    	# 		#预留字段2
-    	# 		uint8_t                     reserved2
+        # 		#预留字段1
+        # 		uint8_t                     reserved1
+        # 		#预留字段2
+        # 		uint8_t                     reserved2
         #     }
         # }
-    	#业务类型
-    	XTP_BUSINESS_TYPE        business_type
+        #业务类型
+        XTP_BUSINESS_TYPE        business_type
         #交易所交易员代码
         char branch_pbu[7]
 
     # #报单查询
 
-# #报单查询请求-条件查询
+    # 报单查询请求-条件查询
     cdef struct XTPQueryOrderReq:
         #     #证券代码，可以为空，如果为空，则默认查询时间段内的所有成交回报
         char      ticker[16]
@@ -171,181 +173,133 @@ cdef extern from "xoms_api_struct.h":
         long long   end_time
 
     # #报单查询响应结构体
-# typedef struct XTPOrderInfo XTPQueryOrderRsp
+    # typedef struct XTPOrderInfo XTPQueryOrderRsp
+
+    # 查询成交报告请求-根据执行编号查询（保留字段）
+    cdef struct XTPQueryReportByExecIdReq:
+        #XTP订单系统ID
+        unsigned long long  order_xtp_id
+        #成交执行编号
+        char  exec_id[18]
+
+    cdef struct XTPQueryTraderReq:
+        char ticker[16]
+        #开始时间，格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点
+        long long begin_time
+        #结束时间，格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
+        long long end_time
+
+    #成交回报查询响应结构体
+    # typedef struct XTPTradeReport  XTPQueryTradeRsp
+
+    cdef struct XTPQueryAssetRsp:
+        #总资产(=可用资金 + 证券资产（目前为0）+ 预扣的资金)
+        double total_asset
+        #可用资金
+        double buying_power
+        #证券资产（保留字段，目前为0）
+        double security_asset
+        #累计买入成交证券占用资金
+        double fund_buy_amount
+        #累计买入成交交易费用
+        double fund_buy_fee
+        #累计卖出成交证券所得资金
+        double fund_sell_amount
+        #累计卖出成交交易费用
+        double fund_sell_fee
+        #XTP系统预扣的资金（包括购买卖股票时预扣的交易资金+预扣手续费）
+        double withholding_amount
+        #账户类型
+        XTP_ACCOUNT_TYPE account_type
+
+        #冻结的保证金
+        double frozen_margin
+        #行权冻结资金
+        double frozen_exec_cash
+        #行权费用
+        double frozen_exec_fee
+        #垫付资金
+        double pay_later
+        #预垫付资金
+        double preadva_pay
+        #昨日余额
+        double orig_banlance
+        #当前余额
+        double banlance
+        #当天出入金
+        double deposit_withdraw
+        #当日交易资金轧差
+        double trade_netting
+        #资金资产
+        double captial_asset
+
+        #强锁资金
+        double force_freeze_amount
+        #可取资金
+        double preferred_amount
+        #(保留字段)
+        unsigned long long unknown[43 - 12]
+
+    cdef  struct XTPQueryStkPositionRsp:
+        #证券代码
+        char                ticker[16]
+        #证券名称
+        char                ticker_name[64]
+        #交易市场
+        XTP_MARKET_TYPE     market
+        #总持仓
+        long long             total_qty
+        #可卖持仓
+        long long                sellable_qty
+        #持仓成本
+        double              avg_price
+        #浮动盈亏（保留字段）
+        double              unrealized_pnl
+        #昨日持仓
+        long long             yesterday_position
+        #今日申购赎回数量（申购和赎回数量不可能同时存在，因此可以共用一个字段）
+        long long                purchase_redeemable_qty
+
+        # 持仓方向
+        XTP_POSITION_DIRECTION_TYPE      position_direction
+        #保留字段1
+        unsigned int            reserved1
+        # 可行权合约
+        long long             executable_option
+        # 可锁定标的
+        long long             lockable_position
+        # 可行权标的
+        long long             executable_underlying
+        # 已锁定标的
+        long long             locked_position
+        # 可用已锁定标的
+        long long             usable_locked_position
+
+        #(保留字段)
+        unsigned long long unknown[50 - 6]
+
+    # 资金内转流水通知
+    cdef struct XTPFundTransferNotice:
+        unsigned long long                serial_id
+        #内转类型
+        XTP_FUND_TRANSFER_TYPE    transfer_type
+        #金额
+        double                    amount
+        #操作结果
+        XTP_FUND_OPER_STATUS    oper_status
+        #操作时间
+        unsigned long long                transfer_time
+
+    # 资金内转流水查询请求与响应
+    cdef struct XTPQueryFundTransferLogReq:
+        unsigned long long    serial_id
+    # typedef struct XTPFundTransferNotice XTPFundTransferLog
+
+    struct XTPQueryStructuredFundInfoReq:
+        XTP_EXCHANGE_TYPE   exchange_id  #<交易所代码，不可为空
+        char                sf_ticker[16]  #<分级基金母基金代码，可以为空，如果为空，则默认查询所有的分级基金
 
 
-
-# //////////////////////////////////////////////////////////////////////////
-# #成交回报查询
-# //////////////////////////////////////////////////////////////////////////
-# #查询成交报告请求-根据执行编号查询（保留字段）
-# struct XTPQueryReportByExecIdReq
-# {
-#     #XTP订单系统ID
-#     uint64_t  order_xtp_id
-#     #成交执行编号
-#     char  exec_id[XTP_EXEC_ID_LEN]
-# }
-#
-# #查询成交回报请求-查询条件
-# struct XTPQueryTraderReq
-# {
-#     #证券代码，可以为空，如果为空，则默认查询时间段内的所有成交回报
-#     char      ticker[XTP_TICKER_LEN]
-#     #开始时间，格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点
-#     int64_t   begin_time
-#     #结束时间，格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
-#     int64_t   end_time
-# }
-#
-# #成交回报查询响应结构体
-# typedef struct XTPTradeReport  XTPQueryTradeRsp
-#
-#
-#
-# //////////////////////////////////////////////////////////////////////////
-# #账户资金查询响应结构体
-# //////////////////////////////////////////////////////////////////////////
-# struct XTPQueryAssetRsp
-# {
-#     #总资产(=可用资金 + 证券资产（目前为0）+ 预扣的资金)
-#     double total_asset
-#     #可用资金
-#     double buying_power
-#     #证券资产（保留字段，目前为0）
-#     double security_asset
-#     #累计买入成交证券占用资金
-#     double fund_buy_amount
-#     #累计买入成交交易费用
-#     double fund_buy_fee
-#     #累计卖出成交证券所得资金
-#     double fund_sell_amount
-#     #累计卖出成交交易费用
-#     double fund_sell_fee
-#     #XTP系统预扣的资金（包括购买卖股票时预扣的交易资金+预扣手续费）
-#     double withholding_amount
-#     #账户类型
-#     XTP_ACCOUNT_TYPE account_type
-#
-#     #冻结的保证金
-#     double frozen_margin
-#     #行权冻结资金
-#     double frozen_exec_cash
-#     #行权费用
-#     double frozen_exec_fee
-#     #垫付资金
-#     double pay_later
-#     #预垫付资金
-#     double preadva_pay
-#     #昨日余额
-#     double orig_banlance
-#     #当前余额
-#     double banlance
-#     #当天出入金
-#     double deposit_withdraw
-#     #当日交易资金轧差
-#     double trade_netting
-#     #资金资产
-#     double captial_asset
-#
-#     #强锁资金
-#     double force_freeze_amount
-#     #可取资金
-#     double preferred_amount
-#
-#     #(保留字段)
-#     uint64_t unknown[43 - 12]
-# }
-#
-#
-#
-# //////////////////////////////////////////////////////////////////////////
-# #查询股票持仓情况
-# //////////////////////////////////////////////////////////////////////////
-# struct XTPQueryStkPositionRsp
-# {
-#     #证券代码
-#     char                ticker[XTP_TICKER_LEN]
-#     #证券名称
-#     char                ticker_name[XTP_TICKER_NAME_LEN]
-#     #交易市场
-#     XTP_MARKET_TYPE     market
-#     #总持仓
-#     int64_t             total_qty
-#     #可卖持仓
-#     int64_t				sellable_qty
-#     #持仓成本
-#     double              avg_price
-#     #浮动盈亏（保留字段）
-#     double              unrealized_pnl
-#     #昨日持仓
-#     int64_t             yesterday_position
-#     #今日申购赎回数量（申购和赎回数量不可能同时存在，因此可以共用一个字段）
-#     int64_t				purchase_redeemable_qty
-#
-#     # 持仓方向
-# 	XTP_POSITION_DIRECTION_TYPE      position_direction
-# 	#保留字段1
-# 	uint32_t			reserved1
-#     # 可行权合约
-#     int64_t             executable_option
-#     # 可锁定标的
-#     int64_t             lockable_position
-#     # 可行权标的
-#     int64_t             executable_underlying
-#     # 已锁定标的
-#     int64_t             locked_position
-#     # 可用已锁定标的
-#     int64_t             usable_locked_position
-#
-#
-#     #(保留字段)
-#     uint64_t unknown[50 - 6]
-# }
-#
-#
-# /////////////////////////////////////////////////////////////////////////
-# #资金内转流水通知
-# /////////////////////////////////////////////////////////////////////////
-# struct XTPFundTransferNotice
-# {
-#     #资金内转编号
-#     uint64_t	            serial_id
-#     #内转类型
-#     XTP_FUND_TRANSFER_TYPE	transfer_type
-#     #金额
-#     double	                amount
-#     #操作结果
-#     XTP_FUND_OPER_STATUS    oper_status
-#     #操作时间
-#     uint64_t	            transfer_time
-# }
-#
-#
-#
-# /////////////////////////////////////////////////////////////////////////
-# #资金内转流水查询请求与响应
-# /////////////////////////////////////////////////////////////////////////
-# struct XTPQueryFundTransferLogReq {
-#     #资金内转编号
-#     uint64_t	serial_id
-#
-# }
-#
-# /////////////////////////////////////////////////////////////////////////
-# #资金内转流水记录结构体
-# /////////////////////////////////////////////////////////////////////////
-# typedef struct XTPFundTransferNotice XTPFundTransferLog
-#
-# //////////////////////////////////////////////////////////////////////////
-# #查询分级基金信息结构体
-# //////////////////////////////////////////////////////////////////////////
-# struct XTPQueryStructuredFundInfoReq
-# {
-# 	XTP_EXCHANGE_TYPE   exchange_id  #<交易所代码，不可为空
-# 	char                sf_ticker[XTP_TICKER_LEN]   #<分级基金母基金代码，可以为空，如果为空，则默认查询所有的分级基金
-# }
-#
 # //////////////////////////////////////////////////////////////////////////
 # #查询分级基金信息响应结构体
 # //////////////////////////////////////////////////////////////////////////
