@@ -10,7 +10,7 @@ class XTPOrderInsertInfo(Base):
     _fields_ = [
         ('order_xtp_id', ctypes.c_uint64),  # XTP系统订单ID，无需用户填写，在XTP系统中唯一
         ('order_client_id', ctypes.c_uint32),  # 报单引用，由客户自定义
-        ('ticker', ctypes.c_char * 16),  # 合约代码 客户端请求不带空格，以'\0'结尾
+        ('ticker', ctypes.c_char * 16),  # 合约代码客户端请求不带空格，以'\0'结尾
         ('market', ctypes.c_int),  # 交易市场
         ('price', ctypes.c_double),  # 价格
         ('stop_price', ctypes.c_double),  # 止损价（保留字段）
@@ -318,8 +318,8 @@ class XTPQueryStructuredFundInfoReq(Base):
     查询分级基金信息结构体
     """
     _fields_ = [
-        ('exchange_id', ctypes.c_int),  # {
-        ('sf_ticker', ctypes.c_char * 16),  # XTP_EXCHANGE_TYPE   exchange_id;  <交易所代码，不可为空
+        ('exchange_id', ctypes.c_int),  # 交易所代码，不可为空
+        ('sf_ticker', ctypes.c_char * 16),  # 分级基金母基金代码，可以为空，如果为空，则默认查询所有的分级基金
     ]
 
     def __init__(self, sf_ticker=''):
@@ -332,16 +332,16 @@ class XTPStructuredFundInfo(Base):
     查询分级基金信息响应结构体
     """
     _fields_ = [
-        ('exchange_id', ctypes.c_int),  # {
-        ('sf_ticker', ctypes.c_char * 16),  # XTP_EXCHANGE_TYPE   exchange_id;  <交易所代码
-        ('sf_ticker_name', ctypes.c_char * 64),  # char                sf_ticker[XTP_TICKER_LEN];   <分级基金母基金代码
-        ('ticker', ctypes.c_char * 16),  # char                sf_ticker_name[XTP_TICKER_NAME_LEN]; <分级基金母基金名称
-        ('ticker_name', ctypes.c_char * 64),  # char                ticker[XTP_TICKER_LEN];   <分级基金子基金代码
-        ('split_merge_status', ctypes.c_int),  # char                ticker_name[XTP_TICKER_NAME_LEN]; <分级基金子基金名称
-        ('ratio', ctypes.c_uint32),  # XTP_SPLIT_MERGE_STATUS	split_merge_status;   <基金允许拆分合并状态
-        ('min_split_qty', ctypes.c_uint32),  # uint32_t            ratio; <拆分合并比例
-        ('min_merge_qty', ctypes.c_uint32),  # uint32_t            min_split_qty;<最小拆分数量
-        ('net_price', ctypes.c_double),  # uint32_t            min_merge_qty; <最小合并数量
+        ('exchange_id', ctypes.c_int),  # 交易所代码
+        ('sf_ticker', ctypes.c_char * 16),  # 分级基金母基金代码
+        ('sf_ticker_name', ctypes.c_char * 64),  # 分级基金母基金名称
+        ('ticker', ctypes.c_char * 16),  # 分级基金子基金代码
+        ('ticker_name', ctypes.c_char * 64),  # 分级基金子基金名称
+        ('split_merge_status', ctypes.c_int),  # 基金允许拆分合并状态
+        ('ratio', ctypes.c_uint32),  # 拆分合并比例
+        ('min_split_qty', ctypes.c_uint32),  # 最小拆分数量
+        ('min_merge_qty', ctypes.c_uint32),  # 最小合并数量
+        ('net_price', ctypes.c_double),  # 基金净值
     ]
 
     def __init__(self, sf_ticker='', sf_ticker_name='', ticker='', ticker_name='', ratio='', min_split_qty='',
@@ -546,34 +546,3 @@ class XTPQueryOptionAuctionInfoRsp(Base):
         self.sell_margin = float(sell_margin)
         self.margin_ratio_param1 = float(margin_ratio_param1)
         self.margin_ratio_param2 = float(margin_ratio_param2)
-
-    ####
-
-    # class XTPOrderInsertInfo(Base):
-    #     _fields_ = [
-    #         ("order_xtp_id", ctypes.c_uint64),
-    #     ]
-    #
-    #
-    # class XTPQueryOptionAuctionInfoRsp(Base):
-    #     """
-    #     查询期权竞价交易业务参考信息
-    #     """
-    #     _fields_ = [
-    #         ("ticker", ctypes.c_char * 16),  # <合约编码，报单ticker采用本字段
-    #         ("security_id_source", ctypes.c_int),  # 证券代码源,
-    #         ("symbol", ctypes.c_char * 64),  # 合约简称
-    #         ("contract_id", ctypes.c_char * 64),  # 合约交易代码
-    #         ("underlying_security_id", ctypes.c_char * 16),  # 基础证券代码
-    #         ("underlying_security_id_source", ctypes.c_int),  # 基础证券代码源
-    #         ("list_date", ctypes.c_uint32),
-    #         ("last_trade_date", ctypes.c_uint32),
-    #         ("ticker_type", ctypes.c_int),
-    #         ("day_trading", ctypes.c_int32),
-    #         ("call_or_put", ctypes.c_int),
-    #         ("delivery_day", ctypes.c_uint32),
-    #         ("delivery_month", ctypes.c_uint32),
-    #         ("exercise_type", ctypes.c_int),
-    #         ("exercise_begin_date", ctypes.c_uint32),
-    #         ("exercise_end_date", ctypes.c_uint32)
-    #     ]
