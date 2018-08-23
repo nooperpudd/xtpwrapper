@@ -374,6 +374,39 @@ class XTPQueryETFBaseReq(Base):
         self.ticker = self._to_bytes(ticker)
 
 
+class XTPQueryETFBaseRsp(Base):
+    """
+    查询股票ETF合约基本情况--响应结构体
+    """
+    _fields_ = [
+        ('market', ctypes.c_int),  # 交易市场
+        ('etf', ctypes.c_char * 16),  # etf代码,买卖,申赎统一使用该代码
+        ('subscribe_redemption_ticker', ctypes.c_char * 16),  # etf代码,买卖,申赎统一使用该代码
+        ('unit', ctypes.c_int32),  # 最小申购赎回单位对应的ETF份数,例如上证"50ETF"就是900000
+        ('subscribe_status', ctypes.c_int32),  # 是否允许申购,1-允许,0-禁止
+        ('redemption_status', ctypes.c_int32),  # 是否允许赎回,1-允许,0-禁止
+        ('max_cash_ratio', ctypes.c_double),  # 最大现金替代比例,小于1的数值
+        ('estimate_amount', ctypes.c_double),  # T日预估金额
+        ('cash_component', ctypes.c_double),  # T-X日现金差额
+        ('net_value', ctypes.c_double),  # 基金单位净值
+        ('total_amount', ctypes.c_double),  # 最小申赎单位净值总金额
+    ]
+
+    def __init__(self, etf='', subscribe_redemption_ticker='', unit='', subscribe_status='', redemption_status='',
+                 max_cash_ratio=0.0, estimate_amount=0.0, cash_component=0.0, net_value=0.0, total_amount=0.0):
+        super(XTPQueryETFBaseRsp, self).__init__()
+        self.etf = self._to_bytes(etf)
+        self.subscribe_redemption_ticker = self._to_bytes(subscribe_redemption_ticker)
+        self.unit = int(unit)
+        self.subscribe_status = int(subscribe_status)
+        self.redemption_status = int(redemption_status)
+        self.max_cash_ratio = float(max_cash_ratio)
+        self.estimate_amount = float(estimate_amount)
+        self.cash_component = float(cash_component)
+        self.net_value = float(net_value)
+        self.total_amount = float(total_amount)
+
+
 class XTPQueryETFComponentReq(Base):
     """
     查询股票ETF合约成分股信息--请求结构体,请求参数为:交易市场+ETF买卖代码
