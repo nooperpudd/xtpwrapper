@@ -91,26 +91,26 @@ cdef extern from "xquote_api_struct.h":
     # 行情
     cdef struct XTPMarketDataStruct:
         # 代码
-        #交易所代码
+        # 交易所代码
         XTP_EXCHANGE_TYPE exchange_id
-        #合约代码（不包含交易所信息），不带空格，以'\0'结尾
+        # 合约代码（不包含交易所信息），不带空格，以'\0'结尾
         char ticker[16]
         # 价格
-        #最新价
+        # 最新价
         double last_price
-        #昨收盘
+        # 昨收盘
         double pre_close_price
-        #今开盘
+        # 今开盘
         double open_price
-        #最高价
+        # 最高价
         double high_price
-        #最低价
+        # 最低价
         double low_price
-        #今收盘
+        # 今收盘
         double close_price
 
         # 期权数据
-        #昨日持仓量(张)(目前未填写)
+        # 昨日持仓量(张)(目前未填写)
         long long pre_total_long_positon
         # 持仓量(张)
         long long total_long_positon
@@ -120,24 +120,24 @@ cdef extern from "xquote_api_struct.h":
         double settl_price
 
         # 涨跌停
-        #涨停价
+        # 涨停价
         double upper_limit_price
-        #跌停价
+        # 跌停价
         double lower_limit_price
-        #预留
+        # 预留
         double pre_delta
-        #预留
+        # 预留
         double curr_delta
 
         # 时间类，格式为YYYYMMDDHHMMSSsss
         long long data_time
 
         # 量额数据
-        #数量，为总成交量（单位股，与交易所一致）
+        # 数量，为总成交量（单位股，与交易所一致）
         long long qty
         # 成交金额，为总成交金额（单位元，与交易所一致）
         double turnover
-        #当日均价=(turnover/qty)
+        # 当日均价=(turnover/qty)
         double avg_price
 
         # 买卖盘
@@ -171,19 +171,19 @@ cdef extern from "xquote_api_struct.h":
     cdef  struct XTPQuoteStaticInfo:
         # 交易所代码
         XTP_EXCHANGE_TYPE exchange_id
-        #合约代码（不包含交易所信息），不带空格，以'\0'结尾
+        # 合约代码（不包含交易所信息），不带空格，以'\0'结尾
         char ticker[16]
         # 合约名称
         char ticker_name[64]
         # 合约类型
         XTP_TICKER_TYPE ticker_type
-        #昨收盘
+        # 昨收盘
         double pre_close_price
-        #涨停板价
+        # 涨停板价
         double upper_limit_price
-        #跌停板价
+        # 跌停板价
         double lower_limit_price
-        #最小变动价位
+        # 最小变动价位
         double price_tick
         # 合约最小交易量(买)
         int buy_qty_unit
@@ -234,11 +234,11 @@ cdef extern from "xquote_api_struct.h":
     # 逐笔成交
     cdef struct XTPTickByTickTrade:
         int channel_no
-        #委托序号(在同一个channel_no内唯一，从1开始连续)
+        # 委托序号(在同一个channel_no内唯一，从1开始连续)
         long long seq
-        #成交价格
+        # 成交价格
         double price
-        #成交量
+        # 成交量
         long long qty
         # 成交金额(仅适用上交所)
         double money
@@ -260,13 +260,13 @@ cdef extern from "xquote_api_struct.h":
         XTP_EXCHANGE_TYPE exchange_id
         # 合约代码（不包含交易所信息），不带空格，以'\0'结尾
         char ticker[16]
-        #预留
+        # 预留
         long long seq
         #委托时间 or 成交时间
         long long data_time
         #委托 or 成交
         XTP_TBT_TYPE type
-        #union
+        # union
         XTPTickByTickStruct_Union inner_union
 
     # 供查询的最新信息

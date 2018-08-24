@@ -1,12 +1,12 @@
 cdef extern from "xtp_api_struct.h":
     # XTP_LOG_LEVEL是日志输出级别类型
     cdef enum XTP_LOG_LEVEL:
-        XTP_LOG_LEVEL_FATAL # 严重错误级别
-        XTP_LOG_LEVEL_ERROR # 错误级别
-        XTP_LOG_LEVEL_WARNING # 警告级别
-        XTP_LOG_LEVEL_INFO # info级别
-        XTP_LOG_LEVEL_DEBUG # debug级别
-        XTP_LOG_LEVEL_TRACE # trace级别
+        XTP_LOG_LEVEL_FATAL  # 严重错误级别
+        XTP_LOG_LEVEL_ERROR  # 错误级别
+        XTP_LOG_LEVEL_WARNING  # 警告级别
+        XTP_LOG_LEVEL_INFO  # info级别
+        XTP_LOG_LEVEL_DEBUG  # debug级别
+        XTP_LOG_LEVEL_TRACE  # trace级别
 
     # XTP_PROTOCOL_TYPE是通讯传输协议方式
     cdef enum XTP_PROTOCOL_TYPE:
@@ -15,27 +15,27 @@ cdef extern from "xtp_api_struct.h":
 
     # XTP_EXCHANGE_TYPE是交易所类型
     cdef enum XTP_EXCHANGE_TYPE:
-        XTP_EXCHANGE_SH = 1 # 上证
-        XTP_EXCHANGE_SZ # 深证
-        XTP_EXCHANGE_UNKNOWN # 不存在的交易所类型
+        XTP_EXCHANGE_SH = 1  # 上证
+        XTP_EXCHANGE_SZ  # 深证
+        XTP_EXCHANGE_UNKNOWN  # 不存在的交易所类型
 
     # XTP_MARKET_TYPE市场类型
     cdef enum XTP_MARKET_TYPE:
-        XTP_MKT_INIT = 0 # 初始化值或者未知
-        XTP_MKT_SZ_A = 1 # 深圳A股
-        XTP_MKT_SH_A # 上海A股
-        XTP_MKT_UNKNOWN # 未知交易市场类型
+        XTP_MKT_INIT = 0  # 初始化值或者未知
+        XTP_MKT_SZ_A = 1  # 深圳A股
+        XTP_MKT_SH_A  # 上海A股
+        XTP_MKT_UNKNOWN  # 未知交易市场类型
 
     # XTP_PRICE_TYPE是价格类型
     cdef enum XTP_PRICE_TYPE:
         XTP_PRICE_LIMIT = 1  # 限价单-沪 / 深 / 沪期权（除普通股票业务外，其余业务均使用此种类型）
-        XTP_PRICE_BEST_OR_CANCEL # 即时成交剩余转撤销，市价单-深 / 沪期权
-        XTP_PRICE_BEST5_OR_LIMIT # 最优五档即时成交剩余转限价，市价单-沪
-        XTP_PRICE_BEST5_OR_CANCEL # 最优5档即时成交剩余转撤销，市价单-沪深
-        XTP_PRICE_ALL_OR_CANCEL # 全部成交或撤销,市价单-深 / 沪期权
-        XTP_PRICE_FORWARD_BEST # 本方最优，市价单-深
-        XTP_PRICE_REVERSE_BEST_LIMIT # 对方最优剩余转限价，市价单-深 / 沪期权
-        XTP_PRICE_LIMIT_OR_CANCEL # 期权限价申报FOK
+        XTP_PRICE_BEST_OR_CANCEL  # 即时成交剩余转撤销，市价单-深 / 沪期权
+        XTP_PRICE_BEST5_OR_LIMIT  # 最优五档即时成交剩余转限价，市价单-沪
+        XTP_PRICE_BEST5_OR_CANCEL  # 最优5档即时成交剩余转撤销，市价单-沪深
+        XTP_PRICE_ALL_OR_CANCEL  # 全部成交或撤销,市价单-深 / 沪期权
+        XTP_PRICE_FORWARD_BEST  # 本方最优，市价单-深
+        XTP_PRICE_REVERSE_BEST_LIMIT  # 对方最优剩余转限价，市价单-深 / 沪期权
+        XTP_PRICE_LIMIT_OR_CANCEL  # 期权限价申报FOK
         XTP_PRICE_TYPE_UNKNOWN  # 未知或者无效价格类型
 
     # XTP_ORDER_ACTION_STATUS_TYPE是报单操作状态类型
@@ -157,16 +157,16 @@ cdef extern from "xtp_api_struct.h":
         XTP_POSITION_DIRECTION_SHORT  # 空（期权则为义务方）
         XTP_POSITION_DIRECTION_COVERED  # 备兑（期权则为备兑义务方）
 
-    #TXTPTradeTypeType是成交类型类型
+    # TXTPTradeTypeType是成交类型类型
     ctypedef char TXTPTradeTypeType
 
-    #普通成交 XTP_TRDT_COMMON '0'
-    #现金替代 XTP_TRDT_CASH '1'
-    #一级市场成交 XTP_TRDT_PRIMARY '2'
+    # 普通成交 XTP_TRDT_COMMON '0'
+    # 现金替代 XTP_TRDT_CASH '1'
+    # 一级市场成交 XTP_TRDT_PRIMARY '2'
 
     # TXTPOrderTypeType是报单类型类型
     ctypedef char TXTPOrderTypeType
-    
+
     # 正常
     # XTP_ORDT_Normal '0'
     # 报价衍生
@@ -181,7 +181,7 @@ cdef extern from "xtp_api_struct.h":
     # XTP_ORDT_Swap '5'
 
     # XTP_SIDE_TYPE是买卖方向类型
-    ctypedef unsigned char XTP_SIDE_TYPE;
+    ctypedef unsigned char XTP_SIDE_TYPE
 
     # 买（新股申购，ETF买，配股，信用交易中担保品买）
     # XTP_SIDE_BUY            1
@@ -213,11 +213,10 @@ cdef extern from "xtp_api_struct.h":
     # XTP_SIDE_STOCK_REPAY_STOCK	26
     # 未知或者无效买卖方向
     # XTP_SIDE_UNKNOWN        27
-    
 
     #  XTP_POSITION_EFFECT_TYPE是开平标识类型
-    ctypedef unsigned char XTP_POSITION_EFFECT_TYPE;
-    
+    ctypedef unsigned char XTP_POSITION_EFFECT_TYPE
+
     #  初始值或未知值开平标识，现货适用
     # XTP_POSITION_EFFECT_INIT                0
     #  开
@@ -236,4 +235,3 @@ cdef extern from "xtp_api_struct.h":
     # XTP_POSITION_EFFECT_LOCALFORCECLOSE     7
     #  未知的开平标识类型
     # XTP_POSITION_EFFECT_UNKNOWN             8
-    
