@@ -38,5 +38,3 @@ class Base(ctypes.Structure):
         """
         items = ["%s:%s" % (item, getattr(self, item)) for item, value in self._fields_]
         return "%s<%s>" % (self.__class__.__name__, ",".join(items))
-
-
