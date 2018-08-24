@@ -1,4 +1,5 @@
-from .xtp_api_data_type cimport (XTP_PRICE_TYPE,
+from .xtp_api_data_type cimport (
+XTP_PRICE_TYPE,
 XTP_MARKET_TYPE,
 XTP_BUSINESS_TYPE,
 XTP_ORDER_STATUS_TYPE,
@@ -14,18 +15,19 @@ XTP_OPT_EXERCISE_TYPE_TYPE,
 XTP_OPT_CALL_OR_PUT_TYPE,
 ETF_REPLACE_TYPE,
 XTP_TICKER_TYPE,
-XTP_EXCHANGE_TYPE)
+XTP_EXCHANGE_TYPE,
+XTP_SIDE_TYPE,
+XTP_POSITION_EFFECT_TYPE)
 
-# typedef signed char        int8_t;
-# typedef short              int16_t;
-# typedef int                int32_t;
-# typedef long long          long long;
-# typedef unsigned char      uint8_t;
-# typedef unsigned short     uint16_t;
-# typedef unsigned int       uint32_t;
-# typedef unsigned long long ulong long;
 
 cdef extern from "xoms_api_struct.h":
+    cdef union Common_Union:
+        unsigned int u32  #
+        XTP_SIDE_TYPE side  # 买卖方向
+        XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
+        unsigned char reserved1  # 预留字段1
+        unsigned char reserved2  # 预留字段2
+
     cdef struct XTPOrderInsertInfo:
         unsigned int order_xtp_id
         #报单引用，由客户自定义
@@ -44,18 +46,8 @@ cdef extern from "xoms_api_struct.h":
         #报单价格
         XTP_PRICE_TYPE price_type
 
-        # cdef union:
-        #     unsigned int u32
-        #     cdef struct:
-        #         #买卖方向
-        #         XTP_SIDE_TYPE               side
-        #         #开平标志
-        #         XTP_POSITION_EFFECT_TYPE    position_effect
-        #         #预留字段1
-        #         uint8_t                     reserved1
-        #         #预留字段2
-        #         uint8_t                     reserved2
-
+        # union
+        Common_Union inner_union
         #业务类型
         XTP_BUSINESS_TYPE business_type
 
@@ -67,7 +59,7 @@ cdef extern from "xoms_api_struct.h":
         unsigned long long order_xtp_id
 
     cdef struct XTPOrderInfo:
-    #     XTP系统订单ID，在XTP系统中唯一
+        #     XTP系统订单ID，在XTP系统中唯一
         unsigned long long order_xtp_id
         # 	报单引用，用户自定义
         unsigned int order_client_id
@@ -85,19 +77,9 @@ cdef extern from "xoms_api_struct.h":
         long long quantity
         # 	#报单价格条件
         XTP_PRICE_TYPE price_type
-        #     union{
-        #         uint32_t            u32
-        #         struct {
-        #             #买卖方向
-        #             XTP_SIDE_TYPE               side
-        #             #开平标志
-        #             XTP_POSITION_EFFECT_TYPE    position_effect
-        # 			#预留字段1
-        # 			uint8_t                     reserved1
-        # 			#预留字段2
-        # 			uint8_t                     reserved2
-        #         }
-        #     }
+        # union
+        Common_Union inner_union
+
         # 	#业务类型
         XTP_BUSINESS_TYPE business_type
         # 	#今成交数量，为此订单累计成交数量
@@ -148,19 +130,9 @@ cdef extern from "xoms_api_struct.h":
         char                     order_exch_id[17]
         #成交类型  --成交回报中的执行类型
         TXTPTradeTypeType        trade_type
-        # union{
-        #     uint32_t            u32
-        #     struct {
-        #         #买卖方向
-        #         XTP_SIDE_TYPE               side
-        #         #开平标志
-        #         XTP_POSITION_EFFECT_TYPE    position_effect
-        # 		#预留字段1
-        # 		uint8_t                     reserved1
-        # 		#预留字段2
-        # 		uint8_t                     reserved2
-        #     }
-        # }
+        # union
+        Common_Union inner_union
+
         #业务类型
         XTP_BUSINESS_TYPE        business_type
         #交易所交易员代码
@@ -301,20 +273,20 @@ cdef extern from "xoms_api_struct.h":
     # typedef struct XTPFundTransferNotice XTPFundTransferLog
 
     cdef struct XTPQueryStructuredFundInfoReq:
-        XTP_EXCHANGE_TYPE   exchange_id  #<交易所代码，不可为空
-        char                sf_ticker[16]  #<分级基金母基金代码，可以为空，如果为空，则默认查询所有的分级基金
+        XTP_EXCHANGE_TYPE   exchange_id  # 交易所代码，不可为空
+        char                sf_ticker[16]  # 分级基金母基金代码，可以为空，如果为空，则默认查询所有的分级基金
     #查询分级基金信息响应结构体
     cdef struct  XTPStructuredFundInfo:
-        XTP_EXCHANGE_TYPE   exchange_id  #<交易所代码
-        char                sf_ticker[16]  #<分级基金母基金代码
-        char                sf_ticker_name[64]  #<分级基金母基金名称
-        char                ticker[16]  #<分级基金子基金代码
-        char                ticker_name[64]  #<分级基金子基金名称
-        XTP_SPLIT_MERGE_STATUS    split_merge_status  #<基金允许拆分合并状态
-        unsigned int            ratio  #<拆分合并比例
-        unsigned int            min_split_qty  #<最小拆分数量
-        unsigned int            min_merge_qty  #<最小合并数量
-        double              net_price  #<基金净值
+        XTP_EXCHANGE_TYPE   exchange_id  # 交易所代码
+        char                sf_ticker[16]  # 分级基金母基金代码
+        char                sf_ticker_name[64]  # 分级基金母基金名称
+        char                ticker[16]  # 分级基金子基金代码
+        char                ticker_name[64]  # 分级基金子基金名称
+        XTP_SPLIT_MERGE_STATUS    split_merge_status  # 基金允许拆分合并状态
+        unsigned int            ratio  # 拆分合并比例
+        unsigned int            min_split_qty  # 最小拆分数量
+        unsigned int            min_merge_qty  # 最小合并数量
+        double              net_price  # 基金净值
 
     # #查询股票ETF合约基本情况--请求结构体,
     # #请求参数为多条件参数:1,不填则返回所有市场的ETF合约信息。
@@ -327,17 +299,17 @@ cdef extern from "xoms_api_struct.h":
         char               ticker[16]
     # 查询股票ETF合约基本情况--响应结构体
     cdef struct XTPQueryETFBaseRsp:
-        XTP_MARKET_TYPE     market  #<交易市场
-        char                etf[16]  #<etf代码,买卖,申赎统一使用该代码
-        char                subscribe_redemption_ticker[16]  #<etf申购赎回代码
-        int             unit  #<最小申购赎回单位对应的ETF份数,例如上证"50ETF"就是900000
-        int             subscribe_status  #<是否允许申购,1-允许,0-禁止
-        int             redemption_status  #<是否允许赎回,1-允许,0-禁止
-        double              max_cash_ratio  #<最大现金替代比例,小于1的数值   TODO 是否采用double
-        double              estimate_amount  #<T日预估金额
-        double              cash_component  #<T-X日现金差额
-        double              net_value  #<基金单位净值
-        double              total_amount  #<最小申赎单位净值总金额=net_value*unit
+        XTP_MARKET_TYPE     market  # 交易市场
+        char                etf[16]  # etf代码,买卖,申赎统一使用该代码
+        char                subscribe_redemption_ticker[16]  # etf申购赎回代码
+        int             unit  # 最小申购赎回单位对应的ETF份数,例如上证"50ETF"就是900000
+        int             subscribe_status  # 是否允许申购,1-允许,0-禁止
+        int             redemption_status  # 是否允许赎回,1-允许,0-禁止
+        double              max_cash_ratio  # 最大现金替代比例,小于1的数值   TODO 是否采用double
+        double              estimate_amount  # T日预估金额
+        double              cash_component  # T-X日现金差额
+        double              net_value  # 基金单位净值
+        double              total_amount  # 最小申赎单位净值总金额=net_value*unit
 
     #查询股票ETF合约成分股信息--请求结构体,请求参数为:交易市场+ETF买卖代码
     cdef struct XTPQueryETFComponentReq:
@@ -396,48 +368,48 @@ cdef extern from "xoms_api_struct.h":
         char                ticker[16]
     # 查询期权竞价交易业务参考信息
     cdef struct XTPQueryOptionAuctionInfoRsp:
-        char                ticker[16]  #<合约编码，报单ticker采用本字段
-        XTP_MARKET_TYPE     security_id_source  #<证券代码源
-        char                symbol[64]  #<合约简称
-        char                contract_id[64]  #<合约交易代码
-        char                underlying_security_id[16]  #<基础证券代码
-        XTP_MARKET_TYPE     underlying_security_id_source  #<基础证券代码源
+        char                ticker[16]  # 合约编码，报单ticker采用本字段
+        XTP_MARKET_TYPE     security_id_source  # 证券代码源
+        char                symbol[64]  # 合约简称
+        char                contract_id[64]  # 合约交易代码
+        char                underlying_security_id[16]  # 基础证券代码
+        XTP_MARKET_TYPE     underlying_security_id_source  # 基础证券代码源
 
-        unsigned int            list_date  #<上市日期，格式为YYYYMMDD
-        unsigned int            last_trade_date  #<最后交易日，格式为YYYYMMDD
-        XTP_TICKER_TYPE     ticker_type  #<证券类别
-        int             day_trading  #<是否支持当日回转交易，1-允许，0-不允许
+        unsigned int            list_date  # 上市日期，格式为YYYYMMDD
+        unsigned int            last_trade_date  # 最后交易日，格式为YYYYMMDD
+        XTP_TICKER_TYPE     ticker_type  # 证券类别
+        int             day_trading  # 是否支持当日回转交易，1-允许，0-不允许
 
-        XTP_OPT_CALL_OR_PUT_TYPE    call_or_put  #<认购或认沽
-        unsigned int            delivery_day  #<行权交割日，格式为YYYYMMDD
-        unsigned int            delivery_month  #<交割月份，格式为YYYYMM
+        XTP_OPT_CALL_OR_PUT_TYPE    call_or_put  # 认购或认沽
+        unsigned int            delivery_day  # 行权交割日，格式为YYYYMMDD
+        unsigned int            delivery_month  # 交割月份，格式为YYYYMM
 
-        XTP_OPT_EXERCISE_TYPE_TYPE  exercise_type  #<行权方式
-        unsigned int            exercise_begin_date  #<行权起始日期，格式为YYYYMMDD
-        unsigned int            exercise_end_date  #<行权结束日期，格式为YYYYMMDD
-        double              exercise_price  #<行权价格
+        XTP_OPT_EXERCISE_TYPE_TYPE  exercise_type  # 行权方式
+        unsigned int            exercise_begin_date  # 行权起始日期，格式为YYYYMMDD
+        unsigned int            exercise_end_date  # 行权结束日期，格式为YYYYMMDD
+        double              exercise_price  # 行权价格
 
-        long long             qty_unit  #<数量单位，对于某一证券申报的委托，其委托数量字段必须为该证券数量单位的整数倍
-        long long            contract_unit  #<合约单位
-        long long             contract_position  #<合约持仓量
+        long long             qty_unit  # 数量单位，对于某一证券申报的委托，其委托数量字段必须为该证券数量单位的整数倍
+        long long            contract_unit  # 合约单位
+        long long             contract_position  # 合约持仓量
 
-        double              prev_close_price  #<合约前收盘价
-        double              prev_clearing_price  #<合约前结算价
+        double              prev_close_price  # 合约前收盘价
+        double              prev_clearing_price  # 合约前结算价
 
-        long long             lmt_buy_max_qty  #<限价买最大量
-        long long             lmt_buy_min_qty  #<限价买最小量
-        long long             lmt_sell_max_qty  #<限价卖最大量
-        long long             lmt_sell_min_qty  #<限价卖最小量
-        long long             mkt_buy_max_qty  #<市价买最大量
-        long long             mkt_buy_min_qty  #<市价买最小量
-        long long             mkt_sell_max_qty  #<市价卖最大量
-        long long             mkt_sell_min_qty  #<市价卖最小量
+        long long             lmt_buy_max_qty  # 限价买最大量
+        long long             lmt_buy_min_qty  # 限价买最小量
+        long long             lmt_sell_max_qty  # 限价卖最大量
+        long long             lmt_sell_min_qty  # 限价卖最小量
+        long long             mkt_buy_max_qty  # 市价买最大量
+        long long             mkt_buy_min_qty  # 市价买最小量
+        long long             mkt_sell_max_qty  # 市价卖最大量
+        long long             mkt_sell_min_qty  # 市价卖最小量
 
-        double              price_tick  #<最小报价单位
-        double              upper_limit_price  #<涨停价
-        double              lower_limit_price  #<跌停价
-        double sell_margin  #<今卖开每张保证金
-        double margin_ratio_param1  #<交易所保证金比例计算参数一
-        double margin_ratio_param2  #<交易所保证金比例计算参数二
+        double              price_tick  # 最小报价单位
+        double              upper_limit_price  # 涨停价
+        double              lower_limit_price  # 跌停价
+        double sell_margin  # 今卖开每张保证金
+        double margin_ratio_param1  # 交易所保证金比例计算参数一
+        double margin_ratio_param2  # 交易所保证金比例计算参数二
 
-        unsigned long long unknown[20]  #<（保留字段）
+        unsigned long long unknown[20]  # （保留字段）

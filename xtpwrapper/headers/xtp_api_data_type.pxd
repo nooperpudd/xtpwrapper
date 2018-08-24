@@ -182,7 +182,7 @@ cdef extern from "xtp_api_struct.h":
 
     # XTP_SIDE_TYPE是买卖方向类型
     ctypedef unsigned char XTP_SIDE_TYPE;
-    
+
     # 买（新股申购，ETF买，配股，信用交易中担保品买）
     # XTP_SIDE_BUY            1
     # 卖（逆回购，ETF卖，信用交易中担保品卖）
