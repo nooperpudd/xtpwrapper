@@ -12,7 +12,7 @@ class XTPFundTransferReq(Base):
 
         ('password', ctypes.c_char * 64),  # 资金账户密码
         ("amount", ctypes.c_double),  # 金额
-        ("transfer_type", ctypes.c_int)  # 内转类型 # todo fix enum type
+        ("transfer_type", ctypes.c_int)  # 内转类型
     ]
 
     # def __init__(self,serial_id=0,fund_account="",password="",amount=0.0,transfer_type=0):

@@ -2,6 +2,20 @@
 import ctypes
 from ._struct import Base
 
+class _CommonStruct(ctypes.Structure):
+    _fields_ =[
+        ("side",ctypes.c_uint8), # 买卖方向
+        ("position_effect",ctypes.c_uint8), # 开平标志
+        ("reserved1",ctypes.c_uint8), # 预留字段1
+        ("reserved2",ctypes.c_uint8) # 预留字段2
+    ]
+
+class _CommonUion(ctypes.Union):
+    _fields_ = [
+        ("u32",ctypes.c_uint32),
+        ("_struct",_CommonStruct),
+    ]
+    _anonymous_ = ('_struct',)
 
 class XTPOrderInsertInfo(Base):
     """
@@ -17,7 +31,13 @@ class XTPOrderInsertInfo(Base):
         ('quantity', ctypes.c_int64),  # 数量(股票单位为股，逆回购单位为张)
         ('price_type', ctypes.c_int),  # 报单价格
         ('business_type', ctypes.c_int),  # 业务类型
+        ('_u',_CommonUion)
     ]
+    _anonymous_ = ('_u',)
+
+
+
+
 
     # def __init__(self, order_xtp_id='', order_client_id='', ticker='', price=0.0, stop_price=0.0, quantity=''):
     #     super(XTPOrderInsertInfo, self).__init__()
@@ -69,7 +89,10 @@ class XTPOrderInfo(Base):
         ('order_status', ctypes.c_int),  # 报单状态，订单响应中没有部分成交状态的推送，在查询订单结果中，会有部分成交状态
         ('order_submit_status', ctypes.c_int),  # 报单提交状态，OMS内部使用，用户无需关心
         ('order_type', ctypes.c_char),  # 报单类型
+
+        ("_u",_CommonUion) #
     ]
+    _anonymous_ = ('_u',)
 
     # def __init__(self, order_xtp_id='', order_client_id='', order_cancel_client_id='', order_cancel_xtp_id='',
     #              ticker='', price=0.0, quantity='', qty_traded='', qty_left='', insert_time='', update_time='',
@@ -112,7 +135,10 @@ class XTPTradeReport(Base):
         ('trade_type', ctypes.c_char),  # 成交类型  --成交回报中的执行类型
         ('business_type', ctypes.c_int),  # 业务类型
         ('branch_pbu', ctypes.c_char * 7),  # 交易所交易员代码
+        ("_u", _CommonUion)  #
     ]
+
+    _anonymous_ = ('_u',)
 
     # def __init__(self, order_xtp_id='', order_client_id='', ticker='', local_order_id='', exec_id='', price=0.0,
     #              quantity='', trade_time='', trade_amount=0.0, report_index='', order_exch_id='', trade_type='',
@@ -539,43 +565,43 @@ class XTPQueryOptionAuctionInfoRsp(Base):
         ('margin_ratio_param1', ctypes.c_double),  # 交易所保证金比例计算参数一
         ('margin_ratio_param2', ctypes.c_double),  # 交易所保证金比例计算参数二
     ]
-
-    def __init__(self, ticker='', symbol='', contract_id='', underlying_security_id='', list_date='',
-                 last_trade_date='', day_trading='', delivery_day='', delivery_month='', exercise_begin_date='',
-                 exercise_end_date='', exercise_price=0.0, qty_unit='', contract_unit='', contract_position='',
-                 prev_close_price=0.0, prev_clearing_price=0.0, lmt_buy_max_qty='', lmt_buy_min_qty='',
-                 lmt_sell_max_qty='', lmt_sell_min_qty='', mkt_buy_max_qty='', mkt_buy_min_qty='', mkt_sell_max_qty='',
-                 mkt_sell_min_qty='', price_tick=0.0, upper_limit_price=0.0, lower_limit_price=0.0, sell_margin=0.0,
-                 margin_ratio_param1=0.0, margin_ratio_param2=0.0):
-        super(XTPQueryOptionAuctionInfoRsp, self).__init__()
-        self.ticker = self._to_bytes(ticker)
-        self.symbol = self._to_bytes(symbol)
-        self.contract_id = self._to_bytes(contract_id)
-        self.underlying_security_id = self._to_bytes(underlying_security_id)
-        self.list_date = int(list_date)
-        self.last_trade_date = int(last_trade_date)
-        self.day_trading = int(day_trading)
-        self.delivery_day = int(delivery_day)
-        self.delivery_month = int(delivery_month)
-        self.exercise_begin_date = int(exercise_begin_date)
-        self.exercise_end_date = int(exercise_end_date)
-        self.exercise_price = float(exercise_price)
-        self.qty_unit = int(qty_unit)
-        self.contract_unit = int(contract_unit)
-        self.contract_position = int(contract_position)
-        self.prev_close_price = float(prev_close_price)
-        self.prev_clearing_price = float(prev_clearing_price)
-        self.lmt_buy_max_qty = int(lmt_buy_max_qty)
-        self.lmt_buy_min_qty = int(lmt_buy_min_qty)
-        self.lmt_sell_max_qty = int(lmt_sell_max_qty)
-        self.lmt_sell_min_qty = int(lmt_sell_min_qty)
-        self.mkt_buy_max_qty = int(mkt_buy_max_qty)
-        self.mkt_buy_min_qty = int(mkt_buy_min_qty)
-        self.mkt_sell_max_qty = int(mkt_sell_max_qty)
-        self.mkt_sell_min_qty = int(mkt_sell_min_qty)
-        self.price_tick = float(price_tick)
-        self.upper_limit_price = float(upper_limit_price)
-        self.lower_limit_price = float(lower_limit_price)
-        self.sell_margin = float(sell_margin)
-        self.margin_ratio_param1 = float(margin_ratio_param1)
-        self.margin_ratio_param2 = float(margin_ratio_param2)
+    #
+    # def __init__(self, ticker='', symbol='', contract_id='', underlying_security_id='', list_date='',
+    #              last_trade_date='', day_trading='', delivery_day='', delivery_month='', exercise_begin_date='',
+    #              exercise_end_date='', exercise_price=0.0, qty_unit='', contract_unit='', contract_position='',
+    #              prev_close_price=0.0, prev_clearing_price=0.0, lmt_buy_max_qty='', lmt_buy_min_qty='',
+    #              lmt_sell_max_qty='', lmt_sell_min_qty='', mkt_buy_max_qty='', mkt_buy_min_qty='', mkt_sell_max_qty='',
+    #              mkt_sell_min_qty='', price_tick=0.0, upper_limit_price=0.0, lower_limit_price=0.0, sell_margin=0.0,
+    #              margin_ratio_param1=0.0, margin_ratio_param2=0.0):
+    #     super(XTPQueryOptionAuctionInfoRsp, self).__init__()
+    #     self.ticker = self._to_bytes(ticker)
+    #     self.symbol = self._to_bytes(symbol)
+    #     self.contract_id = self._to_bytes(contract_id)
+    #     self.underlying_security_id = self._to_bytes(underlying_security_id)
+    #     self.list_date = int(list_date)
+    #     self.last_trade_date = int(last_trade_date)
+    #     self.day_trading = int(day_trading)
+    #     self.delivery_day = int(delivery_day)
+    #     self.delivery_month = int(delivery_month)
+    #     self.exercise_begin_date = int(exercise_begin_date)
+    #     self.exercise_end_date = int(exercise_end_date)
+    #     self.exercise_price = float(exercise_price)
+    #     self.qty_unit = int(qty_unit)
+    #     self.contract_unit = int(contract_unit)
+    #     self.contract_position = int(contract_position)
+    #     self.prev_close_price = float(prev_close_price)
+    #     self.prev_clearing_price = float(prev_clearing_price)
+    #     self.lmt_buy_max_qty = int(lmt_buy_max_qty)
+    #     self.lmt_buy_min_qty = int(lmt_buy_min_qty)
+    #     self.lmt_sell_max_qty = int(lmt_sell_max_qty)
+    #     self.lmt_sell_min_qty = int(lmt_sell_min_qty)
+    #     self.mkt_buy_max_qty = int(mkt_buy_max_qty)
+    #     self.mkt_buy_min_qty = int(mkt_buy_min_qty)
+    #     self.mkt_sell_max_qty = int(mkt_sell_max_qty)
+    #     self.mkt_sell_min_qty = int(mkt_sell_min_qty)
+    #     self.price_tick = float(price_tick)
+    #     self.upper_limit_price = float(upper_limit_price)
+    #     self.lower_limit_price = float(lower_limit_price)
+    #     self.sell_margin = float(sell_margin)
+    #     self.margin_ratio_param1 = float(margin_ratio_param1)
+    #     self.margin_ratio_param2 = float(margin_ratio_param2)

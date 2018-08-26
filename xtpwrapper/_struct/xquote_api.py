@@ -115,6 +115,15 @@ class XTPMarketDataOptionExData(Base):
         self.last_enquiry_time = int(last_enquiry_time)
 
 
+class _XTPMarketUion(ctypes.Union):
+    """
+    """
+    _fields_ = [
+        ("stk", XTPMarketDataStockExData),
+        ("opt", XTPMarketDataOptionExData)
+    ]
+
+
 class XTPMarketDataStruct(Base):
     """
     行情
@@ -148,7 +157,10 @@ class XTPMarketDataStruct(Base):
         ('ticker_status', ctypes.c_char * 8),  # 当前交易状态说明
         ('data_type', ctypes.c_int),  # 决定了union是哪种数据类型
         ('r4', ctypes.c_int32),  # 预留
+
+        ("_u", _XTPMarketUion)
     ]
+    _anonymous_ = ("_u",)
 
     def __init__(self, ticker='', last_price=0.0, pre_close_price=0.0, open_price=0.0, high_price=0.0, low_price=0.0,
                  close_price=0.0, pre_total_long_positon='', total_long_positon='', pre_settl_price=0.0,
@@ -297,6 +309,13 @@ class XTPTickByTickTrade(Base):
         self.trade_flag = self._to_bytes(trade_flag)
 
 
+class _XTPTickByTickUnion(ctypes.Union):
+    _fields_ = [
+        ("entrust", XTPTickByTickEntrust),
+        ("trade", XTPTickByTickTrade)
+    ]
+
+
 class XTPTickByTickStruct(Base):
     """
     逐笔数据信息
@@ -307,7 +326,9 @@ class XTPTickByTickStruct(Base):
         ('seq', ctypes.c_int64),  # 预留
         ('data_time', ctypes.c_int64),  # 委托时间 or 成交时间
         ('type', ctypes.c_int),  # 委托 or 成交
+        ("_u", _XTPTickByTickUnion)
     ]
+    _anonymous_ = ("_u",)
 
     def __init__(self, ticker='', seq='', data_time=''):
         super(XTPTickByTickStruct, self).__init__()
