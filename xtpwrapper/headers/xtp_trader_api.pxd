@@ -1,4 +1,5 @@
 # encoding:utf-8
+# distutils: language=c++
 
 from libc.string cimport const_char
 

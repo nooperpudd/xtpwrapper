@@ -1,3 +1,6 @@
+# encoding:utf-8
+# distutils: language=c++
+
 from cpython cimport PyObject
 from libc.stdlib cimport malloc, free
 from libc.string cimport const_char
@@ -7,8 +10,6 @@ from .headers.xtp_api_struct_common cimport XTPRI
 from .headers.xtp_quote_api cimport QuoteApi, WrapperQuoteSpi, CreateQuoteApi
 from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE
 from .headers.xquote_api_struct cimport XTPST,XTPMD,XTPOB,XTPTBT,XTPTPI,XTPQSI
-
-import ctypes
 
 
 from xtpwrapper._struct import XTPRspInfoStruct

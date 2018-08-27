@@ -1,3 +1,5 @@
+# encoding:utf-8
+# distutils: language=c++
 from .xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_TICKER_TYPE, XTP_TBT_TYPE
 
 

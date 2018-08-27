@@ -1,3 +1,5 @@
+# encoding:utf-8
+# distutils: language=c++
 from .xtp_api_data_type cimport XTP_FUND_TRANSFER_TYPE
 
 cdef extern from "xoms_api_fund_struct.h":

@@ -1,3 +1,5 @@
+# encoding:utf-8
+# distutils: language=c++
 cdef extern from "xtp_api_struct.h":
     # XTP_LOG_LEVEL是日志输出级别类型
     cdef enum XTP_LOG_LEVEL:

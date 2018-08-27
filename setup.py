@@ -3,7 +3,6 @@ import codecs
 import os
 import platform
 import re
-import shutil
 import sys
 from distutils.dir_util import copy_tree
 
@@ -41,35 +40,36 @@ if platform.architecture()[0] != "64bit":
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = os.path.join(base_dir, "xtpwrapper")
-ctp_dir = os.path.join(base_dir, "xtp")
+xtp_dir = os.path.join(base_dir, "xtp")
+header_dir = os.path.join(xtp_dir, "include")
 
-# cython_headers = os.path.join(project_dir, "headers")
-header_dir = os.path.join(ctp_dir, "include")
-# cpp_header_dir = os.path.join(project_dir, "cppheader")
+cython_headers = os.path.join(project_dir, "headers")
+cpp_header_dir = os.path.join(project_dir, "cppheader")
 
 lib_dir = None
-package_data = ["*.xml", "*.dtd"]
+package_data = []
 extra_link_args = None
 extra_compile_args = None
 
 if sys.platform == "linux":
-    lib_dir = os.path.join(ctp_dir, "linux")
+    lib_dir = os.path.join(xtp_dir, "linux")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
     extra_link_args = ['-Wl,-rpath,$ORIGIN']
 
 elif sys.platform == "win32":
-    lib_dir = os.path.join(ctp_dir, "win")
+    lib_dir = os.path.join(xtp_dir, "win")
     extra_compile_args = ["/GR", "/EHsc"]
     # extra_link_args = []
     package_data.append("*.dll")
 
-package_data.append("error.dtd")
-package_data.append("error.xml")
-shutil.copy2(header_dir + "/error.dtd", project_dir + "/error.dtd")
-shutil.copy2(header_dir + "/error.xml", project_dir + "/error.xml")
+elif sys.platform == "darwin":
+    lib_dir = os.path.join(xtp_dir,"macosx")
+    package_data.append("*.so")
+    extra_compile_args = ["-Wall"]
+    extra_link_args = ['-Wl,-rpath,$ORIGIN']
 
-if sys.platform in ["linux", "win32"]:
+if sys.platform in ["linux", "win32","darwin"]:
     copy_tree(lib_dir, project_dir)
 
 common_args = {
@@ -82,31 +82,31 @@ common_args = {
 }
 
 ext_modules = [
-    Cython_Extension(name="ctpwrapper.MdApi",
-                     sources=["ctpwrapper/MdApi.pyx"],
-                     libraries=["thostmduserapi"],
+    Cython_Extension(name="xtpwrapper.quote_api",
+                     sources=["xtpwrapper/quote_api.pyx"],
+                     libraries=["xtpquoteapi"],
                      **common_args),
-    Cython_Extension(name="ctpwrapper.TraderApi",
-                     sources=["ctpwrapper/TraderApi.pyx"],
-                     libraries=["thosttraderapi"],
-                     **common_args)
+    # Cython_Extension(name="ctpwrapper.TraderApi",
+    #                  sources=["ctpwrapper/TraderApi.pyx"],
+    #                  libraries=["thosttraderapi"],
+    #                  **common_args)
 ]
 
 
 setup(
-    name="ctpwrapper",
-    version=find_version("ctpwrapper", "__init__.py"),
-    description="CTP client v6.3.11",
+    name="xtppwrapper",
+    version=find_version("xtpwrapper", "__init__.py"),
+    description="XTP client v1.1.18.13",
     long_description=codecs.open("README.md", encoding="utf-8").read(),
     long_description_content_type='text/markdown',
     license="LGPLv3",
-    keywords="CTP,Future,SHFE,Shanghai Future Exchange",
+    keywords="XTP,Stock",
     author="Winton Wang",
     author_email="365504029@qq.com",
-    url="https://github.com/nooperpudd/ctpwrapper",
+    url="https://github.com/nooperpudd/xtpwrapper",
     include_dirs=[header_dir, cpp_header_dir],
-    platforms=["win32", "linux"],
-    packages=["ctpwrapper"],
+    platforms=["win32", "linux","darwin"],
+    packages=["xtpwrapper"],
     package_data={"": package_data},
     python_requires=">=3.5",
     # cython: binding=True

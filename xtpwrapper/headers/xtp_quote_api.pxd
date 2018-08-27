@@ -1,3 +1,5 @@
+# encoding:utf-8
+# distutils: language=c++
 from cpython cimport PyObject
 from libc.string cimport const_char
 
