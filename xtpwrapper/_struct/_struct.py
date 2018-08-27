@@ -38,3 +38,10 @@ class Base(ctypes.Structure):
         """
         items = ["%s:%s" % (item, getattr(self, item)) for item, value in self._fields_]
         return "%s<%s>" % (self.__class__.__name__, ",".join(items))
+
+
+class XTPRspInfoStruct(Base):
+    _fields_ = [
+        ("error_id",ctypes.c_int32),
+        ("error_msg",ctypes.c_char*124)
+    ]
