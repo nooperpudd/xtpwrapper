@@ -9,6 +9,8 @@ cdef extern from "xquote_api_struct.h":
         # 合约代码（不包含交易所信息）例如"600000"，不带空格，以'\0'结尾
         char ticker[16]
 
+    ctypedef XTPSpecificTickerStruct XTPST
+
     # 股票、基金、债券等额外数据
     cdef struct XTPMarketDataStockExData:
         # 委托买入总量(SH,SZ)
@@ -163,6 +165,8 @@ cdef extern from "xquote_api_struct.h":
         # 预留
         int r4
 
+    ctypedef XTPMarketDataStruct XTPMD
+
     cdef union XTPMarketDataStruct_Union:
         XTPMarketDataStockExData stk
         XTPMarketDataOptionExData opt
@@ -189,6 +193,7 @@ cdef extern from "xquote_api_struct.h":
         int buy_qty_unit
         # 合约最小交易量(卖)
         int sell_qty_unit
+    ctypedef XTPQuoteStaticInfo XTPQSI
     # 定单薄
     cdef struct OrderBookStruct:
         # 交易所代码
@@ -216,6 +221,8 @@ cdef extern from "xquote_api_struct.h":
         long long ask_qty[10]
         #  时间类
         long long data_time
+
+    cdef OrderBookStruct XTPOB
 
     # 逐笔委托(仅适用深交所)
     cdef struct XTPTickByTickEntrust:
@@ -269,6 +276,8 @@ cdef extern from "xquote_api_struct.h":
         # union
         XTPTickByTickStruct_Union inner_union
 
+    ctypedef XTPTickByTickStruct XTPTBT
+
     # 供查询的最新信息
     cdef struct XTPTickerPriceInfo:
         # 交易所代码
@@ -277,3 +286,5 @@ cdef extern from "xquote_api_struct.h":
         char ticker[16]
         # 最新价
         double last_price
+
+    ctypedef XTPTickerPriceInfo XTPTPI
