@@ -78,7 +78,7 @@ install:
 
   - "%PYTHON% -c \"import struct; print(struct.calcsize('P') * 8)\"" # show python version
 
-  - "%PYTHON% -m pip install -U pip setuptools wheel"
+  - "%PYTHON% -m pip install -U pip setuptools wheel cython"
   - "%PYTHON% -m pip install -r requirements.txt"
 
   - "%PYTHON% -m pip install pytest"
@@ -89,22 +89,4 @@ test_script:
   - "%CMD_IN_ENV% %PYTHON% setup.py build_ext --inplace"
   - "%PYTHON% -m pytest -v -s"
 
-# ignore auto publish to pypi.
 
-#build_script:
-#  - "%CMD_IN_ENV% python setup.py bdist_wheel"
-#
-#artifacts:
-#  # bdist_wheel puts your built wheel in the dist directory
-#  - path: 'dist\*.whl'
-#    name: wheel
-
-#deploy_script:
-#  # This step builds your wheels.
-#  # Again, you only need build.cmd if you're building C extensions for
-#  # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
-#  # interpreter
-#  - "echo [pypi] > %USERPROFILE%\\.pypirc"
-#  - "echo username: nooperpudd >> %USERPROFILE%\\.pypirc"
-#  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
-#  - "%CMD_IN_ENV% python setup.py upload"

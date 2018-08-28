@@ -6,8 +6,6 @@ python:
   - "3.7"
   - "pypy3"
 
-dist: "xenial"
-
 compiler:
   - clang
 
@@ -17,8 +15,7 @@ cache: pip
 
 install:
   - python -c "import struct; print(struct.calcsize('P') * 8)"
-  - "pip install wheel pip setuptools --upgrade"
-  - "pip install -r requirements.txt --upgrade"
+  - "pip install wheel pip setuptools cython --upgrade"
   - "pip install pytest"
 
 script:
@@ -31,8 +28,8 @@ deploy:
   provider: pypi
   user: nooperpudd
   password:
-    secure: vdY6WCJCvOS8W0mNC2z/bBDg2OVBss1IFg8BSH25NuziCTBEKbUi3BAwOdq45Ei24r5+2yVjKpAyhXSis8AvdVHBrM84IzpJQHdSLyTVJMexdT/830528IlyIhGVBGROCSIznFXIbfVvcyuTDBhAgBUj4xanjHnLJLMJsqpY8LI52hjGvANWRupp+czpsQTzYL5IVA7WMRoUBvKn7FzBs8ZwtssyeSsv0Ju40r5A942sXW/yjg3mDGF9RWgYaQJMl4VYpYKR7Ck4I0e51axjksZVxggIp1FXpX0jU5e1wt8n9pSl4mN7HSK72ooNlp9uHSAvOuSMvXlbXpHeM+u4HEEYAHJcX/T8DI5E2iAUjjZT3N5mRFR4IuyuvmY1UZ0wm9TvLDHzko3sX9I4JqA2MAILOHxu5rvUqDJ51pb5JCHiYlWpinMLlHVKA8zx6EJcu65TIKEmqqP2gXfJhyWLFLgNVRw3btpmNV51BJFFT7sDDtgKgoP1/glV+BResd0ZGvBQl0hCQtZiUOHQ/naM2+qVa4baysjSoQazwvKvc0D6akedpapQyR8eWPPzUhR0JtQ/qp1qps2DpFEoqAvU6YnYtYQOM1JiZAjRA5Lxyh/Bhh3hQZwWg/EbUnGs1MrUclWlLS9f7zwYzdGnCihPYlEF5cWMoJ+bQsYoYx7UdRo=
+    secure: nhH7QoPKNa6cbng456C4Stj4VjYy6cW6kmiSxvKgIMW3vzz3BDxQUJVnoVNwaKPy3zVIk8JR3UArnERU6avP6gKrsAsqkGRkBV7FclSd9fOTmOU2piiozp7rzRW5a71SsXX7XHR/cozBCxD5XogVDzuP+yRCGHWE1ABduh+Wgp2/wSIrP9iQu9TMgyBXcr1LYN6y7xKllHuyf/QgR/mrjw6MVDzZla0X0jYtD5Lew3Zyu/QLT11+tR4o0TRmozTNIjBrb2e9yOeNdTthVKOY0wtVYWEHQ382UqxQALvLcfvPb8u662UrUUpCNivvM2GXImXLTTS6ZMXy9/tLUjgtSbj8vdKeJ2CvN+l5fvMPZ7CvdC8hieyooZW791UYiiN/PYa9edAmqV075akAHOUOD75AVBu76hfXYm0yUHdwQq3Xr5pe97rvx1ihHNmIASBt3tVT24PS/nvnO+SXSpaBEk0eIMOiDPo2+7/MzmtAdlUfGwUcKFMWGT0+FkXX2yHZGRdE7O6EIZxMGen6DEwaSLnUWtw1jIabiB2q8Tc5eASJTjHaOqmc8hTz0bj/I0oJcPUeeABRgYsXFa26AwGqZTqp12vjHkAS1QLShSI2M6p4Zxr44UxayhVha8rDrIjf6zo0XiOKDeCDy/r7ceeqMpwFqOUQrcFuGFC3LMycw88=
   distributions: "sdist"
   on:
     tags: true
-    python: '3.6.5'
+    python: '3.6.6'
