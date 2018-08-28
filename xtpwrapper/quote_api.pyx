@@ -336,16 +336,16 @@ cdef extern int QuoteSpi_OnSubMarketData(self, XTPST *ticker, XTPRI *error_info,
 
     self.OnSubMarketData(ticker_obj, err_obj, is_last)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubMarketData(self, XTPST *ticker, XTPRI *error_info, cbool is_last) except -1:
     ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
     err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
     self.OnUnSubMarketData(ticker_obj, err_obj, is_last)
-
     return 0
+
 cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
-                                           long long bid1_qty[], int bid1_count,
-                                           int max_bid1_count, long long ask1_qty[], int ask1_count,
-                                           int max_ask1_count) except -1:
+                                           long long bid1_qty[], int bid1_count, int max_bid1_count,
+                                           long long ask1_qty[], int ask1_count, int max_ask1_count) except -1:
     market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
 
     cdef Py_ssize_t count_bid = sizeof(bid1_qty)
@@ -360,7 +360,8 @@ cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
     for i from 0 <= i < count_ask:
         ask1_qty_obj.append(ask1_qty[i])
 
-    self.OnDepthMarketData(market_data_obj, bid1_qty_obj, bid1_count, max_bid1_count,
+    self.OnDepthMarketData(market_data_obj,
+                           bid1_qty_obj, bid1_count, max_bid1_count,
                            ask1_qty_obj, ask1_count, max_ask1_count)
     return 0
 
