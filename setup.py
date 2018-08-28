@@ -58,7 +58,7 @@ if sys.platform == "linux":
     extra_link_args = ['-Wl,-rpath,$ORIGIN']
 
 elif sys.platform == "win32":
-    lib_dir = os.path.join(xtp_dir, "win")
+    lib_dir = os.path.join(xtp_dir, "win64")
     extra_compile_args = ["/GR", "/EHsc"]
     # extra_link_args = []
     package_data.append("*.dll")
