@@ -79,7 +79,6 @@ install:
   - "%PYTHON% -c \"import struct; print(struct.calcsize('P') * 8)\"" # show python version
 
   - "%PYTHON% -m pip install -U pip setuptools wheel cython"
-  - "%PYTHON% -m pip install -r requirements.txt"
 
   - "%PYTHON% -m pip install pytest"
 
