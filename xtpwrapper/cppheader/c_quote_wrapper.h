@@ -1,4 +1,4 @@
-
+﻿
 
 #ifndef C_QUOTE_WRAPPER
 #define C_QUOTE_WRAPPER
