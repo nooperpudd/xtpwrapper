@@ -11,8 +11,14 @@ class Quote(QuoteWrapper):
         :param log_level:
         :return:
         """
-        super(Quote, self).CreateQuote(client_id.encode(),
-                                       client_id.encode(), log_level)
+        super(Quote, self).CreateQuote(client_id,
+                                       save_file_path.encode(), log_level)
+
+    def Release(self):
+        """
+        :return:
+        """
+        super(Quote,self).Release()
 
     def GetTradingDay(self):
         """
@@ -43,11 +49,11 @@ class Quote(QuoteWrapper):
         """
         super(Quote, self).SetUDPBufferSize(buff_size)
 
-    def Register(self):
-        """
-        :return:
-        """
-        super(Quote, self).Register()
+    # def Register(self):
+    #     """
+    #     :return:
+    #     """
+    #     super(Quote, self).Register()
 
     def SetHeartBeatInterval(self, interval):
         """

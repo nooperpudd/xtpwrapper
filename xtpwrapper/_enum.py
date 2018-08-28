@@ -1,11 +1,11 @@
-from enum import Enum, auto
+from enum import IntEnum, auto
 
 
-class XTP_LOG_LEVEL(Enum):
+class XTP_LOG_LEVEL(IntEnum):
     """
     XTP_LOG_LEVEL是日志输出级别类型
     """
-    XTP_LOG_LEVEL_FATAL = auto()  # 严重错误级别
+    XTP_LOG_LEVEL_FATAL = 0  # 严重错误级别
     XTP_LOG_LEVEL_ERROR = auto()  # 错误级别
     XTP_LOG_LEVEL_WARNING = auto()  # 警告级别
     XTP_LOG_LEVEL_INFO = auto()  # info级别
@@ -13,7 +13,7 @@ class XTP_LOG_LEVEL(Enum):
     XTP_LOG_LEVEL_TRACE = auto()  # trace级别
 
 
-class XTP_PROTOCOL_TYPE(Enum):
+class XTP_PROTOCOL_TYPE(IntEnum):
     """
     XTP_PROTOCOL_TYPE是通讯传输协议方式
     """
@@ -21,7 +21,7 @@ class XTP_PROTOCOL_TYPE(Enum):
     XTP_PROTOCOL_UDP = auto()  # 采用UDP方式传输(仅行情接口支持)
 
 
-class XTP_EXCHANGE_TYPE(Enum):
+class XTP_EXCHANGE_TYPE(IntEnum):
     """
     XTP_EXCHANGE_TYPE是交易所类型
     """
@@ -30,7 +30,7 @@ class XTP_EXCHANGE_TYPE(Enum):
     XTP_EXCHANGE_UNKNOWN = auto()  # 不存在的交易所类型
 
 
-class XTP_MARKET_TYPE(Enum):
+class XTP_MARKET_TYPE(IntEnum):
     """
     XTP_MARKET_TYPE市场类型
     """
@@ -40,7 +40,7 @@ class XTP_MARKET_TYPE(Enum):
     XTP_MKT_UNKNOWN = auto()  # 未知交易市场类型
 
 
-class XTP_PRICE_TYPE(Enum):
+class XTP_PRICE_TYPE(IntEnum):
     # XTP_PRICE_TYPE是价格类型
     XTP_PRICE_LIMIT = 1  # 限价单-沪 / 深 / 沪期权（除普通股票业务外，其余业务均使用此种类型）
     XTP_PRICE_BEST_OR_CANCEL = auto()  # 即时成交剩余转撤销，市价单-深 / 沪期权
@@ -115,7 +115,7 @@ class XTP_PRICE_TYPE(Enum):
 # define XTP_POSITION_EFFECT_UNKNOWN             8
 
 
-class XTP_ORDER_ACTION_STATUS_TYPE(Enum):
+class XTP_ORDER_ACTION_STATUS_TYPE(IntEnum):
     """
     XTP_ORDER_ACTION_STATUS_TYPE是报单操作状态类型
     """
@@ -124,7 +124,7 @@ class XTP_ORDER_ACTION_STATUS_TYPE(Enum):
     XTP_ORDER_ACTION_STATUS_REJECTED = auto()  # 已经被拒绝
 
 
-class XTP_ORDER_STATUS_TYPE(Enum):
+class XTP_ORDER_STATUS_TYPE(IntEnum):
     """
     XTP_ORDER_STATUS_TYPE是报单状态类型
     """
@@ -138,7 +138,7 @@ class XTP_ORDER_STATUS_TYPE(Enum):
     XTP_ORDER_STATUS_UNKNOWN = auto()  # 未知订单状态
 
 
-class XTP_ORDER_SUBMIT_STATUS_TYPE(Enum):
+class XTP_ORDER_SUBMIT_STATUS_TYPE(IntEnum):
     """
     XTP_ORDER_SUBMIT_STATUS_TYPE是报单提交状态类型
     """
@@ -150,7 +150,7 @@ class XTP_ORDER_SUBMIT_STATUS_TYPE(Enum):
     XTP_ORDER_SUBMIT_STATUS_CANCEL_ACCEPTED = auto()  # 撤单已经被接受
 
 
-class XTP_TE_RESUME_TYPE(Enum):
+class XTP_TE_RESUME_TYPE(IntEnum):
     """
     XTP_TE_RESUME_TYPE是公有流（订单响应、成交回报）重传方式
     """
@@ -160,7 +160,7 @@ class XTP_TE_RESUME_TYPE(Enum):
     XTP_TERT_QUICK = auto()  # 只传送登录后公有流（订单响应、成交回报）的内容
 
 
-class ETF_REPLACE_TYPE(Enum):
+class ETF_REPLACE_TYPE(IntEnum):
     """
     ETF_REPLACE_TYPE现金替代标识定义
     """
@@ -174,7 +174,7 @@ class ETF_REPLACE_TYPE(Enum):
     EPT_INVALID = auto()  # 无效值
 
 
-class XTP_TICKER_TYPE(Enum):
+class XTP_TICKER_TYPE(IntEnum):
     """
     XTP_TICKER_TYPE证券类型
     """
@@ -186,7 +186,7 @@ class XTP_TICKER_TYPE(Enum):
     XTP_TICKER_TYPE_UNKNOWN = auto()  # 未知类型
 
 
-class XTP_BUSINESS_TYPE(Enum):
+class XTP_BUSINESS_TYPE(IntEnum):
     """
     XTP_BUSINESS_TYPE证券业务类型
     """
@@ -206,7 +206,7 @@ class XTP_BUSINESS_TYPE(Enum):
     XTP_BUSINESS_TYPE_UNKNOWN = auto()  # 未知类型
 
 
-class XTP_ACCOUNT_TYPE(Enum):
+class XTP_ACCOUNT_TYPE(IntEnum):
     """
     XTP_ACCOUNT_TYPE账户类型
     """
@@ -216,7 +216,7 @@ class XTP_ACCOUNT_TYPE(Enum):
     XTP_ACCOUNT_UNKNOWN = auto()  # 未知账户类型
 
 
-class XTP_FUND_TRANSFER_TYPE(Enum):
+class XTP_FUND_TRANSFER_TYPE(IntEnum):
     """
     XTP_FUND_TRANSFER_TYPE是资金流转方向类型
     """
@@ -225,7 +225,7 @@ class XTP_FUND_TRANSFER_TYPE(Enum):
     XTP_FUND_TRANSFER_UNKNOWN = auto()  # 未知类型
 
 
-class XTP_FUND_OPER_STATUS(Enum):
+class XTP_FUND_OPER_STATUS(IntEnum):
     """
     XTP_FUND_OPER_STATUS柜台资金操作结果
     """
@@ -236,7 +236,7 @@ class XTP_FUND_OPER_STATUS(Enum):
     XTP_FUND_OPER_UNKNOWN = auto()  # 未知
 
 
-class XTP_SPLIT_MERGE_STATUS(Enum):
+class XTP_SPLIT_MERGE_STATUS(IntEnum):
     """
     XTP_SPLIT_MERGE_STATUS是一个基金当天拆分合并状态类型
     """
@@ -247,7 +247,7 @@ class XTP_SPLIT_MERGE_STATUS(Enum):
     XTP_SPLIT_MERGE_STATUS_FORBIDDEN = auto()  # 不允许拆分合并
 
 
-class XTP_TBT_TYPE(Enum):
+class XTP_TBT_TYPE(IntEnum):
     """
     XTP_TBT_TYPE是一个逐笔回报类型
     """
@@ -255,7 +255,7 @@ class XTP_TBT_TYPE(Enum):
     XTP_TBT_TRADE = 2  # 逐笔成交
 
 
-class XTP_OPT_CALL_OR_PUT_TYPE(Enum):
+class XTP_OPT_CALL_OR_PUT_TYPE(IntEnum):
     """
     XTP_OPT_CALL_OR_PUT_TYPE是一个认沽或认购类型
     """
@@ -263,7 +263,7 @@ class XTP_OPT_CALL_OR_PUT_TYPE(Enum):
     XTP_OPT_PUT = 2  # 认沽
 
 
-class XTP_OPT_EXERCISE_TYPE_TYPE(Enum):
+class XTP_OPT_EXERCISE_TYPE_TYPE(IntEnum):
     """
     XTP_OPT_EXERCISE_TYPE_TYPE是一个行权方式类型
     """
@@ -271,7 +271,7 @@ class XTP_OPT_EXERCISE_TYPE_TYPE(Enum):
     XTP_OPT_EXERCISE_TYPE_AME = 2  # 美式
 
 
-class XTP_POSITION_DIRECTION_TYPE(Enum):
+class XTP_POSITION_DIRECTION_TYPE(IntEnum):
     """
     XTP_POSITION_DIRECTION_TYPE是一个持仓方向类型
     """
@@ -282,13 +282,12 @@ class XTP_POSITION_DIRECTION_TYPE(Enum):
     XTP_POSITION_DIRECTION_COVERED = auto()  # 备兑（期权则为备兑义务方）
 
 
-class XTP_MARKETDATA_TYPE(Enum):
+class XTP_MARKETDATA_TYPE(IntEnum):
     """
 
     """
-    XTP_MARKETDATA_ACTUAL = 0 # 现货(股票 / 基金 / 债券等)
-    XTP_MARKETDATA_OPTION = 1 # 期权
-
+    XTP_MARKETDATA_ACTUAL = 0  # 现货(股票 / 基金 / 债券等)
+    XTP_MARKETDATA_OPTION = 1  # 期权
 
 ########################/
 # TXTPTradeTypeType是成交类型类型

@@ -43,44 +43,57 @@ cdef class QuoteWrapper:
             return result
 
     def GetApiVersion(self):
+
         cdef const_char *result
-        result = self._api.GetApiVersion()
-        return result
+        if self._api is not NULL:
+            result = self._api.GetApiVersion()
+            return result
 
     def GetApiLastError(self):
+
         cdef XTPRI *err
         if self._spi is not NULL:
             with nogil:
                 err = self._api.GetApiLastError()
             return XTPRspInfoStruct.from_address(<size_t> err)
 
-    def SetUDPBufferSize(self, unsigned int buff_size):
-
-        with nogil:
-            self._api.SetUDPBufferSize(buff_size)
-
     def CreateQuote(self, unsigned char client_id, const_char *save_file_path,
                     int log_level):
 
         self._api = CreateQuoteApi(client_id, save_file_path, <XTP_LOG_LEVEL> log_level)
 
-        if not self._api:
-            raise MemoryError()
-
-    def Register(self):
-
         if self._api is not NULL:
+
             self._spi = new WrapperQuoteSpi(<PyObject *> self)
 
             if self._spi is not NULL:
                 self._api.RegisterSpi(self._spi)
             else:
                 raise MemoryError()
+        else:
+            raise MemoryError()
+
+    # def Register(self):
+    #
+    #     if self._api is not NULL:
+    #         self._spi = new WrapperQuoteSpi(<PyObject *> self)
+    #
+    #         if self._spi is not NULL:
+    #             self._api.RegisterSpi(self._spi)
+    #         else:
+    #             raise MemoryError()
+
+    def SetUDPBufferSize(self, unsigned int buff_size):
+
+        if self._api is not NULL:
+            with nogil:
+                self._api.SetUDPBufferSize(buff_size)
 
     def SetHeartBeatInterval(self, unsigned int interval):
 
-        with nogil:
-            self._api.SetHeartBeatInterval(interval)
+        if self._api is not NULL:
+            with nogil:
+                self._api.SetHeartBeatInterval(interval)
 
     def SubscribeMarketData(self, ticks, int exchange_id):
 

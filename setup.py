@@ -12,7 +12,6 @@ from Cython.Build import cythonize, build_ext
 from Cython.Distutils import Extension as Cython_Extension
 
 
-
 # issue put in the cython library bellow will cause
 # error: each element of 'ext_modules' option must be an Extension instance or 2-tuple
 
@@ -56,7 +55,7 @@ if sys.platform == "linux":
     lib_dir = os.path.join(xtp_dir, "linux")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
-    extra_link_args = ['-Wl,-rpath, $ORIGIN']
+    extra_link_args = ['-Wl,-rpath,$ORIGIN']
 
 elif sys.platform == "win32":
     lib_dir = os.path.join(xtp_dir, "win64")
@@ -68,7 +67,8 @@ elif sys.platform == "darwin":
     lib_dir = os.path.join(xtp_dir, "macosx")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
-    extra_link_args = ['-Wl,-rpath, $ORIGIN']
+    # todo fix this bugs
+    extra_link_args = ['-Wl,-rpath,/Users/zux2/xtpwrapper/xtpwrapper']
 
 if sys.platform in ["linux", "win32", "darwin"]:
     copy_tree(lib_dir, project_dir)
