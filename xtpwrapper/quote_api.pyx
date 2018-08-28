@@ -8,7 +8,7 @@ from libcpp cimport bool as cbool
 
 from .headers.xtp_api_struct_common cimport XTPRI
 from .headers.xtp_quote_api cimport QuoteApi, WrapperQuoteSpi, CreateQuoteApi
-from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE
+from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE,XTP_PROTOCOL_TYPE,XTP_LOG_LEVEL
 from .headers.xquote_api_struct cimport XTPST,XTPMD,XTPOB,XTPTBT,XTPTPI,XTPQSI
 
 
@@ -63,7 +63,7 @@ cdef class QuoteWrapper:
     def CreateQuote(self, unsigned char client_id, const_char *save_file_path,
                     int log_level):
 
-        self._api = CreateQuoteApi(client_id, save_file_path, log_level)
+        self._api = CreateQuoteApi(client_id, save_file_path,  <XTP_LOG_LEVEL> log_level)
 
         if not self._api:
             raise MemoryError()
@@ -97,7 +97,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.SubscribeMarketData(ticker, <int> count, exchange_id)
+                    result = self._api.SubscribeMarketData(ticker, <int> count, <XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -116,7 +116,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.UnSubscribeMarketData(ticker, <int> count, exchange_id)
+                    result = self._api.UnSubscribeMarketData(ticker, <int> count,<XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -135,7 +135,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.SubscribeOrderBook(ticker, <int> count, exchange_id)
+                    result = self._api.SubscribeOrderBook(ticker, <int> count,<XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -153,7 +153,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.UnSubscribeOrderBook(ticker, <int> count, exchange_id)
+                    result = self._api.UnSubscribeOrderBook(ticker, <int> count,<XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -171,7 +171,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.SubscribeTickByTick(ticker, <int> count, exchange_id)
+                    result = self._api.SubscribeTickByTick(ticker, <int> count, <XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -189,7 +189,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.UnSubscribeTickByTick(ticker, <int> count, exchange_id)
+                    result = self._api.UnSubscribeTickByTick(ticker, <int> count,<XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -197,37 +197,37 @@ cdef class QuoteWrapper:
     def SubscribeAllMarketData(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.SubscribeAllMarketData(exchange_id)
+            result = self._api.SubscribeAllMarketData(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def UnSubscribeAllMarketData(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.UnSubscribeAllMarketData(exchange_id)
+            result = self._api.UnSubscribeAllMarketData(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def SubscribeAllOrderBook(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.SubscribeAllOrderBook(exchange_id)
+            result = self._api.SubscribeAllOrderBook(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def UnSubscribeAllOrderBook(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.UnSubscribeAllOrderBook(exchange_id)
+            result = self._api.UnSubscribeAllOrderBook(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def SubscribeAllTickByTick(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.SubscribeAllTickByTick(exchange_id)
+            result = self._api.SubscribeAllTickByTick(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def UnSubscribeAllTickByTick(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.UnSubscribeAllTickByTick(exchange_id)
+            result = self._api.UnSubscribeAllTickByTick(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def Login(self, const_char *ip, int port, const_char *user,
@@ -235,7 +235,7 @@ cdef class QuoteWrapper:
 
         cdef int result
         with nogil:
-            result = self._api.Login(ip, port, user, password, sock_type)
+            result = self._api.Login(ip, port, user, password, <XTP_PROTOCOL_TYPE> sock_type)
         return result
     def Logout(self):
         cdef int result
@@ -246,7 +246,7 @@ cdef class QuoteWrapper:
     def QueryAllTickers(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.QueryAllTickers(exchange_id)
+            result = self._api.QueryAllTickers(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def QueryTickersPriceInfo(self, ticks, int exchange_id):
@@ -262,7 +262,7 @@ cdef class QuoteWrapper:
                 for i from 0 <= i < count:
                     ticker[i] = ticks[i]
                 with nogil:
-                    result = self._api.QueryTickersPriceInfo(ticker, <int> count, exchange_id)
+                    result = self._api.QueryTickersPriceInfo(ticker, <int> count,<XTP_EXCHANGE_TYPE> exchange_id)
             finally:
                 free(ticker)
             return result
@@ -277,35 +277,35 @@ cdef class QuoteWrapper:
 
         cdef int result
         with nogil:
-            result = self._api.SubscribeAllOptionMarketData(exchange_id)
+            result = self._api.SubscribeAllOptionMarketData(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def UnSubscribeAllOptionMarketData(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.UnSubscribeAllOptionMarketData(exchange_id)
+            result = self._api.UnSubscribeAllOptionMarketData(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
     def SubscribeAllOptionOrderBook(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.SubscribeAllOptionOrderBook(exchange_id)
+            result = self._api.SubscribeAllOptionOrderBook(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
     def UnSubscribeAllOptionOrderBook(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.UnSubscribeAllOptionOrderBook(exchange_id)
+            result = self._api.UnSubscribeAllOptionOrderBook(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
     def SubscribeAllOptionTickByTick(self, int exchange_id):
         cdef int result
         with nogil:
-            result = self._api.SubscribeAllOptionTickByTick(exchange_id)
+            result = self._api.SubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
     def UnSubscribeAllOptionTickByTick(self, int exchange_id):
 
         cdef int result
         with nogil:
-            result = self._api.UnSubscribeAllOptionTickByTick(exchange_id)
+            result = self._api.UnSubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE>exchange_id)
         return result
 
 
@@ -342,8 +342,20 @@ cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
                                            int max_ask1_count) except -1:
 
     market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
-    cdef long long[:] bid1_qty_obj = bid1_qty # todo
-    cdef long long[:] ask1_qty_obj = ask1_qty # todo
+
+    cdef long long[::1] bid1_qty_obj
+    cdef long long[::1] ask1_qty_obj
+    cdef Py_ssize_t count_bid = sizeof(bid1_qty)
+    cdef Py_ssize_t count_ask = sizeof(ask1_qty)
+
+    for i from 0 <= i < count_bid:
+        bid1_qty_obj[i] = bid1_qty[i]
+
+    for i from 0 <= i < count_ask:
+        ask1_qty_obj[i] = ask1_qty[i]
+
+    # cdef long long[:] bid1_qty_obj = bid1_qty # todo
+    # cdef long long[:] ask1_qty_obj = ask1_qty # todo
     self.OnDepthMarketData(market_data_obj,bid1_qty_obj,bid1_count,max_bid1_count,
                            ask1_qty_obj,ask1_count,max_ask1_count)
     return 0
@@ -413,13 +425,14 @@ cdef extern int QuoteSpi_OnSubscribeAllTickByTick(self, XTP_EXCHANGE_TYPE exchan
     err_obj  = XTPRspInfoStruct.from_address(<size_t> error_info)
     self.OnSubscribeAllTickByTick(exchange_id,err_obj)
     return 0
-cdef extern int QuoteSpi_OnUnSubscribeAllTickByTick(self, XTPQSI* ticker_info, XTPRI *error_info, cbool is_last) except -1:
-    ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
+
+cdef extern int QuoteSpi_OnUnSubscribeAllTickByTick(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
+
     err_obj  = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllTickByTick(ticker_info_obj,err_obj,is_last)
+    self.OnUnSubscribeAllTickByTick(exchange_id,err_obj)
     return 0
 
-cdef extern int QuoteSpi_OnQueryAllTickers(self, XTPTPI* ticker_info, XTPRI *error_info, cbool is_last) except -1:
+cdef extern int QuoteSpi_OnQueryAllTickers(self, XTPQSI* ticker_info, XTPRI *error_info, cbool is_last) except -1:
     ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
 
     err_obj  = XTPRspInfoStruct.from_address(<size_t> error_info)

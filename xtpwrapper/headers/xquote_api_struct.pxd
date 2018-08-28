@@ -226,7 +226,7 @@ cdef extern from "xquote_api_struct.h":
         #  时间类
         long long data_time
 
-    cdef OrderBookStruct XTPOB
+    ctypedef OrderBookStruct XTPOB
 
     # 逐笔委托(仅适用深交所)
     cdef struct XTPTickByTickEntrust:

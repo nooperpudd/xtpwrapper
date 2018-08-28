@@ -195,7 +195,7 @@ cdef extern from "xtp_quote_api.h" namespace "XTP::API":
         int UnSubscribeAllOptionTickByTick(XTP_EXCHANGE_TYPE exchange_id) nogil except +
 
 
-cdef extern from "xtp_quote_api.h" namespace "XTP::API":
+cdef extern from "xtp_quote_api.h" namespace "XTP::API::QuoteApi":
     #创建QuoteApi
     #@param client_id （必须输入）用于区分同一用户的不同客户端，由用户自定义
     #@param save_file_path （必须输入）存贮订阅信息文件的目录，请设定一个有可写权限的真实存在的路径

@@ -9,12 +9,6 @@
 
 
 
-#define Python_GIL(func) \
-	do { \
-		PyGILState_STATE gil_state = PyGILState_Ensure(); \
-		if ((func) == -1) PyErr_Print();  \
-		PyGILState_Release(gil_state); \
-	} while (false)
 
 using namespace XTP::API;
 
@@ -35,7 +29,7 @@ static inline int QuoteSpi_OnSubTickByTick(PyObject *, XTPST *, XTPRI *, bool);
 static inline int QuoteSpi_OnUnSubTickByTick(PyObject *, XTPST *, XTPRI *, bool);
 static inline int QuoteSpi_OnTickByTick(PyObject *, XTPTBT *);
 
-static inline int QuoteSpi_OnSubscribeAllMarketData(PyObject *, XTP_EXCHANGE_TYPE,, XTPRI *);
+static inline int QuoteSpi_OnSubscribeAllMarketData(PyObject *, XTP_EXCHANGE_TYPE, XTPRI *);
 static inline int QuoteSpi_OnUnSubscribeAllMarketData(PyObject *, XTP_EXCHANGE_TYPE , XTPRI *);
 
 static inline int QuoteSpi_OnSubscribeAllOrderBook(PyObject *, XTP_EXCHANGE_TYPE, XTPRI *);
@@ -55,6 +49,15 @@ static inline int QuoteSpi_OnUnSubscribeAllOptionOrderBook(PyObject *, XTP_EXCHA
 
 static inline int QuoteSpi_OnSubscribeAllOptionTickByTick(PyObject *, XTP_EXCHANGE_TYPE, XTPRI *);
 static inline int QuoteSpi_OnUnSubscribeAllOptionTickByTick(PyObject *, XTP_EXCHANGE_TYPE, XTPRI *);
+
+
+#define Python_GIL(func) \
+	do { \
+		PyGILState_STATE gil_state = PyGILState_Ensure(); \
+		if ((func) == -1) PyErr_Print();  \
+		PyGILState_Release(gil_state); \
+	} while (false)
+
 
 class WrapperQuoteSpi: public QuoteSpi {
 
@@ -106,8 +109,8 @@ class WrapperQuoteSpi: public QuoteSpi {
         ///@remark 需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
         virtual void OnDepthMarketData(XTPMD *market_data, int64_t bid1_qty[], int32_t bid1_count, int32_t max_bid1_count,
         int64_t ask1_qty[], int32_t ask1_count, int32_t max_ask1_count) {
-             Python_GIL(QuoteSpi_OnDepthMarketData(self, market_data, bid1_qty[], bid1_count,
-                                                   max_bid1_count, ask1_qty[], ask1_count, max_ask1_count));
+             Python_GIL(QuoteSpi_OnDepthMarketData(self, market_data, bid1_qty, bid1_count,
+                                                   max_bid1_count, ask1_qty, ask1_count, max_ask1_count));
         };
 
         ///订阅行情订单簿应答，包括股票、指数和期权
@@ -131,7 +134,7 @@ class WrapperQuoteSpi: public QuoteSpi {
         ///行情订单簿通知，包括股票、指数和期权
         ///@param order_book 行情订单簿数据，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
         virtual void OnOrderBook(XTPOB *order_book) {
-             Python_GIL(QuoteSpi_QuoteSpi_OnOrderBook(self, order_book));
+             Python_GIL(QuoteSpi_OnOrderBook(self, order_book));
         };
 
         ///订阅逐笔行情应答，包括股票、指数和期权
@@ -273,7 +276,7 @@ class WrapperQuoteSpi: public QuoteSpi {
 
     private:
 	    PyObject *self;
-}
+};
 
 
 #endif /* CMDAPI_H */

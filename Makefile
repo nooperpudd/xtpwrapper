@@ -2,14 +2,14 @@ clean:
 	python3 setup.py clean --all
 	rm -rf build dist
 
-	find ./xtpwarpper/ -name "quote_api.so"  -delete
+	find ./xtpwrapper/ -name "quote_api.so"  -delete
 	find ./xtpwrapper/ -name "libxtpquoteapi.so" -delete
 	find ./xtpwrapper/ -name "libxtptraderapi.so" -delete
 	find ./xtpwrapper/ -name "libxtpquoteapi.dylib" -delete
 	find ./xtpwrapper/ -name "libxtptraderapi.dylib" -delete
 
 #	find ./xtpwarpper/ -name "Trader*.so"  -delete
-	find ./xtpwarpper/ -name "*.cpp" -delete
+	find ./xtpwrapper/ -name "*.cpp" -delete
 
 .PHONY: build-local
 build-local: clean
