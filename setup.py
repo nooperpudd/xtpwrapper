@@ -67,8 +67,7 @@ elif sys.platform == "darwin":
     lib_dir = os.path.join(xtp_dir, "macosx")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
-    # todo fix this bugs
-    extra_link_args = ['-Wl,-rpath,/Users/zux2/xtpwrapper/xtpwrapper']
+    extra_link_args = ['-Wl,-rpath,'+ project_dir]
 
 if sys.platform in ["linux", "win32", "darwin"]:
     copy_tree(lib_dir, project_dir)
