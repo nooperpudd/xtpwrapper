@@ -12,6 +12,7 @@ from Cython.Build import cythonize, build_ext
 from Cython.Distutils import Extension as Cython_Extension
 
 
+
 # issue put in the cython library bellow will cause
 # error: each element of 'ext_modules' option must be an Extension instance or 2-tuple
 
@@ -55,7 +56,7 @@ if sys.platform == "linux":
     lib_dir = os.path.join(xtp_dir, "linux")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
-    extra_link_args = ['-Wl,-rpath,$ORIGIN']
+    extra_link_args = ['-Wl,-rpath, $ORIGIN']
 
 elif sys.platform == "win32":
     lib_dir = os.path.join(xtp_dir, "win64")
@@ -64,18 +65,18 @@ elif sys.platform == "win32":
     package_data.append("*.dll")
 
 elif sys.platform == "darwin":
-    lib_dir = os.path.join(xtp_dir,"macosx")
+    lib_dir = os.path.join(xtp_dir, "macosx")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
-    extra_link_args = ['-Wl,-rpath,$ORIGIN']
+    extra_link_args = ['-Wl,-rpath, $ORIGIN']
 
-if sys.platform in ["linux", "win32","darwin"]:
+if sys.platform in ["linux", "win32", "darwin"]:
     copy_tree(lib_dir, project_dir)
 
 common_args = {
     "cython_include_dirs": [cython_headers],
     "include_dirs": [header_dir, cpp_header_dir],
-    "library_dirs": [lib_dir],
+    "library_dirs": [project_dir],
     "language": "c++",
     "extra_compile_args": extra_compile_args,
     "extra_link_args": extra_link_args,
@@ -92,7 +93,6 @@ ext_modules = [
     #                  **common_args)
 ]
 
-
 setup(
     name="xtppwrapper",
     version=find_version("xtpwrapper", "__init__.py"),
@@ -105,7 +105,7 @@ setup(
     author_email="365504029@qq.com",
     url="https://github.com/nooperpudd/xtpwrapper",
     include_dirs=[header_dir, cpp_header_dir],
-    platforms=["win32", "linux","darwin"],
+    platforms=["win32", "linux", "darwin"],
     packages=["xtpwrapper"],
     package_data={"": package_data},
     python_requires=">=3.5",
