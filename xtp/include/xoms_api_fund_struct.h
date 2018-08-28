@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////////////////////////////
 ///@author 中泰证券股份有限公司
 ///@file xoms_api_fund_struct.h
 ///@brief 定义资金划拨相关结构体类型
@@ -38,5 +38,6 @@ struct XTPFundTransferReq
 typedef struct XTPFundTransferNotice XTPFundTransferAck ;
 
 #pragma pack()
+
 
 #endif
