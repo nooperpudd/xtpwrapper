@@ -92,6 +92,10 @@ cdef extern from "xquote_api_struct.h":
         XTP_MARKETDATA_ACTUAL = 0  # 现货(股票/基金/债券等)
         XTP_MARKETDATA_OPTION = 1  # 期权
 
+    cdef union XTPMarketDataStruct_Union:
+        XTPMarketDataStockExData stk
+        XTPMarketDataOptionExData opt
+
     # 行情
     cdef struct XTPMarketDataStruct:
         # 代码
@@ -151,7 +155,7 @@ cdef extern from "xquote_api_struct.h":
         double ask[10]
         # 十档申买量
         long long bid_qty[10]
-        十档申卖量
+        # 十档申卖量
         long long ask_qty[10]
 
         # 额外数据
@@ -169,9 +173,7 @@ cdef extern from "xquote_api_struct.h":
 
     ctypedef XTPMarketDataStruct XTPMD
 
-    cdef union XTPMarketDataStruct_Union:
-        XTPMarketDataStockExData stk
-        XTPMarketDataOptionExData opt
+
 
     # 股票行情静态信息
     cdef  struct XTPQuoteStaticInfo:

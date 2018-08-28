@@ -49,12 +49,11 @@ cdef class QuoteWrapper:
 
     def GetApiLastError(self):
         cdef XTPRI *err
-        cdef PyObject data
         if self._spi is not NULL:
             with nogil:
                 err = self._api.GetApiLastError()
-                data = XTPRspInfoStruct.from_address(<size_t> err)
-            return data
+            return XTPRspInfoStruct.from_address(<size_t> err)
+
 
     def SetUDPBufferSize(self, unsigned int buff_size):
 
@@ -72,7 +71,7 @@ cdef class QuoteWrapper:
     def Register(self):
 
         if self._api is not NULL:
-            self._spi = new WrapperQuoteSpi(<self> self)
+            self._spi = new WrapperQuoteSpi(<PyObject *> self)
 
             if self._spi is not NULL:
                 self._api.RegisterSpi(self._spi)
