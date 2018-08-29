@@ -1,9 +1,10 @@
 # encoding:utf-8
 # distutils: language=c++
+from libc.stdint cimport int64_t, int32_t
 from .xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_TICKER_TYPE, XTP_TBT_TYPE
 
 
-cdef extern from "xquote_api_struct.h":
+cdef extern from "xquote_api_struct.h" nogil:
     # 指定的合约
     cdef struct XTPSpecificTickerStruct:
         # 交易所代码
@@ -16,9 +17,9 @@ cdef extern from "xquote_api_struct.h":
     # 股票、基金、债券等额外数据
     cdef struct XTPMarketDataStockExData:
         # 委托买入总量(SH,SZ)
-        long long total_bid_qty
+        int64_t total_bid_qty
         # 委托卖出总量(SH,SZ)
-        long long total_ask_qty
+        int64_t total_ask_qty
         # 加权平均委买价格(SH,SZ)
         double ma_bid_price
         # 加权平均委卖价格(SH,SZ)
@@ -32,9 +33,9 @@ cdef extern from "xquote_api_struct.h":
         # 基金实时参考净值(SH,SZ)
         double iopv
         # ETF申购笔数(SH)
-        int etf_buy_count
+        int32_t etf_buy_count
         # ETF赎回笔数(SH)
-        int etf_sell_count
+        int32_t etf_sell_count
         # ETF申购数量(SH)
         double etf_buy_qty
         # ETF申购金额(SH)
@@ -50,9 +51,9 @@ cdef extern from "xquote_api_struct.h":
         # 权证涨停价格（元）(SH)
         double warrant_upper_price
         # 买入撤单笔数(SH)
-        int cancel_buy_count
+        int32_t cancel_buy_count
         # 卖出撤单笔数(SH)
-        int cancel_sell_count
+        int32_t cancel_sell_count
         # 买入撤单数量(SH)
         double cancel_buy_qty
         # 卖出撤单数量(SH)
@@ -62,31 +63,32 @@ cdef extern from "xquote_api_struct.h":
         # 卖出撤单金额(SH)
         double cancel_sell_money
         # 买入总笔数(SH)
-        long long total_buy_count
+        int64_t total_buy_count
         # 卖出总笔数(SH)
-        long long total_sell_count
+        int64_t total_sell_count
+
         # 买入委托成交最大等待时间(SH)
-        long long duration_after_buy
+        int32_t duration_after_buy
         # 卖出委托成交最大等待时间(SH)
-        long long duration_after_sell
+        int32_t duration_after_sell
         # 买方委托价位数(SH)
-        long long num_bid_orders
+        int32_t num_bid_orders
         # 卖方委托价位数(SH)
-        long long num_ask_orders
+        int32_t num_ask_orders
         # 基金T-1日净值(SZ)
         double pre_iopv
         # 预留
-        long long r1
+        int64_t r1
         # 预留
-        long long r2
+        int64_t r2
     # 期权额外数据
     cdef struct XTPMarketDataOptionExData:
         # 波段性中断参考价(SH)
         double  auction_price
         # 波段性中断集合竞价虚拟匹配量(SH)
-        long long auction_qty
+        int64_t auction_qty
         # 最近询价时间(SH)
-        long long last_enquiry_time
+        int64_t last_enquiry_time
 
     cdef enum XTP_MARKETDATA_TYPE:
         XTP_MARKETDATA_ACTUAL = 0  # 现货(股票/基金/债券等)
@@ -119,9 +121,9 @@ cdef extern from "xquote_api_struct.h":
 
         # 期权数据
         # 昨日持仓量(张)(目前未填写)
-        long long pre_total_long_positon
+        int64_t pre_total_long_positon
         # 持仓量(张)
-        long long total_long_positon
+        int64_t total_long_positon
         # 昨日结算价
         double pre_settl_price
         # 今日结算价
@@ -138,11 +140,11 @@ cdef extern from "xquote_api_struct.h":
         double curr_delta
 
         # 时间类，格式为YYYYMMDDHHMMSSsss
-        long long data_time
+        int64_t data_time
 
         # 量额数据
         # 数量，为总成交量（单位股，与交易所一致）
-        long long qty
+        int64_t qty
         # 成交金额，为总成交金额（单位元，与交易所一致）
         double turnover
         # 当日均价=(turnover/qty)
@@ -154,13 +156,13 @@ cdef extern from "xquote_api_struct.h":
         # 十档申卖价
         double ask[10]
         # 十档申买量
-        long long bid_qty[10]
+        int64_t bid_qty[10]
         # 十档申卖量
-        long long ask_qty[10]
+        int64_t ask_qty[10]
 
         # 额外数据
         # 成交笔数
-        long long trades_count
+        int64_t trades_count
         # 当前交易状态说明
         char ticker_status[8]
 
@@ -169,11 +171,9 @@ cdef extern from "xquote_api_struct.h":
         # 决定了union是哪种数据类型
         XTP_MARKETDATA_TYPE data_type
         # 预留
-        int r4
+        int32_t r4
 
     ctypedef XTPMarketDataStruct XTPMD
-
-
 
     # 股票行情静态信息
     cdef  struct XTPQuoteStaticInfo:
@@ -194,9 +194,9 @@ cdef extern from "xquote_api_struct.h":
         # 最小变动价位
         double price_tick
         # 合约最小交易量(买)
-        int buy_qty_unit
+        int32_t buy_qty_unit
         # 合约最小交易量(卖)
-        int sell_qty_unit
+        int32_t sell_qty_unit
     ctypedef XTPQuoteStaticInfo XTPQSI
     # 定单薄
     cdef struct OrderBookStruct:
@@ -208,11 +208,11 @@ cdef extern from "xquote_api_struct.h":
         # 最新价
         double last_price
         # 数量，为总成交量
-        long long qty
+        int64_t qty
         # 成交金额，为总成交金额
         double turnover
         # 成交笔数
-        long long trades_count
+        int64_t trades_count
 
         # 买卖盘
         # 十档申买价
@@ -220,43 +220,43 @@ cdef extern from "xquote_api_struct.h":
         # 十档申卖价
         double ask[10]
         # 十档申买量
-        long long bid_qty[10]
+        int64_t bid_qty[10]
         # 十档申卖量
-        long long ask_qty[10]
+        int64_t ask_qty[10]
         #  时间类
-        long long data_time
+        int64_t data_time
 
     ctypedef OrderBookStruct XTPOB
 
     # 逐笔委托(仅适用深交所)
     cdef struct XTPTickByTickEntrust:
         #  频道代码
-        int channel_no
+        int32_t channel_no
         # 委托序号(在同一个channel_no内唯一，从1开始连续)
-        long long seq
+        int64_t seq
         # 委托价格
         double price
         # 委托数量
-        long long qty
+        int64_t qty
         # '1':买 '2':卖 'G':借入 'F':出借
         char side
         # 订单类别: '1': 市价 '2': 限价 'U': 本方最优
         char ord_type
     # 逐笔成交
     cdef struct XTPTickByTickTrade:
-        int channel_no
+        int32_t channel_no
         # 委托序号(在同一个channel_no内唯一，从1开始连续)
-        long long seq
+        int64_t seq
         # 成交价格
         double price
         # 成交量
-        long long qty
+        int64_t qty
         # 成交金额(仅适用上交所)
         double money
         # 买方订单号
-        long long bid_no
+        int64_t bid_no
         # 卖方订单号
-        long long ask_no
+        int64_t ask_no
         # SH: 内外盘标识('B':主动买 'S':主动卖 'N':未知)
         # SZ: 成交标识('4':撤 'F':成交)
         char trade_flag
@@ -272,9 +272,9 @@ cdef extern from "xquote_api_struct.h":
         # 合约代码（不包含交易所信息），不带空格，以'\0'结尾
         char ticker[16]
         # 预留
-        long long seq
+        int64_t seq
         #委托时间 or 成交时间
-        long long data_time
+        int64_t data_time
         #委托 or 成交
         XTP_TBT_TYPE type
         # union
