@@ -18,8 +18,7 @@ static inline int QuoteSpi_OnError(PyObject *, XTPRI *);
 
 static inline int QuoteSpi_OnSubMarketData(PyObject *, XTPST *, XTPRI *, bool);
 static inline int QuoteSpi_OnUnSubMarketData(PyObject *, XTPST *, XTPRI *, bool);
-static inline int QuoteSpi_OnDepthMarketData(PyObject *, XTPMD *, int64_t *, int32_t,
-                                             int32_t, int64_t *, int32_t, int32_t);
+static inline int QuoteSpi_OnDepthMarketData(PyObject *, XTPMD *, int64_t[],int32_t, int32_t, int64_t[], int32_t, int32_t);
 
 static inline int QuoteSpi_OnSubOrderBook(PyObject *, XTPST *, XTPRI *, bool);
 static inline int QuoteSpi_OnUnSubOrderBook(PyObject *, XTPST *, XTPRI *, bool);

@@ -346,6 +346,7 @@ cdef extern int QuoteSpi_OnUnSubMarketData(self, XTPST *ticker, XTPRI *error_inf
 cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
                                            long long bid1_qty[], int bid1_count, int max_bid1_count,
                                            long long ask1_qty[], int ask1_count, int max_ask1_count) except -1:
+
     market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
 
     cdef Py_ssize_t count_bid = sizeof(bid1_qty)

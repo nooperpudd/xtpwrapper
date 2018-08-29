@@ -67,7 +67,7 @@ elif sys.platform == "darwin":
     lib_dir = os.path.join(xtp_dir, "macosx")
     package_data.append("*.so")
     extra_compile_args = ["-Wall"]
-    extra_link_args = ['-Wl,-rpath,'+ project_dir]
+    extra_link_args = ['-Wl,-rpath,' + project_dir]
 
 if sys.platform in ["linux", "win32", "darwin"]:
     copy_tree(lib_dir, project_dir)
