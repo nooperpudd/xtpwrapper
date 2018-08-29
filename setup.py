@@ -96,10 +96,10 @@ setup(
     name="xtppwrapper",
     version=find_version("xtpwrapper", "__init__.py"),
     description="XTP client v1.1.18.13",
-    long_description=codecs.open("README.md", encoding="utf-8").read(),
-    long_description_content_type='text/markdown',
+    long_description=codecs.open("README.rst", encoding="utf-8").read(),
     license="LGPLv3",
     keywords="XTP,Stock",
+
     author="Winton Wang",
     author_email="365504029@qq.com",
     url="https://github.com/nooperpudd/xtpwrapper",
@@ -115,12 +115,14 @@ setup(
                                                "binding": True}
                           ),
     cmdclass={'build_ext': build_ext},
+    zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: POSIX",
+        "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft",
         "Operating System :: Microsoft :: Windows",
         "Programming Language :: Python",
