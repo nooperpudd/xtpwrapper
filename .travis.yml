@@ -3,10 +3,12 @@ language: python
 python:
   - "3.6.6"
   - "3.7"
-  - "pypy3"
+#  - "pypy3"
 
 compiler:
   - clang
+
+dist: xenial
 
 sudo: false
 
