@@ -2,20 +2,23 @@
 import ctypes
 from ._struct import Base
 
+
 class _CommonStruct(ctypes.Structure):
-    _fields_ =[
-        ("side",ctypes.c_uint8), # 买卖方向
-        ("position_effect",ctypes.c_uint8), # 开平标志
-        ("reserved1",ctypes.c_uint8), # 预留字段1
-        ("reserved2",ctypes.c_uint8) # 预留字段2
+    _fields_ = [
+        ("side", ctypes.c_uint8),  # 买卖方向
+        ("position_effect", ctypes.c_uint8),  # 开平标志
+        ("reserved1", ctypes.c_uint8),  # 预留字段1
+        ("reserved2", ctypes.c_uint8)  # 预留字段2
     ]
+
 
 class _CommonUion(ctypes.Union):
     _fields_ = [
-        ("u32",ctypes.c_uint32),
-        ("_struct",_CommonStruct),
+        ("u32", ctypes.c_uint32),
+        ("_struct", _CommonStruct),
     ]
     _anonymous_ = ('_struct',)
+
 
 class XTPOrderInsertInfo(Base):
     """
@@ -31,13 +34,9 @@ class XTPOrderInsertInfo(Base):
         ('quantity', ctypes.c_int64),  # 数量(股票单位为股，逆回购单位为张)
         ('price_type', ctypes.c_int),  # 报单价格
         ('business_type', ctypes.c_int),  # 业务类型
-        ('_u',_CommonUion)
+        ('_u', _CommonUion)
     ]
     _anonymous_ = ('_u',)
-
-
-
-
 
     # def __init__(self, order_xtp_id='', order_client_id='', ticker='', price=0.0, stop_price=0.0, quantity=''):
     #     super(XTPOrderInsertInfo, self).__init__()
@@ -90,7 +89,7 @@ class XTPOrderInfo(Base):
         ('order_submit_status', ctypes.c_int),  # 报单提交状态，OMS内部使用，用户无需关心
         ('order_type', ctypes.c_char),  # 报单类型
 
-        ("_u",_CommonUion) #
+        ("_u", _CommonUion)  #
     ]
     _anonymous_ = ('_u',)
 

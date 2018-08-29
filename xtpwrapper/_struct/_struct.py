@@ -42,6 +42,6 @@ class Base(ctypes.Structure):
 
 class XTPRspInfoStruct(Base):
     _fields_ = [
-        ("error_id",ctypes.c_int32),
-        ("error_msg",ctypes.c_char*124)
+        ("error_id", ctypes.c_int32),
+        ("error_msg", ctypes.c_char * 124)
     ]
