@@ -1,16 +1,16 @@
 language: python
 
-python:
-  - "3.6.6"
-  - "3.7"
-#  - "pypy3"
+matrix:
+  include:
+    # others still work and don't install python3.7
+    - python: 3.6
+      sudo: required
+    - python: 3.7
+      sudo: required
+      dist: xenial
 
 compiler:
   - clang
-
-dist: xenial
-
-sudo: false
 
 cache: pip
 
