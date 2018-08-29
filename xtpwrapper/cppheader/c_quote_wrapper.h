@@ -18,7 +18,7 @@ static inline int QuoteSpi_OnError(PyObject *, XTPRI *);
 
 static inline int QuoteSpi_OnSubMarketData(PyObject *, XTPST *, XTPRI *, bool);
 static inline int QuoteSpi_OnUnSubMarketData(PyObject *, XTPST *, XTPRI *, bool);
-static inline int QuoteSpi_OnDepthMarketData(PyObject *, XTPMD *, int64_t[],int32_t, int32_t, int64_t[], int32_t, int32_t);
+static inline int QuoteSpi_OnDepthMarketData(PyObject*, XTPMD*, long long *, int, int, long long *, int, int);
 
 static inline int QuoteSpi_OnSubOrderBook(PyObject *, XTPST *, XTPRI *, bool);
 static inline int QuoteSpi_OnUnSubOrderBook(PyObject *, XTPST *, XTPRI *, bool);
@@ -108,8 +108,9 @@ class WrapperQuoteSpi: public QuoteSpi {
         ///@remark 需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
         virtual void OnDepthMarketData(XTPMD *market_data, int64_t bid1_qty[], int32_t bid1_count, int32_t max_bid1_count,
         int64_t ask1_qty[], int32_t ask1_count, int32_t max_ask1_count) {
-             Python_GIL(QuoteSpi_OnDepthMarketData(self, market_data, bid1_qty, bid1_count,
-                                                   max_bid1_count, ask1_qty, ask1_count, max_ask1_count));
+             Python_GIL(QuoteSpi_OnDepthMarketData(self, market_data,
+                                                   bid1_qty, bid1_count, max_bid1_count,
+                                                   ask1_qty, ask1_count, max_ask1_count));
         };
 
         ///订阅行情订单簿应答，包括股票、指数和期权
