@@ -1,6 +1,7 @@
 # encoding:utf-8
 # distutils: language=c++
 from cpython cimport PyObject
+from libc.stdint cimport uint32_t, uint8_t
 from libc.string cimport const_char
 
 from .xtp_api_data_type cimport (
@@ -33,7 +34,7 @@ cdef extern from "xtp_quote_api.h" namespace "XTP::API":
 
         #设置采用UDP方式连接时的接收缓冲区大小
         #@remark 需要在Login之前调用，默认大小和最小设置均为64MB。此缓存大小单位为MB，请输入2的次方数，例如128MB请输入128。
-        void SetUDPBufferSize(unsigned int buff_size) nogil except +
+        void SetUDPBufferSize(uint32_t buff_size) nogil except +
 
         #注册回调接口
         #@param spi 派生自回调接口类的实例，请在登录之前设定
@@ -42,7 +43,7 @@ cdef extern from "xtp_quote_api.h" namespace "XTP::API":
         #设置心跳检测时间间隔，单位为秒
         #@param interval 心跳检测时间间隔，单位为秒
         #@remark 此函数必须在Login之前调用
-        void SetHeartBeatInterval(unsigned int interval) nogil except +
+        void SetHeartBeatInterval(uint32_t interval) nogil except +
 
         #订阅行情，包括股票、指数和期权。
         #@return 订阅接口调用是否成功，“0”表示接口调用成功，非“0”表示接口调用出错
@@ -203,7 +204,7 @@ cdef extern from "xtp_quote_api.h" namespace "XTP::API::QuoteApi":
     #@return 创建出的UserApi
     #@remark 如果一个账户需要在多个客户端登录，请使用不同的client_id，系统允许一个账户同时登录多个客户端，
     # 但是对于同一账户，相同的client_id只能保持一个session连接，后面的登录在前一个session存续期间，无法连接
-    QuoteApi *CreateQuoteApi(unsigned char client_id, const_char *save_file_path,
+    QuoteApi *CreateQuoteApi(uint8_t client_id, const_char *save_file_path,
                              XTP_LOG_LEVEL log_level) nogil except +
 
 

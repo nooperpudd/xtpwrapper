@@ -1,6 +1,8 @@
 # encoding:utf-8
 # distutils: language=c++
-cdef extern from "xtp_api_struct.h":
+from libc.stdint cimport uint8_t
+
+cdef extern from "xtp_api_struct.h" nogil:
     # XTP_LOG_LEVEL是日志输出级别类型
     cdef enum XTP_LOG_LEVEL:
         XTP_LOG_LEVEL_FATAL  # 严重错误级别
@@ -183,7 +185,7 @@ cdef extern from "xtp_api_struct.h":
     # XTP_ORDT_Swap '5'
 
     # XTP_SIDE_TYPE是买卖方向类型
-    ctypedef unsigned char XTP_SIDE_TYPE
+    ctypedef uint8_t XTP_SIDE_TYPE
 
     # 买（新股申购，ETF买，配股，信用交易中担保品买）
     # XTP_SIDE_BUY            1
@@ -217,7 +219,7 @@ cdef extern from "xtp_api_struct.h":
     # XTP_SIDE_UNKNOWN        27
 
     #  XTP_POSITION_EFFECT_TYPE是开平标识类型
-    ctypedef unsigned char XTP_POSITION_EFFECT_TYPE
+    ctypedef uint8_t XTP_POSITION_EFFECT_TYPE
 
     #  初始值或未知值开平标识，现货适用
     # XTP_POSITION_EFFECT_INIT                0

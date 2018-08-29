@@ -3,6 +3,7 @@
 
 from cpython cimport PyObject
 from libc.stdlib cimport malloc, free
+from libc.stdint cimport uint8_t,uint32_t,int64_t,int32_t
 from libc.string cimport const_char
 from libcpp cimport bool as cbool
 
@@ -57,7 +58,7 @@ cdef class QuoteWrapper:
                 err = self._api.GetApiLastError()
             return XTPRspInfoStruct.from_address(<size_t> err)
 
-    def CreateQuote(self, unsigned char client_id, const_char *save_file_path,
+    def CreateQuote(self, uint8_t client_id, const_char *save_file_path,
                     int log_level):
 
         self._api = CreateQuoteApi(client_id, save_file_path, <XTP_LOG_LEVEL> log_level)
@@ -83,13 +84,13 @@ cdef class QuoteWrapper:
     #         else:
     #             raise MemoryError()
 
-    def SetUDPBufferSize(self, unsigned int buff_size):
+    def SetUDPBufferSize(self, uint32_t buff_size):
 
         if self._api is not NULL:
             with nogil:
                 self._api.SetUDPBufferSize(buff_size)
 
-    def SetHeartBeatInterval(self, unsigned int interval):
+    def SetHeartBeatInterval(self, uint32_t interval):
 
         if self._api is not NULL:
             with nogil:
@@ -344,8 +345,8 @@ cdef extern int QuoteSpi_OnUnSubMarketData(self, XTPST *ticker, XTPRI *error_inf
     return 0
 
 cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
-                                           long long bid1_qty[], int bid1_count, int max_bid1_count,
-                                           long long ask1_qty[], int ask1_count, int max_ask1_count) except -1:
+                                           int64_t bid1_qty[], int32_t bid1_count, int32_t max_bid1_count,
+                                           int64_t ask1_qty[], int32_t ask1_count, int32_t max_ask1_count) except -1:
 
     market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
 
