@@ -9,10 +9,9 @@ matrix:
       sudo: required
       dist: xenial
 
-compiler:
-  - clang
-
-cache: pip
+#compiler:
+#  - clang
+#cache: pip
 
 install:
   - python -c "import struct; print(struct.calcsize('P') * 8)"
