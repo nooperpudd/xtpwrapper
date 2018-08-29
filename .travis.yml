@@ -2,16 +2,30 @@ language: python
 
 matrix:
   include:
-    # others still work and don't install python3.7
-    - python: 3.6
+
+    - os: linux
+      python: 3.6
       sudo: required
-    - python: 3.7
+
+    - os: linux
+      python: 3.7
       sudo: required
       dist: xenial
+
+    - os: osx
+      python: 3.6
+      language: generic
+
+    - os: osx
+      python: 3.7
+      language: generic
 
 #compiler:
 #  - clang
 #cache: pip
+
+#before_install:
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
 
 install:
   - python -c "import struct; print(struct.calcsize('P') * 8)"
