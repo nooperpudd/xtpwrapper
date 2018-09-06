@@ -324,8 +324,8 @@ class XTPTickByTickStruct(Base):
         ('exchange_id', ctypes.c_int),  # 交易所代码
         ('ticker', ctypes.c_char * 16),  # 合约代码（不包含交易所信息），不带空格，以'\0'结尾
         ('seq', ctypes.c_int64),  # 预留
-        ('data_time', ctypes.c_int64),  # 委托时间 or 成交时间
-        ('type', ctypes.c_int),  # 委托 or 成交
+        ('data_time', ctypes.c_int64),  # 委托时间or成交时间
+        ('type', ctypes.c_int),  # 委托or成交
         ("_u", _XTPTickByTickUnion)
     ]
     _anonymous_ = ("_u",)

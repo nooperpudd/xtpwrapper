@@ -74,16 +74,6 @@ cdef class QuoteWrapper:
         else:
             raise MemoryError()
 
-    # def Register(self):
-    #
-    #     if self._api is not NULL:
-    #         self._spi = new WrapperQuoteSpi(<PyObject *> self)
-    #
-    #         if self._spi is not NULL:
-    #             self._api.RegisterSpi(self._spi)
-    #         else:
-    #             raise MemoryError()
-
     def SetUDPBufferSize(self, uint32_t buff_size):
 
         if self._api is not NULL:

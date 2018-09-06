@@ -1,3 +1,4 @@
+# encoding:utf-8
 from enum import IntEnum, auto
 
 
@@ -192,7 +193,7 @@ class XTP_BUSINESS_TYPE(IntEnum):
     """
     XTP_BUSINESS_TYPE_CASH = 0  # 普通股票业务（股票买卖，ETF买卖等）
     XTP_BUSINESS_TYPE_IPOS = auto()  # 新股申购业务（对应的price type需选择限价类型）
-    XTP_BUSINESS_TYPE_REPO = auto()  # 回购业务 ( 对应的price type填为限价，side填为卖 )
+    XTP_BUSINESS_TYPE_REPO = auto()  # 回购业务(对应的price type填为限价，side填为卖)
     XTP_BUSINESS_TYPE_ETF = auto()  # ETF申赎业务
     XTP_BUSINESS_TYPE_MARGIN = auto()  # 融资融券业务（暂未支持）
     XTP_BUSINESS_TYPE_DESIGNATION = auto()  # 转托管（未支持）
@@ -220,8 +221,8 @@ class XTP_FUND_TRANSFER_TYPE(IntEnum):
     """
     XTP_FUND_TRANSFER_TYPE是资金流转方向类型
     """
-    XTP_FUND_TRANSFER_OUT = 0  # 转出 从XTP转出到柜台
-    XTP_FUND_TRANSFER_IN = auto()  # 转入 从柜台转入XTP
+    XTP_FUND_TRANSFER_OUT = 0  # 转出从XTP转出到柜台
+    XTP_FUND_TRANSFER_IN = auto()  # 转入从柜台转入XTP
     XTP_FUND_TRANSFER_UNKNOWN = auto()  # 未知类型
 
 
