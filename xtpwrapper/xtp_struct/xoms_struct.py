@@ -21,7 +21,7 @@ class _CommonUion(ctypes.Union):
     _anonymous_ = ('_struct',)
 
 
-class XTPOrderInsertInfo(Base):
+class XTPOrderInsertInfoStruct(Base):
     """
     新订单请求
     """
@@ -49,7 +49,7 @@ class XTPOrderInsertInfo(Base):
     #     self.quantity = int(quantity)
 
 
-class XTPOrderCancelInfo(Base):
+class XTPOrderCancelInfoStruct(Base):
     """
     撤单失败响应消息
     """
@@ -64,7 +64,7 @@ class XTPOrderCancelInfo(Base):
     #     self.order_xtp_id = int(order_xtp_id)
 
 
-class XTPOrderInfo(Base):
+class XTPOrderInfoStruct(Base):
     """
     报单响应结构体
     """
@@ -115,7 +115,7 @@ class XTPOrderInfo(Base):
     #     self.order_type = self._to_bytes(order_type)
 
 
-class XTPTradeReport(Base):
+class XTPTradeReportStruct(Base):
     """
     报单成交结构体
     """
@@ -159,7 +159,7 @@ class XTPTradeReport(Base):
     #     self.branch_pbu = self._to_bytes(branch_pbu)
 
 
-class XTPQueryOrderReq(Base):
+class XTPQueryOrderReqStruct(Base):
     """
     报单查询请求
     """
@@ -170,13 +170,13 @@ class XTPQueryOrderReq(Base):
     ]
 
     def __init__(self, ticker='', begin_time='', end_time=''):
-        super(XTPQueryOrderReq, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
         self.begin_time = int(begin_time)
         self.end_time = int(end_time)
 
 
-class XTPQueryReportByExecIdReq(Base):
+class XTPQueryReportByExecIdReqStruct(Base):
     """
     查询成交报告请求-根据执行编号查询（保留字段）
     """
@@ -186,12 +186,12 @@ class XTPQueryReportByExecIdReq(Base):
     ]
 
     def __init__(self, order_xtp_id='', exec_id=''):
-        super(XTPQueryReportByExecIdReq, self).__init__()
+        super().__init__()
         self.order_xtp_id = int(order_xtp_id)
         self.exec_id = self._to_bytes(exec_id)
 
 
-class XTPQueryTraderReq(Base):
+class XTPQueryTraderReqStruct(Base):
     """
     查询成交回报请求-查询条件
     """
@@ -202,13 +202,13 @@ class XTPQueryTraderReq(Base):
     ]
 
     def __init__(self, ticker='', begin_time='', end_time=''):
-        super(XTPQueryTraderReq, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
         self.begin_time = int(begin_time)
         self.end_time = int(end_time)
 
 
-class XTPQueryAssetRsp(Base):
+class XTPQueryAssetRspStruct(Base):
     """
     账户资金查询响应结构体
     """
@@ -241,7 +241,7 @@ class XTPQueryAssetRsp(Base):
                  frozen_exec_cash=0.0, frozen_exec_fee=0.0, pay_later=0.0, preadva_pay=0.0, orig_banlance=0.0,
                  banlance=0.0, deposit_withdraw=0.0, trade_netting=0.0, captial_asset=0.0, force_freeze_amount=0.0,
                  preferred_amount=0.0):
-        super(XTPQueryAssetRsp, self).__init__()
+        super().__init__()
         self.total_asset = float(total_asset)
         self.buying_power = float(buying_power)
         self.security_asset = float(security_asset)
@@ -264,7 +264,7 @@ class XTPQueryAssetRsp(Base):
         self.preferred_amount = float(preferred_amount)
 
 
-class XTPQueryStkPositionRsp(Base):
+class XTPQueryStkPositionRspStruct(Base):
     """
     查询股票持仓情况
     """
@@ -290,7 +290,7 @@ class XTPQueryStkPositionRsp(Base):
     def __init__(self, ticker='', ticker_name='', total_qty='', sellable_qty='', avg_price=0.0, unrealized_pnl=0.0,
                  yesterday_position='', purchase_redeemable_qty='', reserved1='', executable_option='',
                  lockable_position='', executable_underlying='', locked_position='', usable_locked_position=''):
-        super(XTPQueryStkPositionRsp, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
         self.ticker_name = self._to_bytes(ticker_name)
         self.total_qty = int(total_qty)
@@ -307,7 +307,7 @@ class XTPQueryStkPositionRsp(Base):
         self.usable_locked_position = int(usable_locked_position)
 
 
-class XTPFundTransferNotice(Base):
+class XTPFundTransferNoticeStruct(Base):
     """
     资金内转流水通知
     """
@@ -320,13 +320,13 @@ class XTPFundTransferNotice(Base):
     ]
 
     def __init__(self, serial_id='', amount=0.0, transfer_time=''):
-        super(XTPFundTransferNotice, self).__init__()
+        super().__init__()
         self.serial_id = int(serial_id)
         self.amount = float(amount)
         self.transfer_time = int(transfer_time)
 
 
-class XTPQueryFundTransferLogReq(Base):
+class XTPQueryFundTransferLogReqStruct(Base):
     """
     资金内转流水查询请求与响应
     """
@@ -335,11 +335,11 @@ class XTPQueryFundTransferLogReq(Base):
     ]
 
     def __init__(self, serial_id=''):
-        super(XTPQueryFundTransferLogReq, self).__init__()
+        super().__init__()
         self.serial_id = int(serial_id)
 
 
-class XTPQueryStructuredFundInfoReq(Base):
+class XTPQueryStructuredFundInfoReqStruct(Base):
     """
     查询分级基金信息结构体
     """
@@ -349,11 +349,11 @@ class XTPQueryStructuredFundInfoReq(Base):
     ]
 
     def __init__(self, sf_ticker=''):
-        super(XTPQueryStructuredFundInfoReq, self).__init__()
+        super().__init__()
         self.sf_ticker = self._to_bytes(sf_ticker)
 
 
-class XTPStructuredFundInfo(Base):
+class XTPStructuredFundInfoStruct(Base):
     """
     查询分级基金信息响应结构体
     """
@@ -372,7 +372,7 @@ class XTPStructuredFundInfo(Base):
 
     def __init__(self, sf_ticker='', sf_ticker_name='', ticker='', ticker_name='', ratio='', min_split_qty='',
                  min_merge_qty='', net_price=0.0):
-        super(XTPStructuredFundInfo, self).__init__()
+        super().__init__()
         self.sf_ticker = self._to_bytes(sf_ticker)
         self.sf_ticker_name = self._to_bytes(sf_ticker_name)
         self.ticker = self._to_bytes(ticker)
@@ -383,7 +383,7 @@ class XTPStructuredFundInfo(Base):
         self.net_price = float(net_price)
 
 
-class XTPQueryETFBaseReq(Base):
+class XTPQueryETFBaseReqStruct(Base):
     """
     查询股票ETF合约基本情况--请求结构体,
     请求参数为多条件参数:1,不填则返回所有市场的ETF合约信息。
@@ -396,11 +396,11 @@ class XTPQueryETFBaseReq(Base):
     ]
 
     def __init__(self, ticker=''):
-        super(XTPQueryETFBaseReq, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
 
 
-class XTPQueryETFBaseRsp(Base):
+class XTPQueryETFBaseRspStruct(Base):
     """
     查询股票ETF合约基本情况--响应结构体
     """
@@ -420,7 +420,7 @@ class XTPQueryETFBaseRsp(Base):
 
     def __init__(self, etf='', subscribe_redemption_ticker='', unit='', subscribe_status='', redemption_status='',
                  max_cash_ratio=0.0, estimate_amount=0.0, cash_component=0.0, net_value=0.0, total_amount=0.0):
-        super(XTPQueryETFBaseRsp, self).__init__()
+        super().__init__()
         self.etf = self._to_bytes(etf)
         self.subscribe_redemption_ticker = self._to_bytes(subscribe_redemption_ticker)
         self.unit = int(unit)
@@ -433,7 +433,7 @@ class XTPQueryETFBaseRsp(Base):
         self.total_amount = float(total_amount)
 
 
-class XTPQueryETFComponentReq(Base):
+class XTPQueryETFComponentReqStruct(Base):
     """
     查询股票ETF合约成分股信息--请求结构体,请求参数为:交易市场+ETF买卖代码
     """
@@ -443,11 +443,11 @@ class XTPQueryETFComponentReq(Base):
     ]
 
     def __init__(self, ticker=''):
-        super(XTPQueryETFComponentReq, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
 
 
-class XTPQueryETFComponentRsp(Base):
+class XTPQueryETFComponentRspStruct(Base):
     """
     查询股票ETF合约成分股信息--响应结构体
     """
@@ -464,7 +464,7 @@ class XTPQueryETFComponentRsp(Base):
     ]
 
     def __init__(self, ticker='', component_ticker='', component_name='', quantity='', premium_ratio=0.0, amount=0.0):
-        super(XTPQueryETFComponentRsp, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
         self.component_ticker = self._to_bytes(component_ticker)
         self.component_name = self._to_bytes(component_name)
@@ -473,7 +473,7 @@ class XTPQueryETFComponentRsp(Base):
         self.amount = float(amount)
 
 
-class XTPQueryIPOTickerRsp(Base):
+class XTPQueryIPOTickerRspStruct(Base):
     """
     查询当日可申购新股信息
     """
@@ -487,7 +487,7 @@ class XTPQueryIPOTickerRsp(Base):
     ]
 
     def __init__(self, ticker='', ticker_name='', price=0.0, unit='', qty_upper_limit=''):
-        super(XTPQueryIPOTickerRsp, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
         self.ticker_name = self._to_bytes(ticker_name)
         self.price = float(price)
@@ -495,7 +495,7 @@ class XTPQueryIPOTickerRsp(Base):
         self.qty_upper_limit = int(qty_upper_limit)
 
 
-class XTPQueryIPOQuotaRsp(Base):
+class XTPQueryIPOQuotaRspStruct(Base):
     """
     查询用户申购额度
     """
@@ -505,11 +505,11 @@ class XTPQueryIPOQuotaRsp(Base):
     ]
 
     def __init__(self, quantity=''):
-        super(XTPQueryIPOQuotaRsp, self).__init__()
+        super().__init__()
         self.quantity = int(quantity)
 
 
-class XTPQueryOptionAuctionInfoReq(Base):
+class XTPQueryOptionAuctionInfoReqStruct(Base):
     """
     查询期权竞价交易业务参考信息--请求结构体,请求参数为:交易市场+8位期权代码
     """
@@ -519,11 +519,11 @@ class XTPQueryOptionAuctionInfoReq(Base):
     ]
 
     def __init__(self, ticker=''):
-        super(XTPQueryOptionAuctionInfoReq, self).__init__()
+        super().__init__()
         self.ticker = self._to_bytes(ticker)
 
 
-class XTPQueryOptionAuctionInfoRsp(Base):
+class XTPQueryOptionAuctionInfoRspStruct(Base):
     """
     查询期权竞价交易业务参考信息
     """

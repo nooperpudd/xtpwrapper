@@ -4,7 +4,7 @@ import ctypes
 from . import Base
 
 
-class XTPFundTransferReq(Base):
+class XTPFundTransferReqStruct(Base):
     """
     用户资金请求
     """

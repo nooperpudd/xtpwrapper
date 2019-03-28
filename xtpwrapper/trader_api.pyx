@@ -11,20 +11,20 @@ from .headers.xoms_api_struct cimport (
     XTPQueryOptionAuctionInfoReq, XTPQueryETFComponentReq,
     XTPQueryETFBaseReq,XTPQueryTraderReq,
     XTPQueryStructuredFundInfoReq, XTPQueryFundTransferLogReq,
-XTPOrderInfo,
-XTPTradeReport,
-XTPOrderCancelInfo,
-XTPQueryStkPositionRsp,
-XTPQueryAssetRsp,
-XTPStructuredFundInfo,
-XTPFundTransferNotice,
-XTPQueryETFBaseRsp,
-XTPQueryETFComponentRsp,
-XTPQueryIPOTickerRsp,
-XTPQueryIPOQuotaRsp,
-XTPQueryOptionAuctionInfoRsp,
-XTPQueryOrderRsp,
-XTPQueryTradeRsp
+    XTPOrderInfo,
+    XTPTradeReport,
+    XTPOrderCancelInfo,
+    XTPQueryStkPositionRsp,
+    XTPQueryAssetRsp,
+    XTPStructuredFundInfo,
+    XTPFundTransferNotice,
+    XTPQueryETFBaseRsp,
+    XTPQueryETFComponentRsp,
+    XTPQueryIPOTickerRsp,
+    XTPQueryIPOQuotaRsp,
+    XTPQueryOptionAuctionInfoRsp,
+    XTPQueryOrderRsp,
+    XTPQueryTradeRsp
 
 )
 
@@ -34,7 +34,7 @@ from .headers.xtp_trader_api cimport TraderApi, CreateTraderApi, WrapperTraderSp
 
 import ctypes
 from xtpwrapper.xtp_struct import XTPRspInfoStruct
-
+from xtpwrapper.xtp_struct.xoms_struct import XTPOrderInfoStruct
 cdef class TraderWrapper:
     cdef TraderApi *_api
     cdef WrapperTraderSpi *_spi
@@ -542,36 +542,104 @@ cdef class TraderWrapper:
 
 
 cdef extern int TraderSpi_OnDisconnected(self, uint64_t session_id, int reason) except -1:
-    pass
+    self.OnDisconnected(session_id,reason)
+
 cdef extern int TraderSpi_OnError(self, XTPRI *error_info) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnError(error_info_obj)
+
 cdef extern int TraderSpi_OnOrderEvent(self, XTPOrderInfo *order_info, XTPRI *error_info, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    if order_info is NULL:
+        order_info_obj = None
+    else:
+        order_info_obj =
+    self.OnOrderEvent(error_info_obj,session_id)
 cdef extern int TraderSpi_OnTradeEvent(self, XTPTradeReport *trade_info, uint64_t session_id) except -1:
-    pass
+    self.OnTradeEvent(session_id)
 cdef extern int TraderSpi_OnCancelOrderError(self, XTPOrderCancelInfo *cancel_info, XTPRI *error_info, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnCancelOrderError(error_info_obj,session_id)
 cdef extern int TraderSpi_OnQueryOrder(self, XTPQueryOrderRsp *order_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryOrder(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryTrade(self, XTPQueryTradeRsp *trade_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryTrade(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryPosition(self, XTPQueryStkPositionRsp *position, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryPosition(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryAsset(self, XTPQueryAssetRsp *asset, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryAsset(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryStructuredFund(self, XTPStructuredFundInfo *fund_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryStructuredFund(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryFundTransfer(self, XTPFundTransferNotice *fund_transfer_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryFundTransfer(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnFundTransfer(self, XTPFundTransferNotice *fund_transfer_info, XTPRI *error_info, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnFundTransfer(error_info_obj,session_id)
 cdef extern int TraderSpi_OnQueryETF(self, XTPQueryETFBaseRsp *etf_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryETF(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryETFBasket(self, XTPQueryETFComponentRsp *etf_component_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryETFBasket(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryIPOInfoList(self, XTPQueryIPOTickerRsp *ipo_info,XTPRI *error_info,int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryIPOInfoList(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryIPOQuotaInfo(self, XTPQueryIPOQuotaRsp *quota_info, XTPRI *error_info,int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryIPOQuotaInfo(error_info_obj,request_id,is_last,session_id)
 cdef extern int TraderSpi_OnQueryOptionAuctionInfo(self, XTPQueryOptionAuctionInfoRsp *option_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
-    pass
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnQueryOptionAuctionInfo(error_info_obj,request_id,is_last,session_id)
