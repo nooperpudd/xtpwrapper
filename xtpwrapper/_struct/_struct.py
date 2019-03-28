@@ -27,10 +27,10 @@ class Base(ctypes.Structure):
         results = {}
         for key, _ in self._fields_:
             _value = getattr(self, key)
-            # if isinstance(_value, bytes):
-            #     results[key] = _value.decode("gbk")
-            # else:
-            results[key] = _value
+            if isinstance(_value, bytes):
+                results[key] = _value.decode("utf-8")
+            else:
+                results[key] = _value
         return results
 
     def __repr__(self):

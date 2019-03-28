@@ -15,12 +15,3 @@ class XTPFundTransferReq(Base):
         ("amount", ctypes.c_double),  # 金额
         ("transfer_type", ctypes.c_int)  # 内转类型
     ]
-
-    # def __init__(self,serial_id=0,fund_account="",password="",amount=0.0,transfer_type=0):
-    #     super(XTPFundTransferReq,self).__init__()
-    #     self.serial_id = serial_id
-    #     self.fund_account = fund_account
-    # def __init__(self, SequenceSeries=0, SequenceNo=0):
-    #     super(DisseminationField, self).__init__()
-    #     self.SequenceSeries = int(SequenceSeries)
-    #     self.SequenceNo = int(SequenceNo)

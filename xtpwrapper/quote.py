@@ -71,7 +71,7 @@ class QuoteAPI(QuoteWrapper):
         """
         super().SetHeartBeatInterval(interval)
 
-    def SubscribeMarketData(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
+    def SubscribeMarketData(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅行情，包括股票、指数和期权。
         可以一次性订阅同一证券交易所的多个合约，无论用户因为何种问题需要重新登录行情服务器，都需要重新订阅行情
@@ -96,7 +96,7 @@ class QuoteAPI(QuoteWrapper):
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
         return super().UnSubscribeMarketData(ticks, exchange_id)
 
-    def SubscribeOrderBook(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
+    def SubscribeOrderBook(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅行情订单簿，包括股票、指数和期权。
 
@@ -109,7 +109,7 @@ class QuoteAPI(QuoteWrapper):
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
         return super().SubscribeOrderBook(ticks, exchange_id)
 
-    def UnSubscribeOrderBook(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
+    def UnSubscribeOrderBook(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订行情订单簿，包括股票、指数和期权。
 
@@ -122,7 +122,7 @@ class QuoteAPI(QuoteWrapper):
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
         return super().UnSubscribeOrderBook(ticks, exchange_id)
 
-    def SubscribeTickByTick(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
+    def SubscribeTickByTick(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅逐笔行情，包括股票、指数和期权。
 
@@ -135,7 +135,7 @@ class QuoteAPI(QuoteWrapper):
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
         return super().SubscribeTickByTick(ticks, exchange_id)
 
-    def UnSubscribeTickByTick(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
+    def UnSubscribeTickByTick(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订逐笔行情，包括股票、指数和期权。
         @remark 可以一次性取消订阅同一证券交易所的多个合约，需要与订阅逐笔行情接口配套使用
