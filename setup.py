@@ -86,10 +86,10 @@ ext_modules = [
                      sources=["xtpwrapper/quote_api.pyx"],
                      libraries=["xtpquoteapi"],
                      **common_args),
-    # Cython_Extension(name="ctpwrapper.TraderApi",
-    #                  sources=["ctpwrapper/TraderApi.pyx"],
-    #                  libraries=["thosttraderapi"],
-    #                  **common_args)
+    Cython_Extension(name="xtpwrapper.trader_api",
+                     sources=["xtpwrapper/trader_api.pyx"],
+                     libraries=["xtptraderapi"],
+                     **common_args)
 ]
 
 setup(

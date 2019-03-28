@@ -1,5 +1,6 @@
 # encoding:utf-8
 # distutils: language=c++
+
 from libc.stdint cimport int32_t
 cdef extern from "xtp_api_struct_common.h" nogil:
     # 错误信息的字符串长度
