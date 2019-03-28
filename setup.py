@@ -5,11 +5,11 @@ import platform
 import re
 import sys
 from distutils.dir_util import copy_tree
-
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from Cython.Build import cythonize, build_ext
 from Cython.Distutils import Extension as Cython_Extension
+
 
 
 # issue put in the cython library bellow will cause
@@ -65,7 +65,7 @@ elif sys.platform == "win32":
 
 elif sys.platform == "darwin":
     lib_dir = os.path.join(xtp_dir, "macosx")
-    package_data.append("*.so")
+    package_data.extend(["*.so", "*.dylib"])
     extra_compile_args = ["-Wall"]
     extra_link_args = ['-Wl,-rpath,' + project_dir]
 
@@ -104,7 +104,7 @@ setup(
     url="https://github.com/nooperpudd/xtpwrapper",
     include_dirs=[header_dir, cpp_header_dir],
     platforms=["win32", "linux", "darwin"],
-    packages=["xtpwrapper"],
+    packages=find_packages(exclude=["tests"]),
     package_data={"": package_data},
     python_requires=">=3.5",
     # cython: binding=True

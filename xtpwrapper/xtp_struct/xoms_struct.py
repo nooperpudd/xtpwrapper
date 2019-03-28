@@ -1,6 +1,7 @@
 # encoding=utf-8
 import ctypes
-from ._struct import Base
+
+from . import Base
 
 
 class _CommonStruct(ctypes.Structure):

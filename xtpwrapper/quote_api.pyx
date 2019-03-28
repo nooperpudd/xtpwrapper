@@ -6,13 +6,19 @@ from libc.stdint cimport uint8_t, uint32_t, int64_t, int32_t
 from libc.stdlib cimport malloc, free
 from libc.string cimport const_char
 from libcpp cimport bool as cbool
-
-from xtpwrapper._struct import XTPRspInfoStruct
-from xtpwrapper._struct import xquote_struct
 from .headers.xquote_api_struct cimport XTPQSI, XTPOB, XTPST, XTPMD, XTPTBT, XTPTPI
 from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_PROTOCOL_TYPE, XTP_LOG_LEVEL
 from .headers.xtp_api_struct_common cimport XTPRI
 from .headers.xtp_quote_api cimport QuoteApi, WrapperQuoteSpi, CreateQuoteApi
+
+from xtpwrapper.xtp_struct import XTPRspInfoStruct
+from xtpwrapper.xtp_struct.xquote_struct import (
+    XTPSpecificTickerStruct,
+    OrderBookStruct,
+    XTPQuoteStaticInfo,
+    XTPMarketDataStruct,
+    XTPTickByTickStruct
+)
 
 cdef class QuoteWrapper:
     cdef QuoteApi *_api
@@ -326,7 +332,7 @@ cdef extern int QuoteSpi_OnError(self, XTPRI *error_info) except -1:
 cdef extern int QuoteSpi_OnSubMarketData(self, XTPST *ticker, XTPRI *error_info, cbool is_last) except -1:
     if ticker is NULL:
 
-        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+        ticker_obj = XTPSpecificTickerStruct.from_address(<size_t> ticker)
     else:
         ticker_obj = None
     if error_info is NULL:
@@ -341,7 +347,7 @@ cdef extern int QuoteSpi_OnUnSubMarketData(self, XTPST *ticker, XTPRI *error_inf
     if ticker is NULL:
         ticker_obj = None
     else:
-        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+        ticker_obj = XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
     if error_info is NULL:
         err_info_obj = None
@@ -357,7 +363,7 @@ cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
     if market_data is NULL:
         market_data_obj = None
     else:
-        market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
+        market_data_obj = XTPMarketDataStruct.from_address(<size_t> market_data)
 
     cdef Py_ssize_t count_bid = sizeof(bid1_qty)
     cdef Py_ssize_t count_ask = sizeof(ask1_qty)
@@ -382,7 +388,7 @@ cdef extern int QuoteSpi_OnSubOrderBook(self, XTPST *ticker, XTPRI *error_info,
         ticker_obj = None
     else:
 
-        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+        ticker_obj = XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
     if error_info is NULL:
         error_info_obj = None
@@ -397,7 +403,7 @@ cdef extern int QuoteSpi_OnUnSubOrderBook(self, XTPST *ticker, XTPRI *error_info
     if ticker is NULL:
         ticker_obj = None
     else:
-        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+        ticker_obj = XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
     if error_info is NULL:
         error_info_obj = None
@@ -411,7 +417,7 @@ cdef extern int QuoteSpi_OnOrderBook(self, XTPOB *order_book) except -1:
     if order_book is NULL:
         order_book_obj = None
     else:
-        order_book_obj = xquote_struct.OrderBookStruct.from_address(<size_t> order_book)
+        order_book_obj = OrderBookStruct.from_address(<size_t> order_book)
 
     self.OnOrderBook(order_book_obj)
     return 0
@@ -420,7 +426,7 @@ cdef extern int QuoteSpi_OnSubTickByTick(self, XTPST *ticker, XTPRI *error_info,
     if ticker is NULL:
         ticker_obj = None
     else:
-        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+        ticker_obj = XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
     if error_info is NULL:
         error_info_obj = None
@@ -434,7 +440,7 @@ cdef extern int QuoteSpi_OnUnSubTickByTick(self, XTPST *ticker, XTPRI *error_inf
     if ticker is NULL:
         ticker_obj = None
     else:
-        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+        ticker_obj = XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
     if error_info is NULL:
         error_info_obj = None
@@ -449,7 +455,7 @@ cdef extern int QuoteSpi_OnTickByTick(self, XTPTBT *tbt_data) except -1:
         tbt_data_obj = None
     else:
 
-        tbt_data_obj = xquote_struct.XTPTickByTickStruct.from_address(<size_t> tbt_data)
+        tbt_data_obj = XTPTickByTickStruct.from_address(<size_t> tbt_data)
     self.OnTickByTick(tbt_data_obj)
     return 0
 
@@ -507,7 +513,7 @@ cdef extern int QuoteSpi_OnQueryAllTickers(self, XTPQSI *ticker_info,
     if ticker_info is NULL:
         ticker_info_obj = None
     else:
-        ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
+        ticker_info_obj = XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
     if error_info is NULL:
         error_info_obj = None
     else:
@@ -519,7 +525,7 @@ cdef extern int QuoteSpi_OnQueryTickersPriceInfo(self, XTPTPI *ticker_info, XTPR
     if ticker_info is NULL:
         ticker_info_obj = None
     else:
-        ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
+        ticker_info_obj = XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
     if error_info is NULL:
         error_info_obj = None
     else:
