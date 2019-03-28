@@ -1,7 +1,7 @@
 # encoding:utf-8
 from xtpwrapper.quote_api import QuoteWrapper
-from ._enum import XTP_EXCHANGE_TYPE
-from ._enum import XTP_LOG_LEVEL
+from .xtp_enum import XTP_EXCHANGE_TYPE
+from .xtp_enum import XTP_LOG_LEVEL
 
 
 class QuoteAPI(QuoteWrapper):
