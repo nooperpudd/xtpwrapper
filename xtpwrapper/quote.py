@@ -1,10 +1,12 @@
 # encoding:utf-8
 from xtpwrapper.quote_api import QuoteWrapper
+from ._enum import XTP_EXCHANGE_TYPE
+from ._enum import XTP_LOG_LEVEL
 
 
-class Quote(QuoteWrapper):
+class QuoteAPI(QuoteWrapper):
 
-    def CreateQuote(self, client_id, save_file_path, log_level: int):
+    def CreateQuote(self, client_id, save_file_path, log_level: XTP_LOG_LEVEL):
         """
         创建QuoteApi
         如果一个账户需要在多个客户端登录，请使用不同的client_id，系统允许一个账户同时登录多个客户端，但是对于同一账户，
@@ -15,7 +17,7 @@ class Quote(QuoteWrapper):
         :param log_level: 日志输出级别
         :return:
         """
-        super(Quote, self).CreateQuote(client_id, save_file_path.encode(), log_level)
+        super().CreateQuote(client_id, save_file_path.encode(), log_level)
 
     def Release(self):
         """
@@ -23,7 +25,7 @@ class Quote(QuoteWrapper):
         不再使用本接口对象时,调用该函数删除接口对象
         :return: None
         """
-        super(Quote, self).Release()
+        super().Release()
 
     def GetTradingDay(self):
         """
@@ -31,7 +33,7 @@ class Quote(QuoteWrapper):
         只有登录成功后,才能得到正确的交易日
         :return: 获取到的交易日
         """
-        day = super(Quote, self).GetTradingDay()
+        day = super().GetTradingDay()
         return day.decode()
 
     def GetApiVersion(self):
@@ -39,7 +41,7 @@ class Quote(QuoteWrapper):
         获取API的发行版本号
         :return: 返回api发行版本号
         """
-        version = super(Quote, self).GetApiVersion()
+        version = super().GetApiVersion()
         return version.decode()
 
     def GetApiLastError(self):
@@ -49,7 +51,7 @@ class Quote(QuoteWrapper):
 
         :return: 返回的错误信息，可以在Login、Logout、订阅、取消订阅失败时调用，获取失败的原因
         """
-        return super(Quote, self).GetApiLastError()
+        return super().GetApiLastError()
 
     def SetUDPBufferSize(self, buff_size):
         """
@@ -58,7 +60,7 @@ class Quote(QuoteWrapper):
         :param buff_size: int
         :return: None
         """
-        super(Quote, self).SetUDPBufferSize(buff_size)
+        super().SetUDPBufferSize(buff_size)
 
     def SetHeartBeatInterval(self, interval):
         """
@@ -67,9 +69,9 @@ class Quote(QuoteWrapper):
         :param interval: 心跳检测时间间隔，单位为秒
         :return:
         """
-        super(Quote, self).SetHeartBeatInterval(interval)
+        super().SetHeartBeatInterval(interval)
 
-    def SubscribeMarketData(self, ticks, exchange_id):
+    def SubscribeMarketData(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅行情，包括股票、指数和期权。
         可以一次性订阅同一证券交易所的多个合约，无论用户因为何种问题需要重新登录行情服务器，都需要重新订阅行情
@@ -79,9 +81,9 @@ class Quote(QuoteWrapper):
         :return: int 订阅接口调用是否成功，“0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super(Quote, self).SubscribeAllMarketData(ticks, exchange_id)
+        return super().SubscribeAllMarketData(ticks, exchange_id)
 
-    def UnSubscribeMarketData(self, ticks, exchange_id):
+    def UnSubscribeMarketData(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订行情，包括股票、指数和期权。
 
@@ -92,9 +94,9 @@ class Quote(QuoteWrapper):
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super(Quote, self).UnSubscribeMarketData(ticks, exchange_id)
+        return super().UnSubscribeMarketData(ticks, exchange_id)
 
-    def SubscribeOrderBook(self, ticks, exchange_id):
+    def SubscribeOrderBook(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅行情订单簿，包括股票、指数和期权。
 
@@ -105,9 +107,9 @@ class Quote(QuoteWrapper):
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super(Quote, self).SubscribeOrderBook(ticks, exchange_id)
+        return super().SubscribeOrderBook(ticks, exchange_id)
 
-    def UnSubscribeOrderBook(self, ticks, exchange_id):
+    def UnSubscribeOrderBook(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订行情订单簿，包括股票、指数和期权。
 
@@ -118,9 +120,9 @@ class Quote(QuoteWrapper):
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super(Quote, self).UnSubscribeOrderBook(ticks, exchange_id)
+        return super().UnSubscribeOrderBook(ticks, exchange_id)
 
-    def SubscribeTickByTick(self, ticks, exchange_id):
+    def SubscribeTickByTick(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅逐笔行情，包括股票、指数和期权。
 
@@ -131,9 +133,9 @@ class Quote(QuoteWrapper):
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super(Quote, self).SubscribeTickByTick(ticks, exchange_id)
+        return super().SubscribeTickByTick(ticks, exchange_id)
 
-    def UnSubscribeTickByTick(self, ticks, exchange_id):
+    def UnSubscribeTickByTick(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订逐笔行情，包括股票、指数和期权。
         @remark 可以一次性取消订阅同一证券交易所的多个合约，需要与订阅逐笔行情接口配套使用
@@ -143,9 +145,9 @@ class Quote(QuoteWrapper):
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super(Quote, self).UnSubscribeTickByTick(ticks, exchange_id)
+        return super().UnSubscribeTickByTick(ticks, exchange_id)
 
-    def SubscribeAllMarketData(self, exchange_id):
+    def SubscribeAllMarketData(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅全市场的股票行情
         @remark 需要与全市场退订行情接口配套使用
@@ -153,9 +155,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).SubscribeAllMarketData(exchange_id)
+        return super().SubscribeAllMarketData(exchange_id)
 
-    def UnSubscribeAllMarketData(self, exchange_id):
+    def UnSubscribeAllMarketData(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订全市场的股票行情
         @remark 需要与订阅全市场行情接口配套使用
@@ -163,9 +165,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).UnSubscribeAllMarketData(exchange_id)
+        return super().UnSubscribeAllMarketData(exchange_id)
 
-    def SubscribeAllOrderBook(self, exchange_id):
+    def SubscribeAllOrderBook(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅全市场的股票行情订单簿
         @remark 需要与全市场退订行情订单簿接口配套使用
@@ -173,9 +175,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).SubscribeAllOrderBook(exchange_id)
+        return super().SubscribeAllOrderBook(exchange_id)
 
-    def UnSubscribeAllOrderBook(self, exchange_id):
+    def UnSubscribeAllOrderBook(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订全市场的股票行情订单簿
         @remark 需要与订阅全市场行情订单簿接口配套使用
@@ -183,9 +185,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).UnSubscribeAllOrderBook(exchange_id)
+        return super().UnSubscribeAllOrderBook(exchange_id)
 
-    def SubscribeAllTickByTick(self, exchange_id):
+    def SubscribeAllTickByTick(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅全市场的股票逐笔行情
         @remark 需要与全市场退订逐笔行情接口配套使用
@@ -193,9 +195,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).SubscribeAllTickByTick(exchange_id)
+        return super().SubscribeAllTickByTick(exchange_id)
 
-    def UnSubscribeAllTickByTick(self, exchange_id):
+    def UnSubscribeAllTickByTick(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订全市场的股票逐笔行情
         @remark 需要与订阅全市场逐笔行情接口配套使用
@@ -203,9 +205,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).UnSubscribeAllTickByTick(exchange_id)
+        return super().UnSubscribeAllTickByTick(exchange_id)
 
-    def Login(self, ip, port, user, password, sock_type):
+    def Login(self, ip, port, user, password, sock_type: int = 1):
         """
         用户登录请求
         “0”表示登录成功，“-1”表示连接服务器出错，此时用户可以调用GetApiLastError()来获取错误代码，“-2”表示已存在连接，不允许重复登录，如果需要重连，请先logout，“-3”表示输入有错误
@@ -218,7 +220,9 @@ class Quote(QuoteWrapper):
         :param sock_type: “1”代表TCP，“2”代表UDP
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).Login(ip, port, user, password, sock_type)
+
+        return super().Login(ip.encode("utf-8"), port, user.encode("utf-8"),
+                             password.encode("utf-8"), sock_type)
 
     def Logout(self):
         """
@@ -228,18 +232,18 @@ class Quote(QuoteWrapper):
 
         :return:
         """
-        return super(Quote, self).Logout()
+        return super().Logout()
 
-    def QueryAllTickers(self, exchange_id):
+    def QueryAllTickers(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         获取当前交易日可交易合约
 
         :param exchange_id: 交易所代码
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).QueryAllTickers(exchange_id)
+        return super().QueryAllTickers(exchange_id)
 
-    def QueryTickersPriceInfo(self, ticks, exchange_id):
+    def QueryTickersPriceInfo(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         获取合约的最新价格信息
 
@@ -249,7 +253,7 @@ class Quote(QuoteWrapper):
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
 
-        return super(Quote, self).QueryAllTickersPriceInfo(ticks, exchange_id)
+        return super().QueryTickersPriceInfo(ticks, exchange_id)
 
     def QueryAllTickersPriceInfo(self):
         """
@@ -257,9 +261,9 @@ class Quote(QuoteWrapper):
 
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).QueryAllTickersPriceInfo()
+        return super().QueryAllTickersPriceInfo()
 
-    def SubscribeAllOptionMarketData(self, exchange_id):
+    def SubscribeAllOptionMarketData(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅全市场的期权行情
         @remark 需要与全市场退订期权行情接口配套使用
@@ -267,9 +271,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).SubscribeAllOptionMarketData(exchange_id)
+        return super().SubscribeAllOptionMarketData(exchange_id)
 
-    def UnSubscribeAllOptionMarketData(self, exchange_id):
+    def UnSubscribeAllOptionMarketData(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订全市场的期权行情
         @remark 需要与订阅全市场期权行情接口配套使用
@@ -277,9 +281,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).UnSubscribeAllOptionMarketData(exchange_id)
+        return super().UnSubscribeAllOptionMarketData(exchange_id)
 
-    def SubscribeAllOptionOrderBook(self, exchange_id):
+    def SubscribeAllOptionOrderBook(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅全市场的期权行情订单簿
         @remark 需要与全市场退订期权行情订单簿接口配套使用
@@ -287,9 +291,9 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).SubscribeAllOptionOrderBook(exchange_id)
+        return super().SubscribeAllOptionOrderBook(exchange_id)
 
-    def UnSubscribeAllOptionOrderBook(self, exchange_id):
+    def UnSubscribeAllOptionOrderBook(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订全市场的期权行情订单簿
         @remark 需要与订阅全市场期权行情订单簿接口配套使用
@@ -297,18 +301,18 @@ class Quote(QuoteWrapper):
         :param exchange_id: exchange_id 表示当前退订的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: “0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).UnSubscribeAllOptionOrderBook(exchange_id)
+        return super().UnSubscribeAllOptionOrderBook(exchange_id)
 
-    def SubscribeAllOptionTickByTick(self, exchange_id):
+    def SubscribeAllOptionTickByTick(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         订阅全市场的期权逐笔行情
         @remark 需要与全市场退订期权逐笔行情接口配套使用
         :param exchange_id: 表示当前全订阅的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: 订阅全市场期权逐笔行情接口调用是否成功，“0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).SubscribeAllOptionTickByTick(exchange_id)
+        return super().SubscribeAllOptionTickByTick(exchange_id)
 
-    def UnSubscribeAllOptionTickByTick(self, exchange_id):
+    def UnSubscribeAllOptionTickByTick(self, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订全市场的期权逐笔行情
         @remark 需要与订阅全市场期权逐笔行情接口配套使用
@@ -316,7 +320,7 @@ class Quote(QuoteWrapper):
         :param exchange_id: 表示当前退订的市场，如果为XTP_EXCHANGE_UNKNOWN，表示沪深全市场，XTP_EXCHANGE_SH表示为上海全市场，XTP_EXCHANGE_SZ表示为深圳全市场
         :return: 退订全市场期权逐笔行情接口调用是否成功，“0”表示接口调用成功，非“0”表示接口调用出错
         """
-        return super(Quote, self).UnSubscribeAllOptionTickByTick(exchange_id)
+        return super().UnSubscribeAllOptionTickByTick(exchange_id)
 
     def OnDisconnected(self, reason):
         """

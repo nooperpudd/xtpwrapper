@@ -197,7 +197,9 @@ cdef extern from "xquote_api_struct.h" nogil:
         int32_t buy_qty_unit
         # 合约最小交易量(卖)
         int32_t sell_qty_unit
+
     ctypedef XTPQuoteStaticInfo XTPQSI
+
     # 定单薄
     cdef struct OrderBookStruct:
         # 交易所代码

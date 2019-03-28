@@ -208,6 +208,6 @@ cdef extern from "xtp_quote_api.h" namespace "XTP::API::QuoteApi":
                              XTP_LOG_LEVEL log_level) nogil except +
 
 
-cdef extern from 'c_quote_wrapper.h':
+cdef extern from 'quote_wrapper.h':
     cdef cppclass WrapperQuoteSpi:
         WrapperQuoteSpi(PyObject *obj)

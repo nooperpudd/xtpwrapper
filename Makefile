@@ -1,20 +1,13 @@
 clean:
 	python3 setup.py clean --all
 	rm -rf build dist
-
-	find ./xtpwrapper/ -name "quote_api.so"  -delete
-	find ./xtpwrapper/ -name "libxtpquoteapi.so" -delete
-	find ./xtpwrapper/ -name "libxtptraderapi.so" -delete
-	find ./xtpwrapper/ -name "libxtpquoteapi.dylib" -delete
-	find ./xtpwrapper/ -name "libxtptraderapi.dylib" -delete
-
-#	find ./xtpwarpper/ -name "Trader*.so"  -delete
+	find ./xtpwrapper/ -name "*.dylib" -delete
+	find ./xtpwrapper/ -name "*.so" -delete
 	find ./xtpwrapper/ -name "*.cpp" -delete
 
 .PHONY: build-local
 build-local: clean
 	python3 setup.py build_ext --inplace
-
 
 .PHONY: build
 build: clean
@@ -30,3 +23,5 @@ sdist: clean
 
 twine:
 	twine upload dist/*
+test:
+	pytest -v -s

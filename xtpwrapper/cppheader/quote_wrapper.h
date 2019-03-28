@@ -1,12 +1,11 @@
-﻿#ifndef C_QUOTE_WRAPPER
-#define C_QUOTE_WRAPPER
+﻿#ifndef QUOTE_WRAPPER
+#define QUOTE_WRAPPER
 
 #include "Python.h"
 #include "pythread.h"
 #include "xtp_quote_api.h"
 
 using namespace XTP::API;
-
 
 static inline int QuoteSpi_OnDisconnected(PyObject *, int);
 static inline int QuoteSpi_OnError(PyObject *, XTPRI *);
@@ -58,7 +57,7 @@ class WrapperQuoteSpi: public QuoteSpi {
     public:
         WrapperQuoteSpi(PyObject *obj):self(obj) {};
 
-	    ~WrapperQuoteSpi(){};
+	    virtual ~WrapperQuoteSpi(){};
         ///当客户端与行情后台通信连接断开时，该方法被调用。
         ///@param reason 错误原因，请与错误代码表对应
         ///@remark api不会自动重连，当断线发生时，请用户自行选择后续操作。可以在此函数中调用Login重新登录。注意用户重新登录后，需要重新订阅行情
@@ -71,7 +70,7 @@ class WrapperQuoteSpi: public QuoteSpi {
         ///@param error_info 当服务器响应发生错误时的具体的错误代码和错误信息，当error_info为空，或者error_info.error_id为0时，表明没有错误
         ///@remark 此函数只有在服务器发生错误时才会调用，一般无需用户处理
         virtual void OnError(XTPRI *error_info) {
-             Python_GIL(QuoteSpi_OnError(self,error_info));
+             Python_GIL(QuoteSpi_OnError(self, error_info));
         };
 
         ///订阅行情应答，包括股票、指数和期权
@@ -129,7 +128,7 @@ class WrapperQuoteSpi: public QuoteSpi {
         ///行情订单簿通知，包括股票、指数和期权
         ///@param order_book 行情订单簿数据，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
         virtual void OnOrderBook(XTPOB *order_book) {
-             Python_GIL(QuoteSpi_OnOrderBook(self, order_book));
+             Python_GIL(QuoteSpi_OnOrderBook(self,order_book));
         };
 
         ///订阅逐笔行情应答，包括股票、指数和期权
@@ -274,4 +273,4 @@ class WrapperQuoteSpi: public QuoteSpi {
 };
 
 
-#endif /* CMDAPI_H */
+#endif /* QUOTE_WRAPPER */

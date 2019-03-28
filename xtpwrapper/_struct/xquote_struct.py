@@ -213,17 +213,17 @@ class XTPQuoteStaticInfo(Base):
         ('sell_qty_unit', ctypes.c_int32),  # 合约最小交易量(卖)
     ]
 
-    def __init__(self, ticker='', ticker_name='', pre_close_price=0.0, upper_limit_price=0.0, lower_limit_price=0.0,
-                 price_tick=0.0, buy_qty_unit='', sell_qty_unit=''):
-        super(XTPQuoteStaticInfo, self).__init__()
-        self.ticker = self._to_bytes(ticker)
-        self.ticker_name = self._to_bytes(ticker_name)
-        self.pre_close_price = float(pre_close_price)
-        self.upper_limit_price = float(upper_limit_price)
-        self.lower_limit_price = float(lower_limit_price)
-        self.price_tick = float(price_tick)
-        self.buy_qty_unit = int(buy_qty_unit)
-        self.sell_qty_unit = int(sell_qty_unit)
+    # def __init__(self, ticker='', ticker_name='', pre_close_price=0.0, upper_limit_price=0.0, lower_limit_price=0.0,
+    #              price_tick=0.0, buy_qty_unit='', sell_qty_unit=''):
+    #     super(XTPQuoteStaticInfo, self).__init__()
+    #     self.ticker = self._to_bytes(ticker)
+    #     self.ticker_name = self._to_bytes(ticker_name)
+    #     self.pre_close_price = float(pre_close_price)
+    #     self.upper_limit_price = float(upper_limit_price)
+    #     self.lower_limit_price = float(lower_limit_price)
+    #     self.price_tick = float(price_tick)
+    #     self.buy_qty_unit = int(buy_qty_unit)
+    #     self.sell_qty_unit = int(sell_qty_unit)
 
 
 class OrderBookStruct(Base):

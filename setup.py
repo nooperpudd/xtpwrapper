@@ -98,8 +98,7 @@ setup(
     description="XTP client v1.1.18.13",
     long_description=codecs.open("README.rst", encoding="utf-8").read(),
     license="LGPLv3",
-    keywords="XTP,Stock",
-
+    keywords="XTP,China Stock API",
     author="Winton Wang",
     author_email="365504029@qq.com",
     url="https://github.com/nooperpudd/xtpwrapper",
@@ -107,7 +106,7 @@ setup(
     platforms=["win32", "linux", "darwin"],
     packages=["xtpwrapper"],
     package_data={"": package_data},
-    python_requires=">=3.6",
+    python_requires=">=3.5",
     # cython: binding=True
     # binding = true for inspect get callargs
     ext_modules=cythonize(ext_modules,

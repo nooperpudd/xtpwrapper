@@ -2,33 +2,31 @@
 # distutils: language=c++
 
 from cpython cimport PyObject
+from libc.stdint cimport uint8_t, uint32_t, int64_t, int32_t
 from libc.stdlib cimport malloc, free
-from libc.stdint cimport uint8_t,uint32_t,int64_t,int32_t
 from libc.string cimport const_char
 from libcpp cimport bool as cbool
 
-from .headers.xtp_api_struct_common cimport XTPRI
-from .headers.xtp_quote_api cimport QuoteApi, WrapperQuoteSpi, CreateQuoteApi
-from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_PROTOCOL_TYPE, XTP_LOG_LEVEL
-from .headers.xquote_api_struct cimport XTPST, XTPMD, XTPOB, XTPTBT, XTPTPI, XTPQSI
-
 from xtpwrapper._struct import XTPRspInfoStruct
 from xtpwrapper._struct import xquote_struct
+from .headers.xquote_api_struct cimport XTPQSI, XTPOB, XTPST, XTPMD, XTPTBT, XTPTPI
+from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_PROTOCOL_TYPE, XTP_LOG_LEVEL
+from .headers.xtp_api_struct_common cimport XTPRI
+from .headers.xtp_quote_api cimport QuoteApi, WrapperQuoteSpi, CreateQuoteApi
 
 cdef class QuoteWrapper:
     cdef QuoteApi *_api
     cdef WrapperQuoteSpi *_spi
 
     def __cinit__(self):
-
         self._api = NULL
         self._spi = NULL
 
     def __dealloc__(self):
+
         self.Release()
 
     def Release(self):
-
         if self._api is not NULL:
             self._api.RegisterSpi(NULL)
             self._api.Release()
@@ -66,13 +64,12 @@ cdef class QuoteWrapper:
         if self._api is not NULL:
 
             self._spi = new WrapperQuoteSpi(<PyObject *> self)
-
             if self._spi is not NULL:
                 self._api.RegisterSpi(self._spi)
             else:
-                raise MemoryError()
+                raise MemoryError("spi memory error")
         else:
-            raise MemoryError()
+            raise MemoryError("api memory error")
 
     def SetUDPBufferSize(self, uint32_t buff_size):
 
@@ -240,6 +237,7 @@ cdef class QuoteWrapper:
         with nogil:
             result = self._api.Login(ip, port, user, password, <XTP_PROTOCOL_TYPE> sock_type)
         return result
+
     def Logout(self):
         cdef int result
         with nogil:
@@ -304,6 +302,7 @@ cdef class QuoteWrapper:
         with nogil:
             result = self._api.SubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
         return result
+
     def UnSubscribeAllOptionTickByTick(self, int exchange_id):
 
         cdef int result
@@ -316,29 +315,49 @@ cdef extern int QuoteSpi_OnDisconnected(self, int reason) except -1:
     return 0
 
 cdef extern int QuoteSpi_OnError(self, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    if error_info is NULL:
+        err_info_obj = None
+    else:
+        err_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
 
-    self.OnError(err_obj)
+    self.OnError(err_info_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubMarketData(self, XTPST *ticker, XTPRI *error_info, cbool is_last) except -1:
-    ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    if ticker is NULL:
 
-    self.OnSubMarketData(ticker_obj, err_obj, is_last)
+        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+    else:
+        ticker_obj = None
+    if error_info is NULL:
+        err_info_obj = None
+    else:
+        err_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnSubMarketData(ticker_obj, err_info_obj, is_last)
     return 0
 
 cdef extern int QuoteSpi_OnUnSubMarketData(self, XTPST *ticker, XTPRI *error_info, cbool is_last) except -1:
-    ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubMarketData(ticker_obj, err_obj, is_last)
+    if ticker is NULL:
+        ticker_obj = None
+    else:
+        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+
+    if error_info is NULL:
+        err_info_obj = None
+    else:
+        err_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnUnSubMarketData(ticker_obj, err_info_obj, is_last)
     return 0
 
 cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
                                            int64_t bid1_qty[], int32_t bid1_count, int32_t max_bid1_count,
                                            int64_t ask1_qty[], int32_t ask1_count, int32_t max_ask1_count) except -1:
-
-    market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
+    if market_data is NULL:
+        market_data_obj = None
+    else:
+        market_data_obj = xquote_struct.XTPMarketDataStruct.from_address(<size_t> market_data)
 
     cdef Py_ssize_t count_bid = sizeof(bid1_qty)
     cdef Py_ssize_t count_ask = sizeof(ask1_qty)
@@ -359,110 +378,205 @@ cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
 
 cdef extern int QuoteSpi_OnSubOrderBook(self, XTPST *ticker, XTPRI *error_info,
                                         cbool is_last) except -1:
-    ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    if ticker is NULL:
+        ticker_obj = None
+    else:
 
-    self.OnSubOrderBook(ticker_obj, err_obj, is_last)
+        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnSubOrderBook(ticker_obj, error_info_obj, is_last)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubOrderBook(self, XTPST *ticker, XTPRI *error_info,
                                           cbool is_last) except -1:
-    ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubOrderBook(ticker_obj, err_obj, is_last)
+    if ticker is NULL:
+        ticker_obj = None
+    else:
+        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
+
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnUnSubOrderBook(ticker_obj, error_info_obj, is_last)
     return 0
+
 cdef extern int QuoteSpi_OnOrderBook(self, XTPOB *order_book) except -1:
-    order_book_obj = xquote_struct.OrderBookStruct.from_address(<size_t> order_book)
+    if order_book is NULL:
+        order_book_obj = None
+    else:
+        order_book_obj = xquote_struct.OrderBookStruct.from_address(<size_t> order_book)
 
     self.OnOrderBook(order_book_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubTickByTick(self, XTPST *ticker, XTPRI *error_info, cbool is_last) except -1:
-    ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    if ticker is NULL:
+        ticker_obj = None
+    else:
+        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
-    self.OnSubTickByTick(ticker_obj, err_obj, is_last)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnSubTickByTick(ticker_obj, error_info_obj, is_last)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubTickByTick(self, XTPST *ticker, XTPRI *error_info, cbool is_last) except -1:
-    ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    if ticker is NULL:
+        ticker_obj = None
+    else:
+        ticker_obj = xquote_struct.XTPSpecificTickerStruct.from_address(<size_t> ticker)
 
-    self.OnUnSubTickByTick(ticker_obj, err_obj, is_last)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+
+    self.OnUnSubTickByTick(ticker_obj, error_info_obj, is_last)
     return 0
+
 cdef extern int QuoteSpi_OnTickByTick(self, XTPTBT *tbt_data) except -1:
-    tbt_data_obj = xquote_struct.XTPTickByTickStruct.from_address(<size_t> tbt_data)
+    if tbt_data is NULL:
+        tbt_data_obj = None
+    else:
+
+        tbt_data_obj = xquote_struct.XTPTickByTickStruct.from_address(<size_t> tbt_data)
     self.OnTickByTick(tbt_data_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubscribeAllMarketData(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
 
-    self.OnSubscribeAllMarketData(exchange_id, err_obj)
+    self.OnSubscribeAllMarketData(exchange_id, error_info_obj)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubscribeAllMarketData(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllMarketData(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnUnSubscribeAllMarketData(exchange_id, error_info_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubscribeAllOrderBook(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnSubscribeAllOrderBook(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnSubscribeAllOrderBook(exchange_id, error_info_obj)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubscribeAllOrderBook(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllOrderBook(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnUnSubscribeAllOrderBook(exchange_id, error_info_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubscribeAllTickByTick(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnSubscribeAllTickByTick(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnSubscribeAllTickByTick(exchange_id, error_info_obj)
     return 0
 
 cdef extern int QuoteSpi_OnUnSubscribeAllTickByTick(self, XTP_EXCHANGE_TYPE exchange_id, XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllTickByTick(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnUnSubscribeAllTickByTick(exchange_id, error_info_obj)
     return 0
 
-cdef extern int QuoteSpi_OnQueryAllTickers(self, XTPQSI*ticker_info, XTPRI *error_info, cbool is_last) except -1:
-    ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
-
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnQueryAllTickers(ticker_info_obj, err_obj, is_last)
+cdef extern int QuoteSpi_OnQueryAllTickers(self, XTPQSI *ticker_info,
+                                           XTPRI *error_info, cbool is_last) except -1:
+    if ticker_info is NULL:
+        ticker_info_obj = None
+    else:
+        ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryAllTickers(ticker_info_obj, error_info_obj, is_last)
     return 0
-cdef extern int QuoteSpi_OnQueryTickersPriceInfo(self, XTPTPI*ticker_info, XTPRI *error_info, cbool is_last) except -1:
-    ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnQueryTickersPriceInfo(ticker_info_obj, err_obj, is_last)
+
+cdef extern int QuoteSpi_OnQueryTickersPriceInfo(self, XTPTPI *ticker_info, XTPRI *error_info, cbool is_last) except -1:
+    if ticker_info is NULL:
+        ticker_info_obj = None
+    else:
+        ticker_info_obj = xquote_struct.XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnQueryTickersPriceInfo(ticker_info_obj, error_info_obj, is_last)
     return 0
 
 cdef extern int QuoteSpi_OnSubscribeAllOptionMarketData(self, XTP_EXCHANGE_TYPE exchange_id,
                                                         XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnSubscribeAllOptionMarketData(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnSubscribeAllOptionMarketData(exchange_id, error_info_obj)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubscribeAllOptionMarketData(self, XTP_EXCHANGE_TYPE exchange_id,
                                                           XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllOptionMarketData(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnUnSubscribeAllOptionMarketData(exchange_id, error_info_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubscribeAllOptionOrderBook(self, XTP_EXCHANGE_TYPE exchange_id,
                                                        XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnSubscribeAllOptionOrderBook(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnSubscribeAllOptionOrderBook(exchange_id, error_info_obj)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubscribeAllOptionOrderBook(self, XTP_EXCHANGE_TYPE exchange_id,
                                                          XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllOptionOrderBook(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnUnSubscribeAllOptionOrderBook(exchange_id, error_info_obj)
     return 0
 
 cdef extern int QuoteSpi_OnSubscribeAllOptionTickByTick(self, XTP_EXCHANGE_TYPE exchange_id,
                                                         XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnSubscribeAllOptionTickByTick(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnSubscribeAllOptionTickByTick(exchange_id, error_info_obj)
     return 0
+
 cdef extern int QuoteSpi_OnUnSubscribeAllOptionTickByTick(self, XTP_EXCHANGE_TYPE exchange_id,
                                                           XTPRI *error_info) except -1:
-    err_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
-    self.OnUnSubscribeAllOptionTickByTick(exchange_id, err_obj)
+    if error_info is NULL:
+        error_info_obj = None
+    else:
+        error_info_obj = XTPRspInfoStruct.from_address(<size_t> error_info)
+    self.OnUnSubscribeAllOptionTickByTick(exchange_id, error_info_obj)
     return 0

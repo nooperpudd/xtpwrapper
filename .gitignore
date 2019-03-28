@@ -107,3 +107,7 @@ venv.bak/
 quote_api.cpp
 
 *.log.*
+
+xtpwrapper/*.dylib
+xtpwrapper/*.so
+
