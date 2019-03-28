@@ -201,60 +201,76 @@ cdef class QuoteWrapper:
             return result
 
     def SubscribeAllMarketData(self, int exchange_id):
+
         cdef int result
-        with nogil:
-            result = self._api.SubscribeAllMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.SubscribeAllMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def UnSubscribeAllMarketData(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.UnSubscribeAllMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.UnSubscribeAllMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def SubscribeAllOrderBook(self, int exchange_id):
+
         cdef int result
-        with nogil:
-            result = self._api.SubscribeAllOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+
+            with nogil:
+                result = self._api.SubscribeAllOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def UnSubscribeAllOrderBook(self, int exchange_id):
+
         cdef int result
-        with nogil:
-            result = self._api.UnSubscribeAllOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+
+            with nogil:
+                result = self._api.UnSubscribeAllOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def SubscribeAllTickByTick(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.SubscribeAllTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+
+            with nogil:
+                result = self._api.SubscribeAllTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def UnSubscribeAllTickByTick(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.UnSubscribeAllTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.UnSubscribeAllTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def Login(self, const_char *ip, int port, const_char *user,
-              const_char *password, int sock_type):
+              const_char *password, XTP_PROTOCOL_TYPE sock_type):
 
         cdef int result
-        with nogil:
-            result = self._api.Login(ip, port, user, password, <XTP_PROTOCOL_TYPE> sock_type)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.Login(ip, port, user, password, <XTP_PROTOCOL_TYPE> sock_type)
+            return result
 
     def Logout(self):
         cdef int result
-        with nogil:
-            result = self._api.Logout()
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.Logout()
+            return result
 
     def QueryAllTickers(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.QueryAllTickers(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.QueryAllTickers(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def QueryTickersPriceInfo(self, ticks, int exchange_id):
         cdef Py_ssize_t count
@@ -276,45 +292,55 @@ cdef class QuoteWrapper:
 
     def QueryAllTickersPriceInfo(self):
         cdef int result
-        with nogil:
-            result = self._api.QueryAllTickersPriceInfo()
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.QueryAllTickersPriceInfo()
+            return result
 
     def SubscribeAllOptionMarketData(self, int exchange_id):
 
         cdef int result
-        with nogil:
-            result = self._api.SubscribeAllOptionMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.SubscribeAllOptionMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def UnSubscribeAllOptionMarketData(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.UnSubscribeAllOptionMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.UnSubscribeAllOptionMarketData(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def SubscribeAllOptionOrderBook(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.SubscribeAllOptionOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.SubscribeAllOptionOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
+
     def UnSubscribeAllOptionOrderBook(self, int exchange_id):
+
         cdef int result
-        with nogil:
-            result = self._api.UnSubscribeAllOptionOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.UnSubscribeAllOptionOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
+
     def SubscribeAllOptionTickByTick(self, int exchange_id):
         cdef int result
-        with nogil:
-            result = self._api.SubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.SubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
     def UnSubscribeAllOptionTickByTick(self, int exchange_id):
 
         cdef int result
-        with nogil:
-            result = self._api.UnSubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
-        return result
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.UnSubscribeAllOptionTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
+            return result
 
 cdef extern int QuoteSpi_OnDisconnected(self, int reason) except -1:
     self.OnDisconnected(reason)

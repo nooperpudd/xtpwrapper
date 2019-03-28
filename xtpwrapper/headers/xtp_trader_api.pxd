@@ -42,7 +42,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
 
         #获取API的发行版本号
         #@return 返回api发行版本号
-        const_char*GetApiVersion() nogil except +
+        const_char *GetApiVersion() nogil except +
 
         #通过报单在xtp系统中的ID获取下单的客户端id
         #@return 返回客户端id，可以用此方法过滤自己下的订单
@@ -54,7 +54,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         #@return 返回资金账户名
         #@param order_xtp_id 报单在xtp系统中的ID
         #@remark 只有资金账户登录成功后,才能得到正确的信息
-        const_char*GetAccountByXTPID(uintmax_t order_xtp_id) nogil except +
+        const_char *GetAccountByXTPID(uintmax_t order_xtp_id) nogil except +
 
         #订阅公共流。
         #@param resume_type 公共流（订单响应、成交回报）重传方式
@@ -67,12 +67,12 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         #设置软件开发版本号
         #@param version 用户开发软件版本号，非api发行版本号，长度不超过15位，以'\0'结尾
         #@remark 此函数必须在Login之前调用，标识的是客户端版本号，而不是API的版本号，由用户自定义
-        void SetSoftwareVersion(const_char*version) nogil except +
+        void SetSoftwareVersion(const_char *version) nogil except +
 
         #设置软件开发Key
         #@param key 用户开发软件Key，用户申请开户时给予，以'\0'结尾
         #@remark 此函数必须在Login之前调用
-        void SetSoftwareKey(const_char*key) nogil except +
+        void SetSoftwareKey(const_char *key) nogil except +
 
         #设置心跳检测时间间隔，单位为秒
         #@param interval 心跳检测时间间隔，单位为秒
@@ -87,7 +87,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         #@param password 登录密码
         #@param sock_type “1”代表TCP，“2”代表UDP，目前暂时只支持TCP
         #@remark 此函数为同步阻塞式，不需要异步等待登录成功，当函数返回即可进行后续操作，此api可支持多个账户连接，但是同一个账户同一个client_id只能有一个session连接，后面的登录在前一个session存续期间，无法连接
-        uintmax_t Login(const_char*ip, int port, const_char*user, const_char*password,
+        uintmax_t Login(const_char *ip, int port, const_char *user, const_char *password,
                         XTP_PROTOCOL_TYPE sock_type) nogil except +
 
         #登出请求
@@ -211,7 +211,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         int QueryOptionAuctionInfo(XTPQueryOptionAuctionInfoReq *query_param,
                                    uintmax_t session_id, int request_id) nogil except +
 
-cdef extern from "xtp_quote_api.h" namespace "XTP::API::QuoteApi":
+cdef extern from "xtp_quote_api.h" namespace "XTP::API::TraderApi":
     #创建QuoteApi
     #@param client_id （必须输入）用于区分同一用户的不同客户端，由用户自定义
     #@param save_file_path （必须输入）存贮订阅信息文件的目录，请设定一个有可写权限的真实存在的路径
@@ -219,7 +219,7 @@ cdef extern from "xtp_quote_api.h" namespace "XTP::API::QuoteApi":
     #@return 创建出的UserApi
     #@remark 如果一个账户需要在多个客户端登录，请使用不同的client_id，系统允许一个账户同时登录多个客户端，
     # 但是对于同一账户，相同的client_id只能保持一个session连接，后面的登录在前一个session存续期间，无法连接
-    TraderApi ** CreateTraderApi(uint8_t client_id, const char *save_file_path, XTP_LOG_LEVEL log_level) nogil except +
+    TraderApi *CreateTraderApi(uint8_t client_id, const char *save_file_path, XTP_LOG_LEVEL log_level) nogil except +
 
 
 cdef extern from 'trader_wrapper.h':
