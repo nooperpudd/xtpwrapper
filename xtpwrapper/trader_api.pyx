@@ -1,16 +1,33 @@
 # encoding:utf-8
 # distutils: language=c++
 from cpython cimport PyObject
-from libc.stdint cimport uint32_t, uintmax_t
+from libc.stdint cimport uint32_t, uint64_t, uintmax_t
 from libc.string cimport const_char
+from libcpp cimport bool as cbool
 
 from .headers.xoms_api_fund_struct cimport XTPFundTransferReq
 from .headers.xoms_api_struct cimport (
     XTPOrderInsertInfo, XTPQueryOrderReq,
     XTPQueryOptionAuctionInfoReq, XTPQueryETFComponentReq,
-    XTPQueryETFBaseReq, XTPQueryTraderReq,
-    XTPQueryStructuredFundInfoReq, XTPQueryFundTransferLogReq
+    XTPQueryETFBaseReq,XTPQueryTraderReq,
+    XTPQueryStructuredFundInfoReq, XTPQueryFundTransferLogReq,
+XTPOrderInfo,
+XTPTradeReport,
+XTPOrderCancelInfo,
+XTPQueryStkPositionRsp,
+XTPQueryAssetRsp,
+XTPStructuredFundInfo,
+XTPFundTransferNotice,
+XTPQueryETFBaseRsp,
+XTPQueryETFComponentRsp,
+XTPQueryIPOTickerRsp,
+XTPQueryIPOQuotaRsp,
+XTPQueryOptionAuctionInfoRsp,
+XTPQueryOrderRsp,
+XTPQueryTradeRsp
+
 )
+
 from .headers.xtp_api_data_type cimport XTP_PROTOCOL_TYPE, XTP_LOG_LEVEL, XTP_TE_RESUME_TYPE
 from .headers.xtp_api_struct_common cimport XTPRI
 from .headers.xtp_trader_api cimport TraderApi, CreateTraderApi, WrapperTraderSpi
@@ -522,3 +539,39 @@ cdef class TraderWrapper:
 
             result = self._api.QueryOptionAuctionInfo(<XTPQueryOptionAuctionInfoReq *> address, session_id, request_id)
             return result
+
+
+cdef extern int TraderSpi_OnDisconnected(self, uint64_t session_id, int reason) except -1:
+    pass
+cdef extern int TraderSpi_OnError(self, XTPRI *error_info) except -1:
+    pass
+cdef extern int TraderSpi_OnOrderEvent(self, XTPOrderInfo *order_info, XTPRI *error_info, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnTradeEvent(self, XTPTradeReport *trade_info, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnCancelOrderError(self, XTPOrderCancelInfo *cancel_info, XTPRI *error_info, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryOrder(self, XTPQueryOrderRsp *order_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryTrade(self, XTPQueryTradeRsp *trade_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryPosition(self, XTPQueryStkPositionRsp *position, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryAsset(self, XTPQueryAssetRsp *asset, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryStructuredFund(self, XTPStructuredFundInfo *fund_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryFundTransfer(self, XTPFundTransferNotice *fund_transfer_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnFundTransfer(self, XTPFundTransferNotice *fund_transfer_info, XTPRI *error_info, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryETF(self, XTPQueryETFBaseRsp *etf_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryETFBasket(self, XTPQueryETFComponentRsp *etf_component_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryIPOInfoList(self, XTPQueryIPOTickerRsp *ipo_info,XTPRI *error_info,int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryIPOQuotaInfo(self, XTPQueryIPOQuotaRsp *quota_info, XTPRI *error_info,int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass
+cdef extern int TraderSpi_OnQueryOptionAuctionInfo(self, XTPQueryOptionAuctionInfoRsp *option_info, XTPRI *error_info, int request_id, cbool is_last, uint64_t session_id) except -1:
+    pass

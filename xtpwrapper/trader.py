@@ -13,8 +13,7 @@ class TraderApi(TraderWrapper):
         :param log_level: 日志输出级别
         :return:
         """
-        super().CreateTrader(client_id,save_file_path,log_level)
-
+        super().CreateTrader(client_id, save_file_path, log_level)
 
     def Release(self):
         """
@@ -24,9 +23,6 @@ class TraderApi(TraderWrapper):
         """
         super().Release()
 
-
-
-
     def GetTradingDay(self):
         """
         # 获取当前交易日
@@ -34,8 +30,8 @@ class TraderApi(TraderWrapper):
         # @remark 只有登录成功后,才能得到正确的交易日
         :return:
         """
-        pass
-
+        day = super().GetTradingDay()
+        return day.decode()
 
     def GetApiLastError(self):
         """
@@ -44,8 +40,7 @@ class TraderApi(TraderWrapper):
         # @remark 可以在调用api接口失败时调用，例如login失败时
         :return:
         """
-        pass
-
+        return super().GetApiLastError()
 
     def GetApiVersion(self):
         """
@@ -53,7 +48,8 @@ class TraderApi(TraderWrapper):
         # @return 返回api发行版本号
         :return:
         """
-        pass
+        version = super().GetApiVersion()
+        return version.decode()
 
     def GetClientIDByXTPID(self, order_xtp_id):
         """
@@ -62,7 +58,7 @@ class TraderApi(TraderWrapper):
         :param order_xtp_id: 报单在xtp系统中的ID
         :return: 返回客户端id，可以用此方法过滤自己下的订单
         """
-        pass
+        return super().GetClientIDByXTPID(order_xtp_id)
 
     def GetAccountByXTPID(self, order_xtp_id):
         """
@@ -72,7 +68,7 @@ class TraderApi(TraderWrapper):
         :param order_xtp_id: 报单在xtp系统中的ID
         :return: 返回资金账户名
         """
-        pass
+        return super().GetAccountByXTPID(order_xtp_id)
 
     def SubscribePublicTopic(self, resume_type):
         """
@@ -86,7 +82,7 @@ class TraderApi(TraderWrapper):
         #        XTP_TERT_QUICK:只传送登录后公共流的内容
         :return:
         """
-        pass
+        super().SubscribePublicTopic(resume_type)
 
     def SetSoftwareVersion(self, version):
         """
@@ -96,7 +92,7 @@ class TraderApi(TraderWrapper):
         :param version: 用户开发软件版本号，非api发行版本号，长度不超过15位，以'\0'结尾
         :return:
         """
-        pass
+        super().SetSoftwareVersion(version)
 
     def SetSoftwareKey(self, key):
         """
@@ -106,7 +102,7 @@ class TraderApi(TraderWrapper):
         :param key: 用户开发软件Key，用户申请开户时给予，以'\0'结尾
         :return:
         """
-        pass
+        super().SetSoftwareKey(key)
 
     def SetHeartBeatInterval(self, erval):
         """
@@ -116,7 +112,7 @@ class TraderApi(TraderWrapper):
         :param erval: 心跳检测时间间隔，单位为秒
         :return:
         """
-        pass
+        super().SetHeartBeatInterval(erval)
 
     def Login(self, ip, port, user, password, sock_type):
         """
@@ -132,7 +128,7 @@ class TraderApi(TraderWrapper):
         :param sock_type: “1”代表TCP，“2”代表UDP，目前暂时只支持TCP
         :return:
         """
-        pass
+        return super().Login(ip, port, user, password, sock_type)
 
     def Logout(self, session_id):
         """
@@ -143,7 +139,7 @@ class TraderApi(TraderWrapper):
         :param session_id: 资金账户对应的session_id,登录时得到
         :return: 登出是否成功，“0”表示登出成功，“-1”表示登出失败
         """
-        pass
+        return super().Logout(session_id)
 
     def InsertOrder(self, order, session_id):
         """
@@ -160,7 +156,7 @@ class TraderApi(TraderWrapper):
         来获取错误代码，非“0”表示报单发送成功，用户需要记录下返回的order_xtp_id，
         它保证一个交易日内唯一，不同的交易日不保证唯一性
         """
-        pass
+        return super().InsertOrder(order, session_id)
 
     def CancelOrder(self, order_xtp_id, session_id):
         """
@@ -175,7 +171,7 @@ class TraderApi(TraderWrapper):
         :return: 撤单在XTP系统中的ID,如果为‘0’表示撤单发送失败，此时用户可以调用GetApiLastError(self,)
         来获取错误代码，非“0”表示撤单发送成功，用户需要记录下返回的order_cancel_xtp_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
         """
-        pass
+        return super().CancelOrder(order_xtp_id, session_id)
 
     def QueryOrderByXTPID(self, order_xtp_id, session_id, request_id):
         """
@@ -189,7 +185,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryOrderByXTPID(order_xtp_id, session_id, request_id)
 
     def QueryOrders(self, query_param, session_id, request_id):
         """
@@ -205,7 +201,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryOrders(query_param, session_id, request_id)
 
     def QueryTradesByXTPID(self, order_xtp_id, session_id, request_id):
         """
@@ -220,7 +216,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryTradesByXTPID(order_xtp_id, session_id, request_id)
 
     def QueryTrades(self, query_param, session_id, request_id):
         """
@@ -236,7 +232,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryTrades(query_param, session_id, request_id)
 
     def QueryPosition(self, ticker, session_id, request_id):
         """
@@ -251,7 +247,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryPosition(ticker, session_id, request_id)
 
     def QueryAsset(self, session_id, request_id):
         """
@@ -259,7 +255,7 @@ class TraderApi(TraderWrapper):
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义"""
-        pass
+        return super().QueryAsset(session_id, request_id)
 
     def QueryStructuredFund(self, query_param, session_id, request_id):
         """
@@ -274,7 +270,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryStructuredFund(query_param, session_id, request_id)
 
     def FundTransfer(self, fund_transfer, session_id):
         """
@@ -285,7 +281,7 @@ class TraderApi(TraderWrapper):
         :param session_id:
         :return:
         """
-        pass
+        return super().FundTransfer(fund_transfer, session_id)
 
     def QueryFundTransfer(self, query_param, session_id, request_id):
         """
@@ -299,7 +295,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryFundTransfer(query_param, session_id, request_id)
 
     def QueryETF(self, query_param, session_id, request_id):
         """
@@ -313,7 +309,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryETF(query_param, session_id, request_id)
 
     def QueryETFTickerBasket(self, query_param, session_id, request_id):
         """
@@ -327,7 +323,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryETFTickerBasket(query_param, session_id, request_id)
 
     def QueryIPOInfoList(self, session_id, request_id):
         """
@@ -337,7 +333,7 @@ class TraderApi(TraderWrapper):
         :param request_id: 用于用户定位查询响应的ID，由用户自定义
         :return: 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
         """
-        pass
+        return super().QueryIPOInfoList(session_id, request_id)
 
     def QueryIPOQuotaInfo(self, session_id, request_id):
         """
@@ -349,7 +345,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        pass
+        return super().QueryIPOQuotaInfo(session_id, request_id)
 
     def QueryOptionAuctionInfo(self, query_param, session_id, request_id):
         """
@@ -359,5 +355,240 @@ class TraderApi(TraderWrapper):
         :param session_id: 资金账户对应的session_id,登录时得到
         :param request_id: 用于用户定位查询响应的ID，由用户自定义
         :return: 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        """
+        return super().QueryOptionAuctionInfo(query_param, session_id, request_id)
+
+    def OnDisconnected(self, session_id, reason):
+        """
+        当客户端的某个连接与交易后台通信连接断开时，该方法被调用。
+        @param reason 错误原因，请与错误代码表对应
+        @param session_id 资金账户对应的session_id，登录时得到
+        @remark 用户主动调用logout导致的断线，不会触发此函数。api不会自动重连，当断线发生时，请用户自行选择后续操作，可以在此函数中调用Login重新登录，并更新session_id，此时用户收到的数据跟断线之前是连续的
+
+        :param session_id: 
+        :param reason: 
+        :return: 
+        """
+        pass
+
+    def OnError(self, error_info):
+        """
+        错误应答
+
+        @remark 此函数只有在服务器发生错误时才会调用，一般无需用户处理
+
+        :param error_info: 当服务器响应发生错误时的具体的错误代码和错误信息,当error_info为空，
+        或者error_info.error_id为0时，表明没有错误
+        :return: 
+        """
+        pass
+
+    def OnOrderEvent(self, order_info, error_info, session_id):
+        """
+        报单通知
+        @remark 每次订单状态更新时，都会被调用，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线，在订单未成交、全部成交、全部撤单、部分撤单、已拒绝这些状态时会有响应，对于部分成交的情况，请由订单的成交回报来自行确认。所有登录了此用户的客户端都将收到此用户的订单响应
+
+        :param order_info: 订单响应具体信息，用户可以通过order_info.
+                    order_xtp_id来管理订单，通过GetClientIDByXTPID() ==
+                    client_id来过滤自己的订单，order_info.qty_left字段在订单为未成交、
+                    部成、全成、废单状态时，表示此订单还没有成交的数量，在部撤、全撤状态时，
+                    表示此订单被撤的数量。order_info.order_cancel_xtp_id为其所对应的撤单ID，
+                    不为0时表示此单被撤成功
+        :param error_info: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnTradeEvent(self, trade_info, session_id):
+        """
+        成交通知
+        @remark 订单有成交发生的时候，会被调用，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线。所有登录了此用户的客户端都将收到此用户的成交回报。相关订单为部成状态，需要用户通过成交回报的成交数量来确定，OnOrderEvent()不会推送部成状态。
+
+        :param trade_info: 成交回报的具体信息，用户可以通过trade_info.order_xtp_id
+                        来管理订单，通过GetClientIDByXTPID() == client_id来过滤自己的订单。对于上交所，
+                        exec_id可以唯一标识一笔成交。当发现2笔成交回报拥有相同的exec_id，
+                        则可以认为此笔交易自成交了。对于深交所，exec_id是唯一的，暂时无此判断机制。
+                        report_index+market字段可以组成唯一标识表示成交回报。
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnCancelOrderError(self, cancel_info, error_info, session_id):
+        """
+        撤单出错响应
+        @remark 此响应只会在撤单发生错误时被回调
+
+        :param cancel_info: 撤单具体信息，包括撤单的order_cancel_xtp_id和待撤单的order_xtp_id
+        :param error_info: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryOrder(self, order_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询报单响应
+        @remark 由于支持分时段查询，一个查询请求可能对应多个响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param order_info: 查询到的一个报单
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryTrade(self, trade_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询成交响应
+        @remark 由于支持分时段查询，一个查询请求可能对应多个响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param trade_info: 查询到的一个成交回报
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryPosition(self, position, error_info, request_id, is_last, session_id):
+        """
+        请求查询投资者持仓响应
+
+        @remark 由于用户可能持有多个股票，一个查询请求可能对应多个响应，
+        需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param position: 查询到的一只股票的持仓情况
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryAsset(self, asset, error_info, request_id, is_last, session_id):
+        """
+        请求查询资金账户响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param asset: 查询到的资金账户情况
+        :param error_info:
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryStructuredFund(self, fund_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询分级基金信息响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param fund_info: 查询到的分级基金情况
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryFundTransfer(self, fund_transfer_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询资金划拨订单响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param fund_transfer_info: 查询到的资金账户情况
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnFundTransfer(self, fund_transfer_info, error_info, session_id):
+        """
+        资金划拨通知
+
+        @remark 当资金划拨订单有状态变化的时候，会被调用，需要快速返回，否则会堵塞后续消息，当堵塞严重时
+        ，会触发断线。所有登录了此用户的客户端都将收到此用户的资金划拨通知。
+
+        :param fund_transfer_info: 资金划拨通知的具体信息，用户可以通过
+                                    fund_transfer_info.serial_id来管理订单，
+                                    通过GetClientIDByXTPID() == client_id来过滤自己的订单。
+        :param error_info: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryETF(self, etf_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询ETF清单文件的响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param etf_info: 查询到的ETF清单文件情况
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryETFBasket(self, etf_component_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询ETF股票篮的响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param etf_component_info: 查询到的ETF合约的相关成分股信息
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryIPOInfoList(self, ipo_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询今日新股申购信息列表的响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        @remark 需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param ipo_info: 查询到的今日新股申购的一只股票信息
+        :param error_info: 查询今日新股申购信息列表发生错误时返回的错误信息
+        :param request_id: 当error_info为空，或者error_info.error_id为0时，表明没有错误
+        :param is_last: 此消息响应函数是否为request_id这条请求所对应的最后一个响应，当为最后一个的时候为true，如果为false，表示还有其他后续消息响应
+        :param session_id:
+        :return: 
+        """
+        pass
+
+    def OnQueryIPOQuotaInfo(self, quota_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询用户新股申购额度信息的响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param quota_info: 查询到的用户某个市场的今日新股申购额度信息
+        :param error_info: 查查询用户新股申购额度信息发生错误时返回的错误信息,当error_info为空，或者error_info.error_id为0时，表明没有错误
+        :param request_id: 此消息响应函数对应的请求ID
+        :param is_last: 
+        :param session_id: 
+        :return: 
+        """
+        pass
+
+    def OnQueryOptionAuctionInfo(self, option_info, error_info, request_id, is_last, session_id):
+        """
+        请求查询期权合约的响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
+
+        :param option_info: 查询到的期权合约情况
+        :param error_info: 
+        :param request_id: 
+        :param is_last: 
+        :param session_id: 
+        :return: 
         """
         pass

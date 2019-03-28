@@ -155,8 +155,8 @@ cdef extern from "xoms_api_struct.h" nogil:
         #   格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
         int64_t end_time
 
-    #  报单查询响应结构体 todo
-    #  typedef struct XTPOrderInfo XTPQueryOrderRsp
+    # 报单查询响应结构体
+    ctypedef XTPOrderInfo XTPQueryOrderRsp
 
     #  成交回报查询
     #  查询成交报告请求-根据执行编号查询（保留字段）
@@ -175,7 +175,7 @@ cdef extern from "xoms_api_struct.h" nogil:
         int64_t end_time
 
     #  成交回报查询响应结构体
-    #  typedef struct XTPTradeReport  XTPQueryTradeRsp
+    ctypedef XTPTradeReport  XTPQueryTradeRsp
 
     #  账户资金查询响应结构体
     cdef struct XTPQueryAssetRsp:
@@ -282,8 +282,8 @@ cdef extern from "xoms_api_struct.h" nogil:
         # 资金内转编号
         uint64_t serial_id
 
-    # 资金内转流水记录结构体 todo
-    #  typedef struct XTPFundTransferNotice XTPFundTransferLog
+    # 资金内转流水记录结构体
+    ctypedef XTPFundTransferNotice XTPFundTransferLog
 
     # 查询分级基金信息结构体
     cdef struct XTPQueryStructuredFundInfoReq:

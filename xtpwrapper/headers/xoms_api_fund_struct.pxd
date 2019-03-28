@@ -12,7 +12,3 @@ cdef extern from "xoms_api_fund_struct.h" nogil:
         char password[64]  # 资金账户密码
         double amount  # 金额
         XTP_FUND_TRANSFER_TYPE transfer_type  # 内转类型
-
-# 用户资金划转请求的响应-复用资金通知结构体
-# todo
-# ctypedef struct XTPFundTransferNotice XTPFundTransferAck
