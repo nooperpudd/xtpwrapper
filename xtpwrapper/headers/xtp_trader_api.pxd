@@ -2,7 +2,7 @@
 # distutils: language=c++
 
 from cpython cimport PyObject
-from libc.stdint cimport uint32_t, uint8_t, uintmax_t
+from libc.stdint cimport uint32_t, uint8_t, uint64_t
 from libc.string cimport const_char
 
 from .xoms_api_fund_struct cimport XTPFundTransferReq
@@ -52,13 +52,13 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @return 返回客户端id，可以用此方法过滤自己下的订单
         # @param order_xtp_id 报单在xtp系统中的ID
         # @remark 由于系统允许同一用户在不同客户端上登录操作，每个客户端通过不同的client_id进行区分
-        unsigned char GetClientIDByXTPID(uintmax_t order_xtp_id) nogil except +
+        unsigned char GetClientIDByXTPID(uint64_t order_xtp_id) nogil except +
 
         # 通过报单在xtp系统中的ID获取相关资金账户名
         # @return 返回资金账户名
         # @param order_xtp_id 报单在xtp系统中的ID
         # @remark 只有资金账户登录成功后,才能得到正确的信息
-        const_char *GetAccountByXTPID(uintmax_t order_xtp_id) nogil except +
+        const_char *GetAccountByXTPID(uint64_t order_xtp_id) nogil except +
 
         # 订阅公共流。
         # @param resume_type 公共流（订单响应、成交回报）重传方式
@@ -92,34 +92,34 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param password 登录密码
         # @param sock_type “1”代表TCP，“2”代表UDP，目前暂时只支持TCP
         # @remark 此函数为同步阻塞式，不需要异步等待登录成功，当函数返回即可进行后续操作，此api可支持多个账户连接，但是同一个账户同一个client_id只能有一个session连接，后面的登录在前一个session存续期间，无法连接
-        uintmax_t Login(const_char *ip, int port, const_char *user, const_char *password,
+        uint64_t Login(const_char *ip, int port, const_char *user, const_char *password,
                         XTP_PROTOCOL_TYPE sock_type) nogil except +
 
         # 登出请求
         # @return 登出是否成功，“0”表示登出成功，“-1”表示登出失败
         # @param session_id 资金账户对应的session_id,登录时得到
-        int Logout(uintmax_t session_id) nogil except +
+        int Logout(uint64_t session_id) nogil except +
 
         # 报单录入请求
         # @return 报单在XTP系统中的ID,如果为‘0’表示报单发送失败，此时用户可以调用GetApiLastError()来获取错误代码，非“0”表示报单发送成功，用户需要记录下返回的order_xtp_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
         # @param order 报单录入信息，其中order.order_client_id字段是用户自定义字段，用户输入什么值，订单响应OnOrderEvent()返回时就会带回什么值，类似于备注，方便用户自己定位订单。当然，如果你什么都不填，也是可以的。order.order_xtp_id字段无需用户填写，order.ticker必须不带空格，以'\0'结尾
         # @param session_id 资金账户对应的session_id,登录时得到
         # @remark 交易所接收订单后，会在报单响应函数OnOrderEvent()中返回报单未成交的状态，之后所有的订单状态改变（除了部成状态）都会通过报单响应函数返回
-        uintmax_t InsertOrder(XTPOrderInsertInfo *order, uintmax_t session_id) nogil except +
+        uint64_t InsertOrder(XTPOrderInsertInfo *order, uint64_t session_id) nogil except +
 
         # 报单操作请求
         # @return 撤单在XTP系统中的ID,如果为‘0’表示撤单发送失败，此时用户可以调用GetApiLastError()来获取错误代码，非“0”表示撤单发送成功，用户需要记录下返回的order_cancel_xtp_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
         # @param order_xtp_id 需要撤销的委托单在XTP系统中的ID
         # @param session_id 资金账户对应的session_id,登录时得到
         # @remark 如果撤单成功，会在报单响应函数OnOrderEvent()里返回原单部撤或者全撤的消息，如果不成功，会在OnCancelOrderError()响应函数中返回错误原因
-        uintmax_t CancelOrder(const uintmax_t order_xtp_id, uintmax_t session_id) nogil except +
+        uint64_t CancelOrder(const uint64_t order_xtp_id, uint64_t session_id) nogil except +
 
         # 根据报单ID请求查询报单
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
         # @param order_xtp_id 需要查询的报单在xtp系统中的ID，即InsertOrder()成功时返回的order_xtp_id
         # @param session_id 资金账户对应的session_id，登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryOrderByXTPID(const uintmax_t order_xtp_id, uintmax_t session_id, int request_id) nogil except +
+        int QueryOrderByXTPID(const uint64_t order_xtp_id, uint64_t session_id, int request_id) nogil except +
 
         # 请求查询报单
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -127,7 +127,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param session_id 资金账户对应的session_id，登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
         # @remark 该方法支持分时段查询，如果股票代码为空，则默认查询时间段内的所有报单，否则查询时间段内所有跟股票代码相关的报单，此函数查询出的结果可能对应多个查询结果响应
-        int QueryOrders(const XTPQueryOrderReq *query_param, uintmax_t session_id, int request_id) nogil except +
+        int QueryOrders(const XTPQueryOrderReq *query_param, uint64_t session_id, int request_id) nogil except +
 
         # 根据委托编号请求查询相关成交
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -135,7 +135,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param session_id 资金账户对应的session_id，登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
         # @remark 此函数查询出的结果可能对应多个查询结果响应
-        int QueryTradesByXTPID(const uintmax_t order_xtp_id, uintmax_t session_id, int request_id) nogil except +
+        int QueryTradesByXTPID(const uint64_t order_xtp_id, uint64_t session_id, int request_id) nogil except +
 
         # 请求查询已成交
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -143,7 +143,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
         # @remark 该方法支持分时段查询，如果股票代码为空，则默认查询时间段内的所有成交回报，否则查询时间段内所有跟股票代码相关的成交回报，此函数查询出的结果可能对应多个查询结果响应
-        int QueryTrades(XTPQueryTraderReq *query_param, uintmax_t session_id, int request_id) nogil except +
+        int QueryTrades(XTPQueryTraderReq *query_param, uint64_t session_id, int request_id) nogil except +
 
         # 请求查询投资者持仓
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -151,13 +151,13 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
         # @remark 该方法如果用户提供了合约代码，则会查询此合约的持仓信息，如果合约代码为空，则默认查询所有持仓信息
-        int QueryPosition(const_char *ticker, uintmax_t session_id, int request_id) nogil except +
+        int QueryPosition(const_char *ticker, uint64_t session_id, int request_id) nogil except +
 
         # 请求查询资产
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryAsset(uintmax_t session_id, int request_id) nogil except +
+        int QueryAsset(uint64_t session_id, int request_id) nogil except +
 
         # 请求查询分级基金
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -165,20 +165,20 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
         # @remark 此函数查询出的结果可能对应多个查询结果响应
-        int QueryStructuredFund(XTPQueryStructuredFundInfoReq *query_param, uintmax_t session_id,
+        int QueryStructuredFund(XTPQueryStructuredFundInfoReq *query_param, uint64_t session_id,
                                 int request_id) nogil except +
 
         # 资金划拨请求
         # @return 资金划拨订单在XTP系统中的ID,如果为‘0’表示消息发送失败，此时用户可以调用GetApiLastError()来获取错误代码，非“0”表示消息发送成功，用户需要记录下返回的serial_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
         # @param session_id 资金账户对应的session_id,登录时得到
-        uintmax_t FundTransfer(XTPFundTransferReq *fund_transfer, uintmax_t session_id) nogil except +
+        uint64_t FundTransfer(XTPFundTransferReq *fund_transfer, uint64_t session_id) nogil except +
 
         # 请求查询资金划拨
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
         # @param query_param 需要查询的资金划拨订单筛选条件，其中serial_id可以为0，则默认所有资金划拨订单，如果不为0，则请求特定的资金划拨订单
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryFundTransfer(XTPQueryFundTransferLogReq *query_param, uintmax_t session_id,
+        int QueryFundTransfer(XTPQueryFundTransferLogReq *query_param, uint64_t session_id,
                               int request_id) nogil except +
 
         # 请求查询ETF清单文件
@@ -186,27 +186,27 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param query_param 需要查询的ETF清单文件的筛选条件，其中合约代码可以为空，则默认所有存在的ETF合约代码，market字段也可以为初始值，则默认所有市场的ETF合约
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryETF(XTPQueryETFBaseReq *query_param, uintmax_t session_id, int request_id) nogil except +
+        int QueryETF(XTPQueryETFBaseReq *query_param, uint64_t session_id, int request_id) nogil except +
 
         # 请求查询ETF股票篮
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
         # @param query_param 需要查询股票篮的的ETF合约，其中合约代码不可以为空，market字段也必须指定
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryETFTickerBasket(XTPQueryETFComponentReq *query_param, uintmax_t session_id,
+        int QueryETFTickerBasket(XTPQueryETFComponentReq *query_param, uint64_t session_id,
                                  int request_id) nogil except +
 
         # 请求查询今日新股申购信息列表
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryIPOInfoList(uintmax_t session_id, int request_id) nogil except +
+        int QueryIPOInfoList(uint64_t session_id, int request_id) nogil except +
 
         # 请求查询用户新股申购额度信息
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
-        int QueryIPOQuotaInfo(uintmax_t session_id, int request_id) nogil except +
+        int QueryIPOQuotaInfo(uint64_t session_id, int request_id) nogil except +
 
         # 请求查询期权合约
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -214,7 +214,7 @@ cdef extern from "xtp_trader_api.h" namespace "XTP::API":
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义
         int QueryOptionAuctionInfo(XTPQueryOptionAuctionInfoReq *query_param,
-                                   uintmax_t session_id, int request_id) nogil except +
+                                   uint64_t session_id, int request_id) nogil except +
 
 cdef extern from "xtp_quote_api.h" namespace "XTP::API::TraderApi":
     # 创建QuoteApi

@@ -1,7 +1,7 @@
 # encoding:utf-8
 # distutils: language=c++
 from cpython cimport PyObject
-from libc.stdint cimport uint32_t, uint64_t, uintmax_t
+from libc.stdint cimport uint32_t, uint64_t
 from libc.string cimport const_char
 from libcpp cimport bool as cbool
 
@@ -135,7 +135,7 @@ cdef class TraderWrapper:
             result = self._api.GetApiVersion()
             return result
 
-    def GetClientIDByXTPID(self, uintmax_t order_xtp_id):
+    def GetClientIDByXTPID(self, uint64_t order_xtp_id):
         """
         # 通过报单在xtp系统中的ID获取下单的客户端id
         # @return 返回客户端id，可以用此方法过滤自己下的订单
@@ -151,7 +151,7 @@ cdef class TraderWrapper:
                 result = self._api.GetClientIDByXTPID(order_xtp_id)
             return result
 
-    def GetAccountByXTPID(self, uintmax_t order_xtp_id):
+    def GetAccountByXTPID(self, uint64_t order_xtp_id):
         """
         # 通过报单在xtp系统中的ID获取相关资金账户名
         # @return 返回资金账户名
@@ -238,14 +238,14 @@ cdef class TraderWrapper:
         :param sock_type:
         :return:
         """
-        cdef uintmax_t result
+        cdef uint64_t result
 
         if self._spi is not NULL:
             with nogil:
                 result = self._api.Login(ip, port, user, password, sock_type)
             return result
 
-    def Logout(self, uintmax_t session_id):
+    def Logout(self, uint64_t session_id):
         """
 
         # 登出请求
@@ -260,7 +260,7 @@ cdef class TraderWrapper:
                 result = self._api.Logout(session_id)
             return result
 
-    def InsertOrder(self, order, uintmax_t session_id):
+    def InsertOrder(self, order, uint64_t session_id):
         """
         # 报单录入请求
         # @return 报单在XTP系统中的ID,如果为‘0’表示报单发送失败，此时用户可以调用GetApiLastError(self,)来获取错误代码，非“0”表示报单发送成功，用户需要记录下返回的order_xtp_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
@@ -272,7 +272,7 @@ cdef class TraderWrapper:
         :param session_id:
         :return:
         """
-        cdef uintmax_t result
+        cdef uint64_t result
         cdef size_t address
 
         if self._spi is not NULL:
@@ -281,7 +281,7 @@ cdef class TraderWrapper:
                 result = self._api.InsertOrder(<XTPOrderInsertInfo *> address, session_id)
             return result
 
-    def CancelOrder(self, const uintmax_t order_xtp_id, uintmax_t session_id):
+    def CancelOrder(self, const uint64_t order_xtp_id, uint64_t session_id):
         """
         # 报单操作请求
         # @return 撤单在XTP系统中的ID,如果为‘0’表示撤单发送失败，此时用户可以调用GetApiLastError(self,)来获取错误代码，非“0”表示撤单发送成功，用户需要记录下返回的order_cancel_xtp_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
@@ -293,13 +293,13 @@ cdef class TraderWrapper:
         :param session_id:
         :return:
         """
-        cdef uintmax_t result
+        cdef uint64_t result
         if self._spi is not NULL:
             with nogil:
                 result = self._api.CancelOrder(order_xtp_id, session_id)
             return result
 
-    def QueryOrderByXTPID(self, const uintmax_t order_xtp_id, uintmax_t session_id, int request_id):
+    def QueryOrderByXTPID(self, const uint64_t order_xtp_id, uint64_t session_id, int request_id):
         """
         # 根据报单ID请求查询报单
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -311,14 +311,14 @@ cdef class TraderWrapper:
         :param request_id:
         :return:
         """
-        cdef uintmax_t result
+        cdef int result
 
         if self._spi is not NULL:
             with nogil:
                 result = self._api.QueryOrderByXTPID(order_xtp_id, session_id, request_id)
             return result
 
-    def QueryOrders(self, query_param, uintmax_t session_id, int request_id):
+    def QueryOrders(self, query_param, uint64_t session_id, int request_id):
         """
         # 请求查询报单
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -341,7 +341,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryOrders(<XTPQueryOrderReq *> query_param, session_id, request_id)
             return result
 
-    def QueryTradesByXTPID(self, const uintmax_t order_xtp_id, uintmax_t session_id, int request_id):
+    def QueryTradesByXTPID(self, const uint64_t order_xtp_id, uint64_t session_id, int request_id):
         """
         # 根据委托编号请求查询相关成交
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -361,7 +361,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryTradesByXTPID(order_xtp_id, session_id, request_id)
             return result
 
-    def QueryTrades(self, query_param, uintmax_t session_id, int request_id):
+    def QueryTrades(self, query_param, uint64_t session_id, int request_id):
         """
         # 请求查询已成交
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -384,7 +384,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryTrades(<XTPQueryTraderReq *> address, session_id, request_id)
             return result
 
-    def QueryPosition(self, const_char *ticker, uintmax_t session_id, int request_id):
+    def QueryPosition(self, const_char *ticker, uint64_t session_id, int request_id):
         """
         # 请求查询投资者持仓
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -404,7 +404,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryPosition(ticker, session_id, request_id)
             return result
 
-    def QueryAsset(self, uintmax_t session_id, int request_id):
+    def QueryAsset(self, uint64_t session_id, int request_id):
         """   # 请求查询资产
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
         # @param session_id 资金账户对应的session_id,登录时得到
@@ -416,7 +416,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryAsset(session_id, request_id)
             return result
 
-    def QueryStructuredFund(self, query_param, uintmax_t session_id, int request_id):
+    def QueryStructuredFund(self, query_param, uint64_t session_id, int request_id):
         """
         # 请求查询分级基金
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -437,7 +437,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryStructuredFund(<XTPQueryStructuredFundInfoReq *> address, session_id, request_id)
             return result
 
-    def FundTransfer(self, fund_transfer, uintmax_t session_id):
+    def FundTransfer(self, fund_transfer, uint64_t session_id):
         """
         # 资金划拨请求
         # @return 资金划拨订单在XTP系统中的ID,如果为‘0’表示消息发送失败，此时用户可以调用GetApiLastError(self,)来获取错误代码，非“0”表示消息发送成功，用户需要记录下返回的serial_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
@@ -446,7 +446,7 @@ cdef class TraderWrapper:
         :param session_id:
         :return:
         """
-        cdef int result
+        cdef uint64_t result
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(fund_transfer)
@@ -454,7 +454,7 @@ cdef class TraderWrapper:
                 result = self._api.FundTransfer(<XTPFundTransferReq *> address, session_id)
             return result
 
-    def QueryFundTransfer(self, query_param, uintmax_t session_id, int request_id):
+    def QueryFundTransfer(self, query_param, uint64_t session_id, int request_id):
         """
         # 请求查询资金划拨
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -474,7 +474,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryFundTransfer(<XTPQueryFundTransferLogReq *> address, session_id, request_id)
             return result
 
-    def QueryETF(self, query_param, uintmax_t session_id, int request_id):
+    def QueryETF(self, query_param, uint64_t session_id, int request_id):
         """
         # 请求查询ETF清单文件
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -494,7 +494,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryETF(<XTPQueryETFBaseReq *> address, session_id, request_id)
             return result
 
-    def QueryETFTickerBasket(self, query_param, uintmax_t session_id, int request_id):
+    def QueryETFTickerBasket(self, query_param, uint64_t session_id, int request_id):
         """
         # 请求查询ETF股票篮
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -514,7 +514,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryETFTickerBasket(<XTPQueryETFComponentReq *> address, session_id, request_id)
             return result
 
-    def QueryIPOInfoList(self, uintmax_t session_id, int request_id):
+    def QueryIPOInfoList(self, uint64_t session_id, int request_id):
         """
         请求查询今日新股申购信息列表
 
@@ -529,7 +529,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryIPOInfoList(session_id, request_id)
             return result
 
-    def QueryIPOQuotaInfo(self, uintmax_t session_id, int request_id):
+    def QueryIPOQuotaInfo(self, uint64_t session_id, int request_id):
         """
         # 请求查询用户新股申购额度信息
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -546,7 +546,7 @@ cdef class TraderWrapper:
                 result = self._api.QueryIPOQuotaInfo(session_id, request_id)
             return result
 
-    def QueryOptionAuctionInfo(self, query_param, uintmax_t session_id, int request_id):
+    def QueryOptionAuctionInfo(self, query_param, uint64_t session_id, int request_id):
         """
         请求查询期权合约
 
