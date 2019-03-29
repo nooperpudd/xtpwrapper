@@ -17,7 +17,8 @@ from xtpwrapper.xtp_struct.xquote_struct import (
     OrderBookStruct,
     XTPQuoteStaticInfo,
     XTPMarketDataStruct,
-    XTPTickByTickStruct
+    XTPTickByTickStruct,
+    XTPTickerPriceInfo
 )
 
 cdef class QuoteWrapper:
@@ -551,7 +552,7 @@ cdef extern int QuoteSpi_OnQueryTickersPriceInfo(self, XTPTPI *ticker_info, XTPR
     if ticker_info is NULL:
         ticker_info_obj = None
     else:
-        ticker_info_obj = XTPQuoteStaticInfo.from_address(<size_t> ticker_info)
+        ticker_info_obj = XTPTickerPriceInfo.from_address(<size_t> ticker_info)
     if error_info is NULL:
         error_info_obj = None
     else:
