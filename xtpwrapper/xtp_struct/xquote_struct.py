@@ -13,12 +13,8 @@ class XTPSpecificTickerStruct(Base):
         ('ticker', ctypes.c_char * 16),  # 合约代码（不包含交易所信息）例如"600000"，不带空格，以'\0'结尾
     ]
 
-    def __init__(self, ticker=''):
-        super(XTPSpecificTickerStruct, self).__init__()
-        self.ticker = self._to_bytes(ticker)
 
-
-class XTPMarketDataStockExData(Base):
+class _XTPMarketDataStockExData(Base):
     """
     股票、基金、债券等额外数据
     """
@@ -57,49 +53,8 @@ class XTPMarketDataStockExData(Base):
         ('r2', ctypes.c_int64),  # 预留
     ]
 
-    def __init__(self, total_bid_qty='', total_ask_qty='', ma_bid_price=0.0, ma_ask_price=0.0, ma_bond_bid_price=0.0,
-                 ma_bond_ask_price=0.0, yield_to_maturity=0.0, iopv=0.0, etf_buy_count='', etf_sell_count='',
-                 etf_buy_qty=0.0, etf_buy_money=0.0, etf_sell_qty=0.0, etf_sell_money=0.0, total_warrant_exec_qty=0.0,
-                 warrant_lower_price=0.0, warrant_upper_price=0.0, cancel_buy_count='', cancel_sell_count='',
-                 cancel_buy_qty=0.0, cancel_sell_qty=0.0, cancel_buy_money=0.0, cancel_sell_money=0.0,
-                 total_buy_count='', total_sell_count='', duration_after_buy='', duration_after_sell='',
-                 num_bid_orders='', num_ask_orders='', pre_iopv=0.0, r1='', r2=''):
-        super(XTPMarketDataStockExData, self).__init__()
-        self.total_bid_qty = int(total_bid_qty)
-        self.total_ask_qty = int(total_ask_qty)
-        self.ma_bid_price = float(ma_bid_price)
-        self.ma_ask_price = float(ma_ask_price)
-        self.ma_bond_bid_price = float(ma_bond_bid_price)
-        self.ma_bond_ask_price = float(ma_bond_ask_price)
-        self.yield_to_maturity = float(yield_to_maturity)
-        self.iopv = float(iopv)
-        self.etf_buy_count = int(etf_buy_count)
-        self.etf_sell_count = int(etf_sell_count)
-        self.etf_buy_qty = float(etf_buy_qty)
-        self.etf_buy_money = float(etf_buy_money)
-        self.etf_sell_qty = float(etf_sell_qty)
-        self.etf_sell_money = float(etf_sell_money)
-        self.total_warrant_exec_qty = float(total_warrant_exec_qty)
-        self.warrant_lower_price = float(warrant_lower_price)
-        self.warrant_upper_price = float(warrant_upper_price)
-        self.cancel_buy_count = int(cancel_buy_count)
-        self.cancel_sell_count = int(cancel_sell_count)
-        self.cancel_buy_qty = float(cancel_buy_qty)
-        self.cancel_sell_qty = float(cancel_sell_qty)
-        self.cancel_buy_money = float(cancel_buy_money)
-        self.cancel_sell_money = float(cancel_sell_money)
-        self.total_buy_count = int(total_buy_count)
-        self.total_sell_count = int(total_sell_count)
-        self.duration_after_buy = int(duration_after_buy)
-        self.duration_after_sell = int(duration_after_sell)
-        self.num_bid_orders = int(num_bid_orders)
-        self.num_ask_orders = int(num_ask_orders)
-        self.pre_iopv = float(pre_iopv)
-        self.r1 = int(r1)
-        self.r2 = int(r2)
 
-
-class XTPMarketDataOptionExData(Base):
+class _XTPMarketDataOptionExData(Base):
     """
     期权额外数据
     """
@@ -109,19 +64,13 @@ class XTPMarketDataOptionExData(Base):
         ('last_enquiry_time', ctypes.c_int64),  # 最近询价时间(SH)
     ]
 
-    def __init__(self, auction_price=0.0, auction_qty='', last_enquiry_time=''):
-        super(XTPMarketDataOptionExData, self).__init__()
-        self.auction_price = float(auction_price)
-        self.auction_qty = int(auction_qty)
-        self.last_enquiry_time = int(last_enquiry_time)
-
 
 class _XTPMarketUion(ctypes.Union):
     """
     """
     _fields_ = [
-        ("stk", XTPMarketDataStockExData),
-        ("opt", XTPMarketDataOptionExData)
+        ("stk", _XTPMarketDataStockExData),
+        ("opt", _XTPMarketDataOptionExData)
     ]
 
 
@@ -163,39 +112,6 @@ class XTPMarketDataStruct(Base):
     ]
     _anonymous_ = ("_u",)
 
-    def __init__(self, ticker='', last_price=0.0, pre_close_price=0.0, open_price=0.0, high_price=0.0, low_price=0.0,
-                 close_price=0.0, pre_total_long_positon='', total_long_positon='', pre_settl_price=0.0,
-                 settl_price=0.0, upper_limit_price=0.0, lower_limit_price=0.0, pre_delta=0.0, curr_delta=0.0,
-                 data_time='', qty='', turnover=0.0, avg_price=0.0, bid=0.0, ask=0.0, bid_qty='', ask_qty='',
-                 trades_count='', ticker_status='', r4=''):
-        super(XTPMarketDataStruct, self).__init__()
-        self.ticker = self._to_bytes(ticker)
-        self.last_price = float(last_price)
-        self.pre_close_price = float(pre_close_price)
-        self.open_price = float(open_price)
-        self.high_price = float(high_price)
-        self.low_price = float(low_price)
-        self.close_price = float(close_price)
-        self.pre_total_long_positon = int(pre_total_long_positon)
-        self.total_long_positon = int(total_long_positon)
-        self.pre_settl_price = float(pre_settl_price)
-        self.settl_price = float(settl_price)
-        self.upper_limit_price = float(upper_limit_price)
-        self.lower_limit_price = float(lower_limit_price)
-        self.pre_delta = float(pre_delta)
-        self.curr_delta = float(curr_delta)
-        self.data_time = int(data_time)
-        self.qty = int(qty)
-        self.turnover = float(turnover)
-        self.avg_price = float(avg_price)
-        self.bid = float(bid)
-        self.ask = float(ask)
-        self.bid_qty = int(bid_qty)
-        self.ask_qty = int(ask_qty)
-        self.trades_count = int(trades_count)
-        self.ticker_status = self._to_bytes(ticker_status)
-        self.r4 = int(r4)
-
 
 class XTPQuoteStaticInfo(Base):
     """
@@ -213,18 +129,6 @@ class XTPQuoteStaticInfo(Base):
         ('buy_qty_unit', ctypes.c_int32),  # 合约最小交易量(买)
         ('sell_qty_unit', ctypes.c_int32),  # 合约最小交易量(卖)
     ]
-
-    # def __init__(self, ticker='', ticker_name='', pre_close_price=0.0, upper_limit_price=0.0, lower_limit_price=0.0,
-    #              price_tick=0.0, buy_qty_unit='', sell_qty_unit=''):
-    #     super(XTPQuoteStaticInfo, self).__init__()
-    #     self.ticker = self._to_bytes(ticker)
-    #     self.ticker_name = self._to_bytes(ticker_name)
-    #     self.pre_close_price = float(pre_close_price)
-    #     self.upper_limit_price = float(upper_limit_price)
-    #     self.lower_limit_price = float(lower_limit_price)
-    #     self.price_tick = float(price_tick)
-    #     self.buy_qty_unit = int(buy_qty_unit)
-    #     self.sell_qty_unit = int(sell_qty_unit)
 
 
 class OrderBookStruct(Base):
@@ -245,22 +149,8 @@ class OrderBookStruct(Base):
         ('data_time', ctypes.c_int64),  # 时间类
     ]
 
-    def __init__(self, ticker='', last_price=0.0, qty='', turnover=0.0, trades_count='', bid=0.0, ask=0.0, bid_qty='',
-                 ask_qty='', data_time=''):
-        super(OrderBookStruct, self).__init__()
-        self.ticker = self._to_bytes(ticker)
-        self.last_price = float(last_price)
-        self.qty = int(qty)
-        self.turnover = float(turnover)
-        self.trades_count = int(trades_count)
-        self.bid = float(bid)
-        self.ask = float(ask)
-        self.bid_qty = int(bid_qty)
-        self.ask_qty = int(ask_qty)
-        self.data_time = int(data_time)
 
-
-class XTPTickByTickEntrust(Base):
+class _XTPTickByTickEntrust(Base):
     """
     逐笔委托(仅适用深交所)
     """
@@ -273,17 +163,8 @@ class XTPTickByTickEntrust(Base):
         ('ord_type', ctypes.c_char),  # 订单类别: '1': 市价; '2': 限价; 'U': 本方最优
     ]
 
-    def __init__(self, channel_no='', seq='', price=0.0, qty='', side='', ord_type=''):
-        super(XTPTickByTickEntrust, self).__init__()
-        self.channel_no = int(channel_no)
-        self.seq = int(seq)
-        self.price = float(price)
-        self.qty = int(qty)
-        self.side = self._to_bytes(side)
-        self.ord_type = self._to_bytes(ord_type)
 
-
-class XTPTickByTickTrade(Base):
+class _XTPTickByTickTrade(Base):
     """
     逐笔成交
     """
@@ -298,22 +179,11 @@ class XTPTickByTickTrade(Base):
         ('trade_flag', ctypes.c_char),  # SH: 内外盘标识('B':主动买; 'S':主动卖; 'N':未知) SZ: 成交标识('4':撤; 'F':成交)
     ]
 
-    def __init__(self, channel_no='', seq='', price=0.0, qty='', money=0.0, bid_no='', ask_no='', trade_flag=''):
-        super(XTPTickByTickTrade, self).__init__()
-        self.channel_no = int(channel_no)
-        self.seq = int(seq)
-        self.price = float(price)
-        self.qty = int(qty)
-        self.money = float(money)
-        self.bid_no = int(bid_no)
-        self.ask_no = int(ask_no)
-        self.trade_flag = self._to_bytes(trade_flag)
-
 
 class _XTPTickByTickUnion(ctypes.Union):
     _fields_ = [
-        ("entrust", XTPTickByTickEntrust),
-        ("trade", XTPTickByTickTrade)
+        ("entrust", _XTPTickByTickEntrust),
+        ("trade", _XTPTickByTickTrade)
     ]
 
 
@@ -331,12 +201,6 @@ class XTPTickByTickStruct(Base):
     ]
     _anonymous_ = ("_u",)
 
-    def __init__(self, ticker='', seq='', data_time=''):
-        super(XTPTickByTickStruct, self).__init__()
-        self.ticker = self._to_bytes(ticker)
-        self.seq = int(seq)
-        self.data_time = int(data_time)
-
 
 class XTPTickerPriceInfo(Base):
     """
@@ -347,8 +211,3 @@ class XTPTickerPriceInfo(Base):
         ('ticker', ctypes.c_char * 16),  # 合约代码（不包含交易所信息），不带空格，以'\0'结尾
         ('last_price', ctypes.c_double),  # 最新价
     ]
-
-    def __init__(self, ticker='', last_price=0.0):
-        super(XTPTickerPriceInfo, self).__init__()
-        self.ticker = self._to_bytes(ticker)
-        self.last_price = float(last_price)
