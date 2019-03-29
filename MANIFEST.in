@@ -1,0 +1,8 @@
+include LICENSE
+include README.rst
+recursive-include xtp *
+
+recursive-include xtpwrapper *.h *.pyx *.pxd
+recursive-exclude xtpwrapper *.cpp *.xml *.dtd
+
+global-exclude .benchmarks .pytest_cache build __pycache__ *.pyc *.pyo doc log extra tests
