@@ -146,8 +146,9 @@ cdef class TraderWrapper:
         """
         cdef unsigned char result
 
-        if self._api is not NULL:
-            result = self._api.GetClientIDByXTPID(order_xtp_id)
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.GetClientIDByXTPID(order_xtp_id)
             return result
 
     def GetAccountByXTPID(self, uintmax_t order_xtp_id):
@@ -161,8 +162,9 @@ cdef class TraderWrapper:
         """
         cdef const_char *result
 
-        if self._api is not NULL:
-            result = self._api.GetAccountByXTPID(order_xtp_id)
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.GetAccountByXTPID(order_xtp_id)
             return result
 
     def SubscribePublicTopic(self, XTP_TE_RESUME_TYPE resume_type):
@@ -177,8 +179,9 @@ cdef class TraderWrapper:
         :param resume_type:
         :return:
         """
-        if self._api is not NULL:
-            self._api.SubscribePublicTopic(resume_type)
+        if self._spi is not NULL:
+            with nogil:
+                self._api.SubscribePublicTopic(resume_type)
 
     def SetSoftwareVersion(self, const_char *version):
         """
@@ -188,8 +191,9 @@ cdef class TraderWrapper:
         :param version:
         :return:
         """
-        if self._api is not NULL:
-            self._api.SetSoftwareVersion(version)
+        if self._spi is not NULL:
+            with nogil:
+                self._api.SetSoftwareVersion(version)
 
     def SetSoftwareKey(self, const_char *key):
         """
@@ -199,8 +203,9 @@ cdef class TraderWrapper:
         :param key:
         :return:
         """
-        if self._api is not NULL:
-            self._api.SetSoftwareKey(key)
+        if self._spi is not NULL:
+            with nogil:
+                self._api.SetSoftwareKey(key)
 
     def SetHeartBeatInterval(self, uint32_t erval):
         """
@@ -210,8 +215,9 @@ cdef class TraderWrapper:
         :param erval:
         :return:
         """
-        if self._api is not NULL:
-            self._api.SetHeartBeatInterval(erval)
+        if self._spi is not NULL:
+            with nogil:
+                self._api.SetHeartBeatInterval(erval)
 
     def Login(self, const_char *ip, int port, const_char *user,
               const_char *password, XTP_PROTOCOL_TYPE sock_type):
@@ -234,8 +240,9 @@ cdef class TraderWrapper:
         """
         cdef uintmax_t result
 
-        if self._api is not NULL:
-            result = self._api.Login(ip, port, user, password, sock_type)
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.Login(ip, port, user, password, sock_type)
             return result
 
     def Logout(self, uintmax_t session_id):
@@ -248,8 +255,9 @@ cdef class TraderWrapper:
         :return:
         """
         cdef int result
-        if self._api is not NULL:
-            result = self._api.Logout(session_id)
+        if self._spi is not NULL:
+            with nogil:
+                result = self._api.Logout(session_id)
             return result
 
     def InsertOrder(self, order, uintmax_t session_id):
@@ -269,7 +277,8 @@ cdef class TraderWrapper:
 
         if self._spi is not NULL:
             address = ctypes.addressof(order)
-            result = self._api.InsertOrder(<XTPOrderInsertInfo *> address, session_id)
+            with nogil:
+                result = self._api.InsertOrder(<XTPOrderInsertInfo *> address, session_id)
             return result
 
     def CancelOrder(self, const uintmax_t order_xtp_id, uintmax_t session_id):
@@ -286,7 +295,8 @@ cdef class TraderWrapper:
         """
         cdef uintmax_t result
         if self._spi is not NULL:
-            result = self._api.CancelOrder(order_xtp_id, session_id)
+            with nogil:
+                result = self._api.CancelOrder(order_xtp_id, session_id)
             return result
 
     def QueryOrderByXTPID(self, const uintmax_t order_xtp_id, uintmax_t session_id, int request_id):
@@ -304,7 +314,8 @@ cdef class TraderWrapper:
         cdef uintmax_t result
 
         if self._spi is not NULL:
-            result = self._api.QueryOrderByXTPID(order_xtp_id, session_id, request_id)
+            with nogil:
+                result = self._api.QueryOrderByXTPID(order_xtp_id, session_id, request_id)
             return result
 
     def QueryOrders(self, query_param, uintmax_t session_id, int request_id):
@@ -326,8 +337,8 @@ cdef class TraderWrapper:
 
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryOrders(<XTPQueryOrderReq *> query_param, session_id, request_id)
+            with nogil:
+                result = self._api.QueryOrders(<XTPQueryOrderReq *> query_param, session_id, request_id)
             return result
 
     def QueryTradesByXTPID(self, const uintmax_t order_xtp_id, uintmax_t session_id, int request_id):
@@ -346,7 +357,8 @@ cdef class TraderWrapper:
         cdef int result
 
         if self._spi is not NULL:
-            result = self._api.QueryTradesByXTPID(order_xtp_id, session_id, request_id)
+            with nogil:
+                result = self._api.QueryTradesByXTPID(order_xtp_id, session_id, request_id)
             return result
 
     def QueryTrades(self, query_param, uintmax_t session_id, int request_id):
@@ -368,8 +380,8 @@ cdef class TraderWrapper:
 
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryTrades(<XTPQueryTraderReq *> address, session_id, request_id)
+            with nogil:
+                result = self._api.QueryTrades(<XTPQueryTraderReq *> address, session_id, request_id)
             return result
 
     def QueryPosition(self, const_char *ticker, uintmax_t session_id, int request_id):
@@ -388,7 +400,8 @@ cdef class TraderWrapper:
         cdef int result
 
         if self._spi is not NULL:
-            result = self._api.QueryPosition(ticker, session_id, request_id)
+            with nogil:
+                result = self._api.QueryPosition(ticker, session_id, request_id)
             return result
 
     def QueryAsset(self, uintmax_t session_id, int request_id):
@@ -399,7 +412,8 @@ cdef class TraderWrapper:
         cdef int result
 
         if self._spi is not NULL:
-            result = self._api.QueryAsset(session_id, request_id)
+            with nogil:
+                result = self._api.QueryAsset(session_id, request_id)
             return result
 
     def QueryStructuredFund(self, query_param, uintmax_t session_id, int request_id):
@@ -419,8 +433,8 @@ cdef class TraderWrapper:
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryStructuredFund(<XTPQueryStructuredFundInfoReq *> address, session_id, request_id)
+            with nogil:
+                result = self._api.QueryStructuredFund(<XTPQueryStructuredFundInfoReq *> address, session_id, request_id)
             return result
 
     def FundTransfer(self, fund_transfer, uintmax_t session_id):
@@ -436,8 +450,8 @@ cdef class TraderWrapper:
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(fund_transfer)
-
-            result = self._api.FundTransfer(<XTPFundTransferReq *> address, session_id)
+            with nogil:
+                result = self._api.FundTransfer(<XTPFundTransferReq *> address, session_id)
             return result
 
     def QueryFundTransfer(self, query_param, uintmax_t session_id, int request_id):
@@ -456,8 +470,8 @@ cdef class TraderWrapper:
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryFundTransfer(<XTPQueryFundTransferLogReq *> address, session_id, request_id)
+            with nogil:
+                result = self._api.QueryFundTransfer(<XTPQueryFundTransferLogReq *> address, session_id, request_id)
             return result
 
     def QueryETF(self, query_param, uintmax_t session_id, int request_id):
@@ -476,8 +490,8 @@ cdef class TraderWrapper:
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryETF(<XTPQueryETFBaseReq *> address, session_id, request_id)
+            with nogil:
+                result = self._api.QueryETF(<XTPQueryETFBaseReq *> address, session_id, request_id)
             return result
 
     def QueryETFTickerBasket(self, query_param, uintmax_t session_id, int request_id):
@@ -496,8 +510,8 @@ cdef class TraderWrapper:
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryETFTickerBasket(<XTPQueryETFComponentReq *> address, session_id, request_id)
+            with nogil:
+                result = self._api.QueryETFTickerBasket(<XTPQueryETFComponentReq *> address, session_id, request_id)
             return result
 
     def QueryIPOInfoList(self, uintmax_t session_id, int request_id):
@@ -511,7 +525,8 @@ cdef class TraderWrapper:
         cdef int result
 
         if self._spi is not NULL:
-            result = self._api.QueryIPOInfoList(session_id, request_id)
+            with nogil:
+                result = self._api.QueryIPOInfoList(session_id, request_id)
             return result
 
     def QueryIPOQuotaInfo(self, uintmax_t session_id, int request_id):
@@ -527,7 +542,8 @@ cdef class TraderWrapper:
         cdef int result
 
         if self._spi is not NULL:
-            result = self._api.QueryIPOQuotaInfo(session_id, request_id)
+            with nogil:
+                result = self._api.QueryIPOQuotaInfo(session_id, request_id)
             return result
 
     def QueryOptionAuctionInfo(self, query_param, uintmax_t session_id, int request_id):
@@ -543,8 +559,8 @@ cdef class TraderWrapper:
         cdef size_t address
         if self._spi is not NULL:
             address = ctypes.addressof(query_param)
-
-            result = self._api.QueryOptionAuctionInfo(<XTPQueryOptionAuctionInfoReq *> address, session_id, request_id)
+            with nogil:
+                result = self._api.QueryOptionAuctionInfo(<XTPQueryOptionAuctionInfoReq *> address, session_id, request_id)
             return result
 
 cdef extern int TraderSpi_OnDisconnected(self, uint64_t session_id, int reason) except -1:

@@ -6,7 +6,7 @@ from .xtp_enum import XTP_LOG_LEVEL
 
 class QuoteAPI(QuoteWrapper):
 
-    def CreateQuote(self, client_id, save_file_path, log_level: XTP_LOG_LEVEL):
+    def CreateQuote(self, client_id: int, save_file_path: str, log_level: XTP_LOG_LEVEL):
         """
         创建QuoteApi
         如果一个账户需要在多个客户端登录，请使用不同的client_id，系统允许一个账户同时登录多个客户端，但是对于同一账户，
@@ -53,7 +53,7 @@ class QuoteAPI(QuoteWrapper):
         """
         return super().GetApiLastError()
 
-    def SetUDPBufferSize(self, buff_size):
+    def SetUDPBufferSize(self, buff_size: int):
         """
         设置采用UDP方式连接时的接收缓冲区大小
         需要在Login之前调用，默认大小和最小设置均为64MB。此缓存大小单位为MB，请输入2的次方数，例如128MB请输入128。
@@ -62,7 +62,7 @@ class QuoteAPI(QuoteWrapper):
         """
         super().SetUDPBufferSize(buff_size)
 
-    def SetHeartBeatInterval(self, interval):
+    def SetHeartBeatInterval(self, interval: int):
         """
         设置心跳检测时间间隔，单位为秒
         此函数必须在Login之前调用
@@ -83,7 +83,7 @@ class QuoteAPI(QuoteWrapper):
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
         return super().SubscribeAllMarketData(ticks, exchange_id)
 
-    def UnSubscribeMarketData(self, ticks, exchange_id: XTP_EXCHANGE_TYPE):
+    def UnSubscribeMarketData(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
         退订行情，包括股票、指数和期权。
 
@@ -207,7 +207,7 @@ class QuoteAPI(QuoteWrapper):
         """
         return super().UnSubscribeAllTickByTick(exchange_id)
 
-    def Login(self, ip, port, user, password, sock_type: int = 1):
+    def Login(self, ip: str, port: int, user: str, password: str, sock_type: int = 1):
         """
         用户登录请求
         “0”表示登录成功，“-1”表示连接服务器出错，此时用户可以调用GetApiLastError()来获取错误代码，“-2”表示已存在连接，不允许重复登录，如果需要重连，请先logout，“-3”表示输入有错误

@@ -1,12 +1,22 @@
 # encoding:utf-8
 
 from .trader_api import TraderWrapper
-from .xtp_enum import XTP_TE_RESUME_TYPE
+from .xtp_enum import XTP_TE_RESUME_TYPE, XTP_LOG_LEVEL
+from .xtp_struct.api_fund_struct import XTPFundTransferReqStruct
+from .xtp_struct.xoms_struct import (XTPOrderInsertInfoStruct,
+                                     XTPQueryOrderReqStruct,
+                                     XTPQueryTraderReqStruct,
+                                     XTPQueryStructuredFundInfoReqStruct,
+                                     XTPQueryFundTransferLogReqStruct,
+                                     XTPQueryETFBaseReqStruct,
+                                     XTPQueryETFComponentReqStruct,
+                                     XTPQueryOptionAuctionInfoReqStruct)
 
 
 class TraderApi(TraderWrapper):
 
-    def CreateTrader(self, client_id, save_file_path, log_level):
+    def CreateTrader(self, client_id: int, save_file_path: str,
+                     log_level: XTP_LOG_LEVEL = XTP_LOG_LEVEL.XTP_LOG_LEVEL_INFO):
         """
         如果一个账户需要在多个客户端登录，请使用不同的client_id，系统允许一个账户同时登录多个客户端，
         但是对于同一账户，相同的client_id只能保持一个session连接，
@@ -33,8 +43,7 @@ class TraderApi(TraderWrapper):
         # @remark 只有登录成功后,才能得到正确的交易日
         :return:
         """
-        day = super().GetTradingDay()
-        return day.decode()
+        return super().GetTradingDay().decode()
 
     def GetApiLastError(self):
         """
@@ -51,10 +60,9 @@ class TraderApi(TraderWrapper):
         # @return 返回api发行版本号
         :return:
         """
-        version = super().GetApiVersion()
-        return version.decode()
+        return super().GetApiVersion().decode()
 
-    def GetClientIDByXTPID(self, order_xtp_id):
+    def GetClientIDByXTPID(self, order_xtp_id: int):
         """
         # 通过报单在xtp系统中的ID获取下单的客户端id
         # @remark 由于系统允许同一用户在不同客户端上登录操作，每个客户端通过不同的client_id进行区分
@@ -63,7 +71,7 @@ class TraderApi(TraderWrapper):
         """
         return super().GetClientIDByXTPID(order_xtp_id)
 
-    def GetAccountByXTPID(self, order_xtp_id):
+    def GetAccountByXTPID(self, order_xtp_id: int):
         """
         # 通过报单在xtp系统中的ID获取相关资金账户名
 
@@ -87,7 +95,7 @@ class TraderApi(TraderWrapper):
         """
         super().SubscribePublicTopic(resume_type)
 
-    def SetSoftwareVersion(self, version):
+    def SetSoftwareVersion(self, version: str):
         """
         # 设置软件开发版本号
 
@@ -97,7 +105,7 @@ class TraderApi(TraderWrapper):
         """
         super().SetSoftwareVersion(version.encode())
 
-    def SetSoftwareKey(self, key):
+    def SetSoftwareKey(self, key: str):
         """
         # 设置软件开发Key
 
@@ -107,7 +115,7 @@ class TraderApi(TraderWrapper):
         """
         super().SetSoftwareKey(key.encode())
 
-    def SetHeartBeatInterval(self, erval):
+    def SetHeartBeatInterval(self, erval: int):
         """
         # 设置心跳检测时间间隔，单位为秒
 
@@ -117,7 +125,7 @@ class TraderApi(TraderWrapper):
         """
         super().SetHeartBeatInterval(erval)
 
-    def Login(self, ip, port, user, password, sock_type: int = 1):
+    def Login(self, ip: str, port: int, user: str, password: str, sock_type: int = 1):
         """
         # 用户登录请求
         # @return session_id表明此资金账号登录是否成功，“0”表示登录失败，
@@ -134,7 +142,7 @@ class TraderApi(TraderWrapper):
         """
         return super().Login(ip.encode(), port, user.encode(), password.encode(), sock_type)
 
-    def Logout(self, session_id):
+    def Logout(self, session_id: int):
         """
 
         # 登出请求
@@ -145,11 +153,12 @@ class TraderApi(TraderWrapper):
         """
         return super().Logout(session_id)
 
-    def InsertOrder(self, order, session_id):
+    def InsertOrder(self, order: XTPOrderInsertInfoStruct, session_id: int):
         """
         # 报单录入请求
 
-        # @remark 交易所接收订单后，会在报单响应函数OnOrderEvent(self,)中返回报单未成交的状态，之后所有的订单状态改变（除了部成状态）都会通过报单响应函数返回
+        # @remark 交易所接收订单后，会在报单响应函数OnOrderEvent(self,)中返回报单未成交的状态，
+        之后所有的订单状态改变（除了部成状态）都会通过报单响应函数返回
 
         :param order: 报单录入信息，其中order.order_client_id字段是用户自定义字段，
                 用户输入什么值，订单响应OnOrderEvent(self,)返回时就会带回什么值，
@@ -162,7 +171,7 @@ class TraderApi(TraderWrapper):
         """
         return super().InsertOrder(order, session_id)
 
-    def CancelOrder(self, order_xtp_id, session_id):
+    def CancelOrder(self, order_xtp_id: int, session_id: int):
         """
         # 报单操作请求
         # @return
@@ -177,7 +186,7 @@ class TraderApi(TraderWrapper):
         """
         return super().CancelOrder(order_xtp_id, session_id)
 
-    def QueryOrderByXTPID(self, order_xtp_id, session_id, request_id):
+    def QueryOrderByXTPID(self, order_xtp_id: int, session_id: int, request_id: int):
         """
         # 根据报单ID请求查询报单
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -191,7 +200,8 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryOrderByXTPID(order_xtp_id, session_id, request_id)
 
-    def QueryOrders(self, query_param, session_id, request_id):
+    def QueryOrders(self, query_param: XTPQueryOrderReqStruct,
+                    session_id: int, request_id: int):
         """
         # 请求查询报单
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -207,7 +217,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryOrders(query_param, session_id, request_id)
 
-    def QueryTradesByXTPID(self, order_xtp_id, session_id, request_id):
+    def QueryTradesByXTPID(self, order_xtp_id: int, session_id: int, request_id: int):
         """
         # 根据委托编号请求查询相关成交
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -222,7 +232,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryTradesByXTPID(order_xtp_id, session_id, request_id)
 
-    def QueryTrades(self, query_param, session_id, request_id):
+    def QueryTrades(self, query_param: XTPQueryTraderReqStruct, session_id: int, request_id: int):
         """
         # 请求查询已成交
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -238,7 +248,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryTrades(query_param, session_id, request_id)
 
-    def QueryPosition(self, ticker, session_id, request_id):
+    def QueryPosition(self, ticker: str, session_id: int, request_id: int):
         """
         # 请求查询投资者持仓
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -253,7 +263,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryPosition(ticker, session_id, request_id)
 
-    def QueryAsset(self, session_id, request_id):
+    def QueryAsset(self, session_id: int, request_id: int):
         """
         # 请求查询资产
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -261,7 +271,8 @@ class TraderApi(TraderWrapper):
         # @param request_id 用于用户定位查询响应的ID，由用户自定义"""
         return super().QueryAsset(session_id, request_id)
 
-    def QueryStructuredFund(self, query_param, session_id, request_id):
+    def QueryStructuredFund(self, query_param: XTPQueryStructuredFundInfoReqStruct,
+                            session_id: int, request_id: int):
         """
         # 请求查询分级基金
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -276,7 +287,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryStructuredFund(query_param, session_id, request_id)
 
-    def FundTransfer(self, fund_transfer, session_id):
+    def FundTransfer(self, fund_transfer: XTPFundTransferReqStruct, session_id: int):
         """
         # 资金划拨请求
         # @return 资金划拨订单在XTP系统中的ID,如果为‘0’表示消息发送失败，此时用户可以调用GetApiLastError(self,)来获取错误代码，非“0”表示消息发送成功，用户需要记录下返回的serial_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
@@ -287,7 +298,7 @@ class TraderApi(TraderWrapper):
         """
         return super().FundTransfer(fund_transfer, session_id)
 
-    def QueryFundTransfer(self, query_param, session_id, request_id):
+    def QueryFundTransfer(self, query_param: XTPQueryFundTransferLogReqStruct, session_id: int, request_id: int):
         """
         # 请求查询资金划拨
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -301,7 +312,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryFundTransfer(query_param, session_id, request_id)
 
-    def QueryETF(self, query_param, session_id, request_id):
+    def QueryETF(self, query_param: XTPQueryETFBaseReqStruct, session_id: int, request_id: int):
         """
         # 请求查询ETF清单文件
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -315,7 +326,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryETF(query_param, session_id, request_id)
 
-    def QueryETFTickerBasket(self, query_param, session_id, request_id):
+    def QueryETFTickerBasket(self, query_param: XTPQueryETFComponentReqStruct, session_id: int, request_id: int):
         """
         # 请求查询ETF股票篮
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -329,7 +340,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryETFTickerBasket(query_param, session_id, request_id)
 
-    def QueryIPOInfoList(self, session_id, request_id):
+    def QueryIPOInfoList(self, session_id: int, request_id: int):
         """
         请求查询今日新股申购信息列表
 
@@ -339,7 +350,7 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryIPOInfoList(session_id, request_id)
 
-    def QueryIPOQuotaInfo(self, session_id, request_id):
+    def QueryIPOQuotaInfo(self, session_id: int, request_id: int):
         """
         # 请求查询用户新股申购额度信息
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
@@ -351,7 +362,8 @@ class TraderApi(TraderWrapper):
         """
         return super().QueryIPOQuotaInfo(session_id, request_id)
 
-    def QueryOptionAuctionInfo(self, query_param, session_id, request_id):
+    def QueryOptionAuctionInfo(self, query_param: XTPQueryOptionAuctionInfoReqStruct,
+                               session_id: int, request_id: int):
         """
         请求查询期权合约
 

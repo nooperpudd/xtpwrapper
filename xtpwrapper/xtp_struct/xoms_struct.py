@@ -4,6 +4,7 @@ import ctypes
 from . import Base
 
 
+
 class _CommonStruct(ctypes.Structure):
     _fields_ = [
         ("side", ctypes.c_uint8),  # 买卖方向
@@ -12,14 +13,12 @@ class _CommonStruct(ctypes.Structure):
         ("reserved2", ctypes.c_uint8)  # 预留字段2
     ]
 
-
 class _CommonUion(ctypes.Union):
     _fields_ = [
         ("u32", ctypes.c_uint32),
         ("_struct", _CommonStruct),
     ]
     _anonymous_ = ('_struct',)
-
 
 class XTPOrderInsertInfoStruct(Base):
     """
@@ -29,10 +28,25 @@ class XTPOrderInsertInfoStruct(Base):
         ('order_xtp_id', ctypes.c_uint64),  # XTP系统订单ID，无需用户填写，在XTP系统中唯一
         ('order_client_id', ctypes.c_uint32),  # 报单引用，由客户自定义
         ('ticker', ctypes.c_char * 16),  # 合约代码客户端请求不带空格，以'\0'结尾
+
+        # XTP_MKT_INIT = 0,///<初始化值或者未知
+        # XTP_MKT_SZ_A = 1,///<深圳A股
+        # XTP_MKT_SH_A,    ///<上海A股
+        # XTP_MKT_UNKNOWN   ///<未知交易市场类型
         ('market', ctypes.c_int),  # 交易市场
         ('price', ctypes.c_double),  # 价格
         ('stop_price', ctypes.c_double),  # 止损价（保留字段）
         ('quantity', ctypes.c_int64),  # 数量(股票单位为股，逆回购单位为张)
+
+        # XTP_PRICE_LIMIT = 1, // / < 限价单 - 沪 / 深 / 沪期权（除普通股票业务外，其余业务均使用此种类型）
+        # XTP_PRICE_BEST_OR_CANCEL, // / < 即时成交剩余转撤销，市价单 - 深 / 沪期权
+        # XTP_PRICE_BEST5_OR_LIMIT, // / < 最优五档即时成交剩余转限价，市价单 - 沪
+        # XTP_PRICE_BEST5_OR_CANCEL, // / < 最优5档即时成交剩余转撤销，市价单 - 沪深
+        # XTP_PRICE_ALL_OR_CANCEL, // / < 全部成交或撤销, 市价单 - 深 / 沪期权
+        # XTP_PRICE_FORWARD_BEST, // / < 本方最优，市价单 - 深
+        # XTP_PRICE_REVERSE_BEST_LIMIT, // / < 对方最优剩余转限价，市价单 - 深 / 沪期权
+        # XTP_PRICE_LIMIT_OR_CANCEL, // / < 期权限价申报FOK
+        # XTP_PRICE_TYPE_UNKNOWN, // / < 未知或者无效价格类型
         ('price_type', ctypes.c_int),  # 报单价格
         ('business_type', ctypes.c_int),  # 业务类型
         ('_u', _CommonUion)
