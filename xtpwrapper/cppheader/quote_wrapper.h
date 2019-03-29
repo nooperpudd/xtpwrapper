@@ -272,5 +272,4 @@ class WrapperQuoteSpi: public QuoteSpi {
 	    PyObject *self;
 };
 
-
 #endif /* QUOTE_WRAPPER */

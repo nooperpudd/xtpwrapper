@@ -1,4 +1,7 @@
+# encoding:utf-8
+
 from .trader_api import TraderWrapper
+from .xtp_enum import XTP_TE_RESUME_TYPE
 
 
 class TraderApi(TraderWrapper):
@@ -13,7 +16,7 @@ class TraderApi(TraderWrapper):
         :param log_level: 日志输出级别
         :return:
         """
-        super().CreateTrader(client_id, save_file_path, log_level)
+        super().CreateTrader(client_id, save_file_path.encode(), log_level)
 
     def Release(self):
         """
@@ -70,7 +73,7 @@ class TraderApi(TraderWrapper):
         """
         return super().GetAccountByXTPID(order_xtp_id)
 
-    def SubscribePublicTopic(self, resume_type):
+    def SubscribePublicTopic(self, resume_type: XTP_TE_RESUME_TYPE = XTP_TE_RESUME_TYPE.XTP_TERT_QUICK):
         """
         # 订阅公共流。
 
@@ -92,7 +95,7 @@ class TraderApi(TraderWrapper):
         :param version: 用户开发软件版本号，非api发行版本号，长度不超过15位，以'\0'结尾
         :return:
         """
-        super().SetSoftwareVersion(version)
+        super().SetSoftwareVersion(version.encode())
 
     def SetSoftwareKey(self, key):
         """
@@ -102,7 +105,7 @@ class TraderApi(TraderWrapper):
         :param key: 用户开发软件Key，用户申请开户时给予，以'\0'结尾
         :return:
         """
-        super().SetSoftwareKey(key)
+        super().SetSoftwareKey(key.encode())
 
     def SetHeartBeatInterval(self, erval):
         """
@@ -114,10 +117,11 @@ class TraderApi(TraderWrapper):
         """
         super().SetHeartBeatInterval(erval)
 
-    def Login(self, ip, port, user, password, sock_type):
+    def Login(self, ip, port, user, password, sock_type: int = 1):
         """
         # 用户登录请求
-        # @return session_id表明此资金账号登录是否成功，“0”表示登录失败，可以调用GetApiLastError(self,)来获取错误代码，非“0”表示登录成功，此时需要记录下这个返回值session_id，与登录的资金账户对应
+        # @return session_id表明此资金账号登录是否成功，“0”表示登录失败，
+        可以调用GetApiLastError(self,)来获取错误代码，非“0”表示登录成功，此时需要记录下这个返回值session_id，与登录的资金账户对应
 
         # @remark 此函数为同步阻塞式，不需要异步等待登录成功，当函数返回即可进行后续操作，此api可支持多个账户连接，但是同一个账户同一个client_id只能有一个session连接，后面的登录在前一个session存续期间，无法连接
 
@@ -128,7 +132,7 @@ class TraderApi(TraderWrapper):
         :param sock_type: “1”代表TCP，“2”代表UDP，目前暂时只支持TCP
         :return:
         """
-        return super().Login(ip, port, user, password, sock_type)
+        return super().Login(ip.encode(), port, user.encode(), password.encode(), sock_type)
 
     def Logout(self, session_id):
         """

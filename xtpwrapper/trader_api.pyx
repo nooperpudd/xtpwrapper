@@ -52,7 +52,6 @@ cdef class TraderWrapper:
         self._spi = NULL
 
     def __dealloc__(self):
-
         self.Release()
 
     def Release(self):
@@ -292,11 +291,11 @@ cdef class TraderWrapper:
 
     def QueryOrderByXTPID(self, const uintmax_t order_xtp_id, uintmax_t session_id, int request_id):
         """
-            # 根据报单ID请求查询报单
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param order_xtp_id 需要查询的报单在xtp系统中的ID，即InsertOrder(self,)成功时返回的order_xtp_id
-    # @param session_id 资金账户对应的session_id，登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # 根据报单ID请求查询报单
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param order_xtp_id 需要查询的报单在xtp系统中的ID，即InsertOrder(self,)成功时返回的order_xtp_id
+        # @param session_id 资金账户对应的session_id，登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
         :param order_xtp_id:
         :param session_id:
         :param request_id:
@@ -311,11 +310,11 @@ cdef class TraderWrapper:
     def QueryOrders(self, query_param, uintmax_t session_id, int request_id):
         """
         # 请求查询报单
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param query_param 需要查询的订单相关筛选条件，其中合约代码可以为空，则默认所有存在的合约代码，如果不为空，请不带空格，并以'\0'结尾，其中起始时间格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点，结束时间格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
-    # @param session_id 资金账户对应的session_id，登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
-    # @remark 该方法支持分时段查询，如果股票代码为空，则默认查询时间段内的所有报单，否则查询时间段内所有跟股票代码相关的报单，此函数查询出的结果可能对应多个查询结果响应
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param query_param 需要查询的订单相关筛选条件，其中合约代码可以为空，则默认所有存在的合约代码，如果不为空，请不带空格，并以'\0'结尾，其中起始时间格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点，结束时间格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
+        # @param session_id 资金账户对应的session_id，登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # @remark 该方法支持分时段查询，如果股票代码为空，则默认查询时间段内的所有报单，否则查询时间段内所有跟股票代码相关的报单，此函数查询出的结果可能对应多个查询结果响应
 
         :param query_param:
         :param session_id:
@@ -375,12 +374,12 @@ cdef class TraderWrapper:
 
     def QueryPosition(self, const_char *ticker, uintmax_t session_id, int request_id):
         """
-           # 请求查询投资者持仓
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param ticker 需要查询的持仓合约代码，可以为空，如果不为空，请不带空格，并以'\0'结尾
-    # @param session_id 资金账户对应的session_id,登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
-    # @remark 该方法如果用户提供了合约代码，则会查询此合约的持仓信息，如果合约代码为空，则默认查询所有持仓信息
+        # 请求查询投资者持仓
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param ticker 需要查询的持仓合约代码，可以为空，如果不为空，请不带空格，并以'\0'结尾
+        # @param session_id 资金账户对应的session_id,登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # @remark 该方法如果用户提供了合约代码，则会查询此合约的持仓信息，如果合约代码为空，则默认查询所有持仓信息
         :param ticker:
         :param session_id:
         :param request_id:
@@ -405,12 +404,12 @@ cdef class TraderWrapper:
 
     def QueryStructuredFund(self, query_param, uintmax_t session_id, int request_id):
         """
-            # 请求查询分级基金
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param query_param 需要查询的分级基金筛选条件，其中母基金代码可以为空，则默认所有存在的母基金，如果不为空，请不带空格，并以'\0'结尾，其中交易市场不能为空
-    # @param session_id 资金账户对应的session_id,登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
-    # @remark 此函数查询出的结果可能对应多个查询结果响应
+        # 请求查询分级基金
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param query_param 需要查询的分级基金筛选条件，其中母基金代码可以为空，则默认所有存在的母基金，如果不为空，请不带空格，并以'\0'结尾，其中交易市场不能为空
+        # @param session_id 资金账户对应的session_id,登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # @remark 此函数查询出的结果可能对应多个查询结果响应
         :param query_param:
         :param session_id:
         :param request_id:
@@ -426,9 +425,9 @@ cdef class TraderWrapper:
 
     def FundTransfer(self, fund_transfer, uintmax_t session_id):
         """
-            # 资金划拨请求
-    # @return 资金划拨订单在XTP系统中的ID,如果为‘0’表示消息发送失败，此时用户可以调用GetApiLastError(self,)来获取错误代码，非“0”表示消息发送成功，用户需要记录下返回的serial_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
-    # @param session_id 资金账户对应的session_id,登录时得到
+        # 资金划拨请求
+        # @return 资金划拨订单在XTP系统中的ID,如果为‘0’表示消息发送失败，此时用户可以调用GetApiLastError(self,)来获取错误代码，非“0”表示消息发送成功，用户需要记录下返回的serial_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
+        # @param session_id 资金账户对应的session_id,登录时得到
         :param fund_transfer:
         :param session_id:
         :return:
@@ -444,10 +443,10 @@ cdef class TraderWrapper:
     def QueryFundTransfer(self, query_param, uintmax_t session_id, int request_id):
         """
         # 请求查询资金划拨
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param query_param 需要查询的资金划拨订单筛选条件，其中serial_id可以为0，则默认所有资金划拨订单，如果不为0，则请求特定的资金划拨订单
-    # @param session_id 资金账户对应的session_id,登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param query_param 需要查询的资金划拨订单筛选条件，其中serial_id可以为0，则默认所有资金划拨订单，如果不为0，则请求特定的资金划拨订单
+        # @param session_id 资金账户对应的session_id,登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
         :param query_param:
         :param session_id:
         :param request_id:
@@ -463,11 +462,11 @@ cdef class TraderWrapper:
 
     def QueryETF(self, query_param, uintmax_t session_id, int request_id):
         """
-            # 请求查询ETF清单文件
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param query_param 需要查询的ETF清单文件的筛选条件，其中合约代码可以为空，则默认所有存在的ETF合约代码，market字段也可以为初始值，则默认所有市场的ETF合约
-    # @param session_id 资金账户对应的session_id,登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # 请求查询ETF清单文件
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param query_param 需要查询的ETF清单文件的筛选条件，其中合约代码可以为空，则默认所有存在的ETF合约代码，market字段也可以为初始值，则默认所有市场的ETF合约
+        # @param session_id 资金账户对应的session_id,登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
         :param query_param:
         :param session_id:
         :param request_id:
@@ -484,10 +483,10 @@ cdef class TraderWrapper:
     def QueryETFTickerBasket(self, query_param, uintmax_t session_id, int request_id):
         """
         # 请求查询ETF股票篮
-    # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
-    # @param query_param 需要查询股票篮的的ETF合约，其中合约代码不可以为空，market字段也必须指定
-    # @param session_id 资金账户对应的session_id,登录时得到
-    # @param request_id 用于用户定位查询响应的ID，由用户自定义
+        # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
+        # @param query_param 需要查询股票篮的的ETF合约，其中合约代码不可以为空，market字段也必须指定
+        # @param session_id 资金账户对应的session_id,登录时得到
+        # @param request_id 用于用户定位查询响应的ID，由用户自定义
         :param query_param:
         :param session_id:
         :param request_id:
@@ -517,7 +516,7 @@ cdef class TraderWrapper:
 
     def QueryIPOQuotaInfo(self, uintmax_t session_id, int request_id):
         """
-            # 请求查询用户新股申购额度信息
+        # 请求查询用户新股申购额度信息
         # @return 查询是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError(self,)来获取错误代码
         # @param session_id 资金账户对应的session_id,登录时得到
         # @param request_id 用于用户定位查询响应的ID，由用户自定义

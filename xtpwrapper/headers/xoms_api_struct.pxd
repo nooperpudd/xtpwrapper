@@ -1,7 +1,9 @@
 # encoding:utf-8
 # distutils: language=c++
-from libc.stdint cimport uint64_t,uint32_t,int64_t,uint8_t,int32_t
-from .xtp_api_data_type cimport(
+
+from libc.stdint cimport uint64_t, uint32_t, int64_t, uint8_t, int32_t
+
+from .xtp_api_data_type cimport (
     XTP_PRICE_TYPE,
     XTP_MARKET_TYPE,
     XTP_BUSINESS_TYPE,
@@ -20,58 +22,59 @@ from .xtp_api_data_type cimport(
     XTP_TICKER_TYPE,
     XTP_EXCHANGE_TYPE,
     XTP_SIDE_TYPE,
-    XTP_POSITION_EFFECT_TYPE)
+    XTP_POSITION_EFFECT_TYPE
+)
 
 
 
 
 cdef extern from "xoms_api_struct.h" nogil:
-
     cdef union Common_Union:
-        uint32_t u32  #
+        uint32_t u32
         XTP_SIDE_TYPE side  # 买卖方向
         XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
         uint8_t reserved1  # 预留字段1
         uint8_t reserved2  # 预留字段2
 
-    #   新订单请求
+    # 新订单请求
     cdef struct XTPOrderInsertInfo:
         uint64_t order_xtp_id
-        #   报单引用，由客户自定义
+        # 报单引用，由客户自定义
         uint32_t order_client_id
 
-        #   合约代码 客户端请求不带空格，以'\0'结尾
+        # 合约代码 客户端请求不带空格，以'\0'结尾
         char ticker[16]
-        #   交易市场
+        # 交易市场
         XTP_MARKET_TYPE market
-        #   价格
+        # 价格
         double price
-        #   止损价（保留字段）
+        # 止损价（保留字段）
         double stop_price
-        #   数量(股票单位为股，逆回购单位为张)
+        # 数量(股票单位为股，逆回购单位为张)
         int64_t quantity
-        #   报单价格
+        # 报单价格
         XTP_PRICE_TYPE price_type
-        #   union
+        # union
         Common_Union inner_union
-        #   业务类型
+        # 业务类型
         XTP_BUSINESS_TYPE business_type
 
-    #   撤单失败响应消息
+    # 撤单失败响应消息
     cdef struct XTPOrderCancelInfo:
-        #   撤单XTPID
+        # 撤单XTPID
         uint64_t order_cancel_xtp_id
-        #   原始订单XTPID
+        # 原始订单XTPID
         uint64_t order_xtp_id
-    #   报单响应结构体
+
+    # 报单响应结构体
     cdef struct XTPOrderInfo:
-        #    XTP系统订单ID，在XTP系统中唯一
+        #  XTP系统订单ID，在XTP系统中唯一
         uint64_t order_xtp_id
         #  	报单引用，用户自定义
         uint32_t order_client_id
-        #    报单操作引用，用户自定义（暂未使用）
+        #  报单操作引用，用户自定义（暂未使用）
         uint32_t order_cancel_client_id
-        #    撤单在XTP系统中的id，在XTP系统中唯一
+        #  撤单在XTP系统中的id，在XTP系统中唯一
         uint64_t order_cancel_xtp_id
         #  	合约代码
         char ticker[16]
@@ -85,7 +88,6 @@ cdef extern from "xoms_api_struct.h" nogil:
         XTP_PRICE_TYPE price_type
         #  union
         Common_Union inner_union
-
         #  	# 业务类型
         XTP_BUSINESS_TYPE business_type
         #  	# 今成交数量，为此订单累计成交数量
@@ -109,7 +111,10 @@ cdef extern from "xoms_api_struct.h" nogil:
         #  	# 报单类型
         TXTPOrderTypeType order_type
 
-    #   报单成交结构体
+    # 报单查询响应结构体
+    ctypedef XTPOrderInfo XTPQueryOrderRsp
+
+    # 报单成交结构体
     cdef struct XTPTradeReport:
         # XTP系统订单ID，此成交回报相关的订单ID，在XTP系统中唯一
         uint64_t order_xtp_id
@@ -139,34 +144,33 @@ cdef extern from "xoms_api_struct.h" nogil:
         TXTPTradeTypeType trade_type
         #  union
         Common_Union inner_union
-
         # 业务类型
         XTP_BUSINESS_TYPE business_type
         # 交易所交易员代码
         char branch_pbu[7]
 
+    #  成交回报查询响应结构体
+    ctypedef XTPTradeReport  XTPQueryTradeRsp
+
     #  报单查询
     #  报单查询请求-条件查询
     cdef struct XTPQueryOrderReq:
-        #   证券代码，可以为空，如果为空，则默认查询时间段内的所有成交回报
+        # 证券代码，可以为空，如果为空，则默认查询时间段内的所有成交回报
         char ticker[16]
-        #   格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点
+        # 格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点
         int64_t begin_time
-        #   格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
+        # 格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
         int64_t end_time
 
-    # 报单查询响应结构体
-    ctypedef XTPOrderInfo XTPQueryOrderRsp
-
-    #  成交回报查询
-    #  查询成交报告请求-根据执行编号查询（保留字段）
+    # 成交回报查询
+    # 查询成交报告请求-根据执行编号查询（保留字段）
     cdef struct XTPQueryReportByExecIdReq:
         # XTP订单系统ID
         uint64_t order_xtp_id
         # 成交执行编号
         char exec_id[18]
 
-    #  查询成交回报请求-查询条件
+    # 查询成交回报请求-查询条件
     cdef struct XTPQueryTraderReq:
         char ticker[16]
         # 开始时间，格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点
@@ -174,31 +178,28 @@ cdef extern from "xoms_api_struct.h" nogil:
         # 结束时间，格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
         int64_t end_time
 
-    #  成交回报查询响应结构体
-    ctypedef XTPTradeReport  XTPQueryTradeRsp
-
-    #  账户资金查询响应结构体
+    # 账户资金查询响应结构体
     cdef struct XTPQueryAssetRsp:
-        #   总资产(=可用资金 + 证券资产（目前为0）+ 预扣的资金)
+        # 总资产(=可用资金 + 证券资产（目前为0）+ 预扣的资金)
         double total_asset
-        #   可用资金
+        # 可用资金
         double buying_power
-        #   证券资产（保留字段，目前为0）
+        # 证券资产（保留字段，目前为0）
         double security_asset
-        #   累计买入成交证券占用资金
+        # 累计买入成交证券占用资金
         double fund_buy_amount
-        #   累计买入成交交易费用
+        # 累计买入成交交易费用
         double fund_buy_fee
-        #   累计卖出成交证券所得资金
+        # 累计卖出成交证券所得资金
         double fund_sell_amount
-        #   累计卖出成交交易费用
+        # 累计卖出成交交易费用
         double fund_sell_fee
-        #   XTP系统预扣的资金（包括购买卖股票时预扣的交易资金+预扣手续费）
+        # XTP系统预扣的资金（包括购买卖股票时预扣的交易资金+预扣手续费）
         double withholding_amount
-        #   账户类型
+        # 账户类型
         XTP_ACCOUNT_TYPE account_type
 
-        #   冻结的保证金
+        # 冻结的保证金
         double frozen_margin
         # 行权冻结资金
         double frozen_exec_cash
@@ -246,7 +247,6 @@ cdef extern from "xoms_api_struct.h" nogil:
         int64_t yesterday_position
         # 今日申购赎回数量（申购和赎回数量不可能同时存在，因此可以共用一个字段）
         int64_t purchase_redeemable_qty
-
         #  持仓方向
         XTP_POSITION_DIRECTION_TYPE position_direction
         # 保留字段1
@@ -261,7 +261,6 @@ cdef extern from "xoms_api_struct.h" nogil:
         int64_t locked_position
         #  可用已锁定标的
         int64_t usable_locked_position
-
         # (保留字段)
         uint64_t unknown[44]
 
@@ -277,13 +276,13 @@ cdef extern from "xoms_api_struct.h" nogil:
         # 操作时间
         uint64_t transfer_time
 
+    # 资金内转流水记录结构体
+    ctypedef XTPFundTransferNotice XTPFundTransferLog
+
     #  资金内转流水查询请求与响应
     cdef struct XTPQueryFundTransferLogReq:
         # 资金内转编号
         uint64_t serial_id
-
-    # 资金内转流水记录结构体
-    ctypedef XTPFundTransferNotice XTPFundTransferLog
 
     # 查询分级基金信息结构体
     cdef struct XTPQueryStructuredFundInfoReq:
@@ -320,7 +319,7 @@ cdef extern from "xoms_api_struct.h" nogil:
     #                  2,只填写market,返回该交易市场下结果
     #                  3,填写market及ticker参数,只返回该etf信息。
     cdef struct XTPQueryETFBaseReq:
-        #    交易市场
+        #  交易市场
         XTP_MARKET_TYPE market
         #  ETF买卖代码
         char ticker[16]
