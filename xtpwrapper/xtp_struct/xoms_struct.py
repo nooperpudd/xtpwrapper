@@ -76,8 +76,6 @@ class XTPOrderCancelInfoStruct(Base):
     ]
 
 
-
-
 class XTPOrderInfoStruct(Base):
     """
     报单响应结构体
@@ -133,7 +131,6 @@ class XTPTradeReportStruct(Base):
     ]
 
     _anonymous_ = ('_u',)
-
 
 
 class XTPQueryOrderReqStruct(Base):
@@ -251,7 +248,6 @@ class XTPFundTransferNoticeStruct(Base):
     ]
 
 
-
 class XTPQueryFundTransferLogReqStruct(Base):
     """
     资金内转流水查询请求与响应
@@ -304,7 +300,6 @@ class XTPStructuredFundInfoStruct(Base):
     ]
 
 
-
 class XTPQueryETFBaseReqStruct(Base):
     """
     查询股票ETF合约基本情况--请求结构体,
@@ -344,6 +339,7 @@ class XTPQueryETFBaseRspStruct(Base):
         ('net_value', ctypes.c_double),  # 基金单位净值
         ('total_amount', ctypes.c_double),  # 最小申赎单位净值总金额
     ]
+
 
 class XTPQueryETFComponentReqStruct(Base):
     """
@@ -392,7 +388,6 @@ class XTPQueryIPOTickerRspStruct(Base):
         ('unit', ctypes.c_int32),  # 申购单元
         ('qty_upper_limit', ctypes.c_int32),  # 最大允许申购数量
     ]
-
 
 
 class XTPQueryIPOQuotaRspStruct(Base):
