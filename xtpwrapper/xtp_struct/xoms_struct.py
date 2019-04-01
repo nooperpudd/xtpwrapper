@@ -1,20 +1,30 @@
 # encoding=utf-8
 import ctypes
 
-from xtpwrapper.xtp_enum import XTP_MARKET_TYPE, XTP_EXCHANGE_TYPE
-from . import Base
+from xtpwrapper.xtp_enum import (XTP_MARKET_TYPE,
+                                 XTP_EXCHANGE_TYPE,
+                                 XTP_BUSINESS_TYPE,
+                                 XTP_PRICE_TYPE,
+                                 XTP_SIDE_TYPE,
+                                 XTP_POSITION_EFFECT_TYPE
+                                 )
+from . import StructBase, UnionBase
 
 
-class _CommonStruct(ctypes.Structure):
+class _CommonStruct(StructBase):
     _fields_ = [
         ("side", ctypes.c_uint8),  # 买卖方向
         ("position_effect", ctypes.c_uint8),  # 开平标志
         ("reserved1", ctypes.c_uint8),  # 预留字段1
         ("reserved2", ctypes.c_uint8)  # 预留字段2
     ]
+    _enum_ = {
+        "side": XTP_SIDE_TYPE,
+        "position_effect": XTP_POSITION_EFFECT_TYPE
+    }
 
 
-class _CommonUion(ctypes.Union):
+class _CommonUion(UnionBase):
     _fields_ = [
         ("u32", ctypes.c_uint32),
         ("_struct", _CommonStruct),
@@ -22,7 +32,7 @@ class _CommonUion(ctypes.Union):
     _anonymous_ = ('_struct',)
 
 
-class XTPOrderInsertInfoStruct(Base):
+class XTPOrderInsertInfoStruct(StructBase):
     """
     新订单请求
     """
@@ -54,19 +64,34 @@ class XTPOrderInsertInfoStruct(Base):
         ('_u', _CommonUion)
     ]
     _anonymous_ = ('_u',)
+    _enum_ = {
+        "business_type": XTP_BUSINESS_TYPE,
+        "market": XTP_MARKET_TYPE,
+        "price_type": XTP_PRICE_TYPE
+    }
 
-    # todo
-    # def __init__(self, order_xtp_id='', order_client_id='', ticker='', price=0.0, stop_price=0.0, quantity=''):
-    #     super(XTPOrderInsertInfo, self).__init__()
-    #     self.order_xtp_id = int(order_xtp_id)
-    #     self.order_client_id = int(order_client_id)
-    #     self.ticker = self._to_bytes(ticker)
-    #     self.price = float(price)
-    #     self.stop_price = float(stop_price)
-    #     self.quantity = int(quantity)
+    def __init__(self, order_xtp_id, order_client_id, ticker, market: XTP_MARKET_TYPE, price,
+                 stop_price, quantity, price_type: XTP_PRICE_TYPE,
+                 business_type: XTP_BUSINESS_TYPE, u32, side: XTP_SIDE_TYPE,
+                 position_effect: XTP_POSITION_EFFECT_TYPE, reserved1=0, reserved2=0):
+        super().__init__()
+        self.order_xtp_id = int(order_xtp_id)
+        self.order_client_id = int(order_client_id)
+        self.ticker = self._to_bytes(ticker)
+        self.market = market
+        self.price = float(price)
+        self.stop_price = float(stop_price)
+        self.quantity = int(quantity)
+        self.price_type = price_type
+        self.business_type = business_type
+        self.u32 = u32
+        self.side = side
+        self.position_effect = position_effect
+        self.reserved1 = reserved1
+        self.reserved2 = reserved2
 
 
-class XTPOrderCancelInfoStruct(Base):
+class XTPOrderCancelInfoStruct(StructBase):
     """
     撤单失败响应消息
     """
@@ -76,7 +101,7 @@ class XTPOrderCancelInfoStruct(Base):
     ]
 
 
-class XTPOrderInfoStruct(Base):
+class XTPOrderInfoStruct(StructBase):
     """
     报单响应结构体
     """
@@ -107,7 +132,7 @@ class XTPOrderInfoStruct(Base):
     _anonymous_ = ('_u',)
 
 
-class XTPTradeReportStruct(Base):
+class XTPTradeReportStruct(StructBase):
     """
     报单成交结构体
     """
@@ -133,7 +158,7 @@ class XTPTradeReportStruct(Base):
     _anonymous_ = ('_u',)
 
 
-class XTPQueryOrderReqStruct(Base):
+class XTPQueryOrderReqStruct(StructBase):
     """
     报单查询请求
     """
@@ -150,7 +175,7 @@ class XTPQueryOrderReqStruct(Base):
         self.end_time = int(end_time)
 
 
-class XTPQueryReportByExecIdReqStruct(Base):
+class XTPQueryReportByExecIdReqStruct(StructBase):
     """
     查询成交报告请求-根据执行编号查询（保留字段）
     """
@@ -159,13 +184,13 @@ class XTPQueryReportByExecIdReqStruct(Base):
         ('exec_id', ctypes.c_char * 18),  # 成交执行编号
     ]
 
-    def __init__(self, order_xtp_id='', exec_id=''):
+    def __init__(self, order_xtp_id, exec_id):
         super().__init__()
         self.order_xtp_id = int(order_xtp_id)
         self.exec_id = self._to_bytes(exec_id)
 
 
-class XTPQueryTraderReqStruct(Base):
+class XTPQueryTraderReqStruct(StructBase):
     """
     查询成交回报请求-查询条件
     """
@@ -182,7 +207,7 @@ class XTPQueryTraderReqStruct(Base):
         self.end_time = int(end_time)
 
 
-class XTPQueryAssetRspStruct(Base):
+class XTPQueryAssetRspStruct(StructBase):
     """
     账户资金查询响应结构体
     """
@@ -211,7 +236,7 @@ class XTPQueryAssetRspStruct(Base):
     ]
 
 
-class XTPQueryStkPositionRspStruct(Base):
+class XTPQueryStkPositionRspStruct(StructBase):
     """
     查询股票持仓情况
     """
@@ -235,7 +260,7 @@ class XTPQueryStkPositionRspStruct(Base):
     ]
 
 
-class XTPFundTransferNoticeStruct(Base):
+class XTPFundTransferNoticeStruct(StructBase):
     """
     资金内转流水通知
     """
@@ -248,7 +273,7 @@ class XTPFundTransferNoticeStruct(Base):
     ]
 
 
-class XTPQueryFundTransferLogReqStruct(Base):
+class XTPQueryFundTransferLogReqStruct(StructBase):
     """
     资金内转流水查询请求与响应
     """
@@ -261,7 +286,7 @@ class XTPQueryFundTransferLogReqStruct(Base):
         self.serial_id = int(serial_id)
 
 
-class XTPQueryStructuredFundInfoReqStruct(Base):
+class XTPQueryStructuredFundInfoReqStruct(StructBase):
     """
     查询分级基金信息结构体
     """
@@ -276,13 +301,13 @@ class XTPQueryStructuredFundInfoReqStruct(Base):
         "exchange_id": XTP_EXCHANGE_TYPE
     }
 
-    def __init__(self, exchange_id, sf_ticker=""):
+    def __init__(self, exchange_id: XTP_EXCHANGE_TYPE, sf_ticker=""):
         super().__init__()
         self.exchange_id = exchange_id
         self.sf_ticker = self._to_bytes(sf_ticker)
 
 
-class XTPStructuredFundInfoStruct(Base):
+class XTPStructuredFundInfoStruct(StructBase):
     """
     查询分级基金信息响应结构体
     """
@@ -300,7 +325,7 @@ class XTPStructuredFundInfoStruct(Base):
     ]
 
 
-class XTPQueryETFBaseReqStruct(Base):
+class XTPQueryETFBaseReqStruct(StructBase):
     """
     查询股票ETF合约基本情况--请求结构体,
     请求参数为多条件参数:1,不填则返回所有市场的ETF合约信息。
@@ -316,13 +341,13 @@ class XTPQueryETFBaseReqStruct(Base):
         "market": XTP_MARKET_TYPE
     }
 
-    def __init__(self, market, ticker):
+    def __init__(self, market: XTP_MARKET_TYPE, ticker):
         super().__init__()
         self.market = market
         self.ticker = self._to_bytes(ticker)
 
 
-class XTPQueryETFBaseRspStruct(Base):
+class XTPQueryETFBaseRspStruct(StructBase):
     """
     查询股票ETF合约基本情况--响应结构体
     """
@@ -341,7 +366,7 @@ class XTPQueryETFBaseRspStruct(Base):
     ]
 
 
-class XTPQueryETFComponentReqStruct(Base):
+class XTPQueryETFComponentReqStruct(StructBase):
     """
     查询股票ETF合约成分股信息--请求结构体,请求参数为:交易市场+ETF买卖代码
     """
@@ -353,13 +378,13 @@ class XTPQueryETFComponentReqStruct(Base):
         "market": XTP_MARKET_TYPE
     }
 
-    def __init__(self, market, ticker):
+    def __init__(self, market: XTP_MARKET_TYPE, ticker):
         super().__init__()
         self.market = market
         self.ticker = self._to_bytes(ticker)
 
 
-class XTPQueryETFComponentRspStruct(Base):
+class XTPQueryETFComponentRspStruct(StructBase):
     """
     查询股票ETF合约成分股信息--响应结构体
     """
@@ -376,7 +401,7 @@ class XTPQueryETFComponentRspStruct(Base):
     ]
 
 
-class XTPQueryIPOTickerRspStruct(Base):
+class XTPQueryIPOTickerRspStruct(StructBase):
     """
     查询当日可申购新股信息
     """
@@ -390,7 +415,7 @@ class XTPQueryIPOTickerRspStruct(Base):
     ]
 
 
-class XTPQueryIPOQuotaRspStruct(Base):
+class XTPQueryIPOQuotaRspStruct(StructBase):
     """
     查询用户申购额度
     """
@@ -400,7 +425,7 @@ class XTPQueryIPOQuotaRspStruct(Base):
     ]
 
 
-class XTPQueryOptionAuctionInfoReqStruct(Base):
+class XTPQueryOptionAuctionInfoReqStruct(StructBase):
     """
     查询期权竞价交易业务参考信息--请求结构体,请求参数为:交易市场+8位期权代码
     """
@@ -416,13 +441,13 @@ class XTPQueryOptionAuctionInfoReqStruct(Base):
         "market": XTP_MARKET_TYPE
     }
 
-    def __init__(self, market, ticker):
+    def __init__(self, market: XTP_MARKET_TYPE, ticker):
         super().__init__()
         self.market = market
         self.ticker = self._to_bytes(ticker)
 
 
-class XTPQueryOptionAuctionInfoRspStruct(Base):
+class XTPQueryOptionAuctionInfoRspStruct(StructBase):
     """
     查询期权竞价交易业务参考信息
     """

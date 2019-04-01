@@ -93,7 +93,7 @@ ext_modules = [
 ]
 
 setup(
-    name="xtppwrapper",
+    name="xtpwrapper",
     version=find_version("xtpwrapper", "__init__.py"),
     description="XTP client v1.1.18.13",
     long_description=codecs.open("README.rst", encoding="utf-8").read(),

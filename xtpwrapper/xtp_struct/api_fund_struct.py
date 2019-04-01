@@ -2,10 +2,10 @@
 import ctypes
 
 from xtpwrapper.xtp_enum import XTP_FUND_TRANSFER_TYPE
-from . import Base
+from . import StructBase
 
 
-class XTPFundTransferReqStruct(Base):
+class XTPFundTransferReqStruct(StructBase):
     """
     用户资金请求
    """
@@ -24,7 +24,8 @@ class XTPFundTransferReqStruct(Base):
         "transfer_type": XTP_FUND_TRANSFER_TYPE
     }
 
-    def __init__(self, serial_id, fund_account, password, amount, transfer_type):
+    def __init__(self, serial_id, fund_account, password, amount,
+                 transfer_type: XTP_FUND_TRANSFER_TYPE):
         super().__init__()
         self.serial_id = serial_id
         self.found_account = self._to_bytes(fund_account)

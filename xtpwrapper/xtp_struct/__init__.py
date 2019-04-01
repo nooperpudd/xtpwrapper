@@ -1,8 +1,44 @@
 import ctypes
 
 
-class Base(ctypes.Structure):
+class Mixin(object):
+    """
+    """
 
+    def to_dict(self):
+        """
+        :return:
+        """
+        results = {}
+        for key, _ in self._fields_:
+            value = getattr(self, key)
+            if isinstance(value, bytes):
+                results[key] = value.decode("utf-8")
+            elif isinstance(value, ctypes.Array):
+                results[key] = [x for x in value]
+            elif isinstance(value, (ctypes.Union, ctypes.Structure)):
+                results[key] = value.to_dict()
+            else:
+                results[key] = value
+        return results
+
+    def __repr__(self):
+        """
+        :return:
+        """
+        items = []
+        for item, value in self._fields_:
+            if issubclass(value, (ctypes.Union, ctypes.Structure)):
+                items.append(item + ":" + repr(getattr(self, item)))
+            if issubclass(value, ctypes.Array) and not isinstance(getattr(self, item), bytes):
+                items.append("%s:(%s)" % (item, ",".join([str(x) for x in getattr(self, item)])))
+            else:
+                items.append("%s:%s" % (item, getattr(self, item)))
+        return "<%s>" % (",".join(items))
+
+
+
+class StructBase(ctypes.Structure,Mixin):
     _enum_ = {}
 
     def _to_bytes(self, value):
@@ -14,33 +50,6 @@ class Base(ctypes.Structure):
         else:
             return bytes(str(value), encoding="utf-8")
 
-    @classmethod
-    def from_dict(cls, obj):
-        """
-        :return:
-        """
-        return cls(**obj)
-
-    def to_dict(self):
-        """
-        :return:
-        """
-        results = {}
-        for key, _ in self._fields_:
-            _value = getattr(self, key)
-            if isinstance(_value, bytes):
-                results[key] = _value.decode("utf-8")
-            else:
-                results[key] = _value
-        return results
-
-    def __repr__(self):
-        """
-        :return:
-        """
-        items = ["%s:%s" % (item, getattr(self, item)) for item, value in self._fields_]
-        return "%s<%s>" % (self.__class__.__name__, ",".join(items))
-
     def __getattribute__(self, name):
         """
         set attribute with enum
@@ -48,21 +57,22 @@ class Base(ctypes.Structure):
         :return:
         """
         _enum = ctypes.Structure.__getattribute__(self, '_enum_')
-
         value = ctypes.Structure.__getattribute__(self, name)
 
         if name in _enum:
             enum_cls = _enum[name]
-            if isinstance(value, ctypes.Array):
-                return [enum_cls(x) for x in value]
-            else:
-                return enum_cls(value)
+            return enum_cls(value)
         else:
 
             return value
 
+class UnionBase(ctypes.Union, Mixin):
+    """
+    """
+    pass
 
-class XTPRspInfoStruct(Base):
+
+class XTPRspInfoStruct(StructBase):
     _fields_ = [
         ("error_id", ctypes.c_int32),
         ("error_msg", ctypes.c_char * 124)

@@ -1,11 +1,12 @@
 # encoding:utf-8
 # distutils: language=c++
-
 from cpython cimport PyObject
+from cpython.list cimport PyList_Append
 from libc.stdint cimport uint8_t, uint32_t, int64_t, int32_t
 from libc.stdlib cimport malloc, free
 from libc.string cimport const_char
 from libcpp cimport bool as cbool
+
 from .headers.xquote_api_struct cimport XTPQSI, XTPOB, XTPST, XTPMD, XTPTBT, XTPTPI
 from .headers.xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_PROTOCOL_TYPE, XTP_LOG_LEVEL
 from .headers.xtp_api_struct_common cimport XTPRI
@@ -20,7 +21,6 @@ from xtpwrapper.xtp_struct.xquote_struct import (
     XTPTickByTickStruct,
     XTPTickerPriceInfo
 )
-
 cdef class QuoteWrapper:
     cdef QuoteApi *_api
     cdef WrapperQuoteSpi *_spi
@@ -92,7 +92,7 @@ cdef class QuoteWrapper:
 
     def SubscribeMarketData(self, ticks, int exchange_id):
 
-        cdef Py_ssize_t count
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -111,7 +111,7 @@ cdef class QuoteWrapper:
 
     def UnSubscribeMarketData(self, ticks, int exchange_id):
 
-        cdef Py_ssize_t count
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -130,7 +130,7 @@ cdef class QuoteWrapper:
 
     def SubscribeOrderBook(self, ticks, int exchange_id):
 
-        cdef Py_ssize_t count
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -148,7 +148,8 @@ cdef class QuoteWrapper:
             return result
 
     def UnSubscribeOrderBook(self, ticks, int exchange_id):
-        cdef Py_ssize_t count
+
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -166,7 +167,8 @@ cdef class QuoteWrapper:
             return result
 
     def SubscribeTickByTick(self, ticks, int exchange_id):
-        cdef Py_ssize_t count
+
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -184,7 +186,8 @@ cdef class QuoteWrapper:
             return result
 
     def UnSubscribeTickByTick(self, ticks, int exchange_id):
-        cdef Py_ssize_t count
+
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -220,7 +223,6 @@ cdef class QuoteWrapper:
 
         cdef int result
         if self._spi is not NULL:
-
             with nogil:
                 result = self._api.SubscribeAllOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
             return result
@@ -229,7 +231,6 @@ cdef class QuoteWrapper:
 
         cdef int result
         if self._spi is not NULL:
-
             with nogil:
                 result = self._api.UnSubscribeAllOrderBook(<XTP_EXCHANGE_TYPE> exchange_id)
             return result
@@ -237,7 +238,6 @@ cdef class QuoteWrapper:
     def SubscribeAllTickByTick(self, int exchange_id):
         cdef int result
         if self._spi is not NULL:
-
             with nogil:
                 result = self._api.SubscribeAllTickByTick(<XTP_EXCHANGE_TYPE> exchange_id)
             return result
@@ -274,7 +274,7 @@ cdef class QuoteWrapper:
             return result
 
     def QueryTickersPriceInfo(self, ticks, int exchange_id):
-        cdef Py_ssize_t count
+        cdef Py_ssize_t count, i
         cdef int result
         cdef char ** ticker
 
@@ -387,22 +387,23 @@ cdef extern int QuoteSpi_OnUnSubMarketData(self, XTPST *ticker, XTPRI *error_inf
 cdef extern int QuoteSpi_OnDepthMarketData(self, XTPMD *market_data,
                                            int64_t bid1_qty[], int32_t bid1_count, int32_t max_bid1_count,
                                            int64_t ask1_qty[], int32_t ask1_count, int32_t max_ask1_count) except -1:
+    cdef list bid1_qty_obj = []
+    cdef list ask1_qty_obj = []
+
+    cdef Py_ssize_t i, j
     if market_data is NULL:
         market_data_obj = None
     else:
         market_data_obj = XTPMarketDataStruct.from_address(<size_t> market_data)
 
-    cdef Py_ssize_t count_bid = sizeof(bid1_qty)
-    cdef Py_ssize_t count_ask = sizeof(ask1_qty)
+    # https://stackoverflow.com/questions/37538/how-do-i-determine-the-size-of-my-array-in-c
+    # cdef Py_ssize_t count_bid = <Py_ssize_t> (sizeof(bid1_qty) / sizeof(bid1_qty[0]))
+    # cdef Py_ssize_t count_ask = <Py_ssize_t> (sizeof(ask1_qty) / sizeof(ask1_qty[0]))
+    for i in range(bid1_count):
+        PyList_Append(bid1_qty_obj, bid1_qty[i])
 
-    bid1_qty_obj = list()
-    ask1_qty_obj = list()
-
-    for i from 0 <= i < count_bid:
-        bid1_qty_obj.append(bid1_qty[i])
-
-    for i from 0 <= i < count_ask:
-        ask1_qty_obj.append(ask1_qty[i])
+    for j in range(ask1_count):
+        PyList_Append(ask1_qty_obj, ask1_qty[j])
 
     self.OnDepthMarketData(market_data_obj,
                            bid1_qty_obj, bid1_count, max_bid1_count,

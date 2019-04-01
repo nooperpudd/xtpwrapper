@@ -1,10 +1,10 @@
 # encoding=utf-8
 import ctypes
 
-from . import Base
+from . import StructBase, UnionBase
 
 
-class XTPSpecificTickerStruct(Base):
+class XTPSpecificTickerStruct(StructBase):
     """
     指定的合约
     """
@@ -14,7 +14,7 @@ class XTPSpecificTickerStruct(Base):
     ]
 
 
-class _XTPMarketDataStockExData(Base):
+class _XTPMarketDataStockExData(StructBase):
     """
     股票、基金、债券等额外数据
     """
@@ -54,7 +54,7 @@ class _XTPMarketDataStockExData(Base):
     ]
 
 
-class _XTPMarketDataOptionExData(Base):
+class _XTPMarketDataOptionExData(StructBase):
     """
     期权额外数据
     """
@@ -65,7 +65,7 @@ class _XTPMarketDataOptionExData(Base):
     ]
 
 
-class _XTPMarketUion(ctypes.Union):
+class _XTPMarketUion(UnionBase):
     """
     """
     _fields_ = [
@@ -74,7 +74,7 @@ class _XTPMarketUion(ctypes.Union):
     ]
 
 
-class XTPMarketDataStruct(Base):
+class XTPMarketDataStruct(StructBase):
     """
     行情
     """
@@ -113,7 +113,7 @@ class XTPMarketDataStruct(Base):
     _anonymous_ = ("_u",)
 
 
-class XTPQuoteStaticInfo(Base):
+class XTPQuoteStaticInfo(StructBase):
     """
     股票行情静态信息
     """
@@ -131,7 +131,7 @@ class XTPQuoteStaticInfo(Base):
     ]
 
 
-class OrderBookStruct(Base):
+class OrderBookStruct(StructBase):
     """
     定单薄
     """
@@ -150,7 +150,7 @@ class OrderBookStruct(Base):
     ]
 
 
-class _XTPTickByTickEntrust(Base):
+class _XTPTickByTickEntrust(StructBase):
     """
     逐笔委托(仅适用深交所)
     """
@@ -164,7 +164,7 @@ class _XTPTickByTickEntrust(Base):
     ]
 
 
-class _XTPTickByTickTrade(Base):
+class _XTPTickByTickTrade(StructBase):
     """
     逐笔成交
     """
@@ -180,14 +180,14 @@ class _XTPTickByTickTrade(Base):
     ]
 
 
-class _XTPTickByTickUnion(ctypes.Union):
+class _XTPTickByTickUnion(UnionBase):
     _fields_ = [
         ("entrust", _XTPTickByTickEntrust),
         ("trade", _XTPTickByTickTrade)
     ]
 
 
-class XTPTickByTickStruct(Base):
+class XTPTickByTickStruct(StructBase):
     """
     逐笔数据信息
     """
@@ -202,7 +202,7 @@ class XTPTickByTickStruct(Base):
     _anonymous_ = ("_u",)
 
 
-class XTPTickerPriceInfo(Base):
+class XTPTickerPriceInfo(StructBase):
     """
     供查询的最新信息
     """

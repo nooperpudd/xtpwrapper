@@ -54,66 +54,58 @@ class XTP_PRICE_TYPE(IntEnum):
     XTP_PRICE_TYPE_UNKNOWN = auto()  # 未知或者无效价格类型
 
 
-# ########################/
-# #@brief XTP_SIDE_TYPE是买卖方向类型
-# ########################/
-# typedef uint8_t XTP_SIDE_TYPE;
+class XTP_SIDE_TYPE(IntEnum):
+    # 是买卖方向类型
+    XTP_SIDE_BUY = 1  # 买（新股申购，ETF买，配股，信用交易中担保品买）
 
-# 买（新股申购，ETF买，配股，信用交易中担保品买）
-# define XTP_SIDE_BUY            1
-# 卖（逆回购，ETF卖，信用交易中担保品卖）
-# define XTP_SIDE_SELL           2
-# 申购
-# define XTP_SIDE_PURCHASE       7
-# 赎回
-# define XTP_SIDE_REDEMPTION     8
-# 拆分
-# define XTP_SIDE_SPLIT          9
-# 合并
-# define XTP_SIDE_MERGE          10
-# 改版之后的side的备兑，暂不支持
-# define XTP_SIDE_COVER          11
-# 改版之后的side锁定（对应开平标识为开）/解锁（对应开平标识为平）
-# define XTP_SIDE_FREEZE         12
-# 融资买入
-# define XTP_SIDE_MARGIN_TRADE	21
-# 融券卖出
-# define XTP_SIDE_SHORT_SELL		22
-# 卖券还款
-# define XTP_SIDE_REPAY_MARGIN	23
-# 买券还券
-# define XTP_SIDE_REPAY_STOCK	24
-# 现金还款
-# define XTP_SIDE_CASH_REPAY_MARGIN	25
-# 现券还券
-# define XTP_SIDE_STOCK_REPAY_STOCK	26
-# 未知或者无效买卖方向
-# define XTP_SIDE_UNKNOWN        27
+    XTP_SIDE_SELL = 2  # 卖（逆回购，ETF卖，信用交易中担保品卖）
+
+    XTP_SIDE_PURCHASE = 7  # 申购
+
+    XTP_SIDE_REDEMPTION = 8  # 赎回
+
+    XTP_SIDE_SPLIT = 9  # 拆分
+
+    XTP_SIDE_MERGE = 10  # 合并
+
+    XTP_SIDE_COVER = 11  # 改版之后的side的备兑，暂不支持
+
+    XTP_SIDE_FREEZE = 12  # 改版之后的side锁定（对应开平标识为开）/解锁（对应开平标识为平）
+
+    XTP_SIDE_MARGIN_TRADE = 21  # 融资买入
+
+    XTP_SIDE_SHORT_SELL = 22  # 融券卖出
+
+    XTP_SIDE_REPAY_MARGIN = 23  # 卖券还款
+
+    XTP_SIDE_REPAY_STOCK = 24  # 买券还券
+
+    XTP_SIDE_CASH_REPAY_MARGIN = 25  # 现金还款
+
+    XTP_SIDE_STOCK_REPAY_STOCK = 26  # 现券还券
+
+    XTP_SIDE_UNKNOWN = 27  # 未知或者无效买卖方向
 
 
-########################/
-# @brief XTP_POSITION_EFFECT_TYPE是开平标识类型
-########################/
-# typedef uint8_t XTP_POSITION_EFFECT_TYPE;
+class XTP_POSITION_EFFECT_TYPE(IntEnum):
+    # 是开平标识类型
+    XTP_POSITION_EFFECT_INIT = 0  # 初始值或未知值开平标识，现货适用
 
-# 初始值或未知值开平标识，现货适用
-# define XTP_POSITION_EFFECT_INIT                0
-# 开
-# define XTP_POSITION_EFFECT_OPEN                1
-# 平
-# define XTP_POSITION_EFFECT_CLOSE               2
-# 强平
-# define XTP_POSITION_EFFECT_FORCECLOSE          3
-# 平今
-# define XTP_POSITION_EFFECT_CLOSETODAY          4
-# 平昨
-# define XTP_POSITION_EFFECT_CLOSEYESTERDAY      5
-# 强减
-# define XTP_POSITION_EFFECT_FORCEOFF            6
-# 本地强平
-# define XTP_POSITION_EFFECT_LOCALFORCECLOSE     7
-# 未知的开平标识类型
-# define XTP_POSITION_EFFECT_UNKNOWN             8
+    XTP_POSITION_EFFECT_OPEN = 1  # 开
+
+    XTP_POSITION_EFFECT_CLOSE = 2  # 平
+
+    XTP_POSITION_EFFECT_FORCECLOSE = 3  # 强平
+
+    XTP_POSITION_EFFECT_CLOSETODAY = 4  # 平今
+
+    XTP_POSITION_EFFECT_CLOSEYESTERDAY = 5  # 平昨
+
+    XTP_POSITION_EFFECT_FORCEOFF = 6  # 强减
+
+    XTP_POSITION_EFFECT_LOCALFORCECLOSE = 7  # 本地强平
+
+    XTP_POSITION_EFFECT_UNKNOWN = 8  # 未知的开平标识类型
 
 
 class XTP_ORDER_ACTION_STATUS_TYPE(IntEnum):

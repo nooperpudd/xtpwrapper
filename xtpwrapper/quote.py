@@ -81,7 +81,7 @@ class QuoteAPI(QuoteWrapper):
         :return: int 订阅接口调用是否成功，“0”表示接口调用成功，非“0”表示接口调用出错
         """
         ticks = [bytes(item, encoding="utf-8") for item in ticks]
-        return super().SubscribeAllMarketData(ticks, exchange_id)
+        return super().SubscribeMarketData(ticks, exchange_id)
 
     def UnSubscribeMarketData(self, ticks: list, exchange_id: XTP_EXCHANGE_TYPE):
         """
