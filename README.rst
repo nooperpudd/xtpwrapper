@@ -1,10 +1,30 @@
 ===========
-XTP-Wrapper
+XTP-Wrapper (Chinese Stock Market Quote and Trade Python API)
 ===========
 
+Chinese Stock Market Quote and Trade API by dealer, Python Wrapper C++ Interface.
 
 |travis| |appveyor| |codacy| |pypi| |status| |pyversion|
 
+Version: v1.1.18.13
+
+Platform: Linux 64bit, Windows 64bit, MacOS
+
+Python Requirement: x86-64
+
+Install
+=======
+
+Before you install xtpwrapper package, you need to make sure you have
+already install cython package.
+
+    >>>pip install cython --upgrade
+    >>>pip install xtpwrapper --upgrade
+
+Donate [捐助]
+============
+
+  <img src="img/alipay.png" width="250" height="250"><img src="img/wechat.jpg" width="250" height="250">
 
 Contact
 =======
