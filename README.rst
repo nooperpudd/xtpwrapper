@@ -25,7 +25,10 @@ already install cython package.
 Donate [捐助]
 ============
 
-|alipay| |wechat|
+.. raw:: html
+    <img width="250" height="250" src="img/alipay.png">
+
+|wechat|
 
 Contact
 =======
@@ -55,9 +58,11 @@ Email: 365504029@qq.com
 .. |alipay| image:: img/alipay.png
     :width: 250pt
     :height: 250pt
+
+.. raw:: html
+
 .. |wechat| image:: img/wechat.jpg
-    :width: 250pt
-    :height: 250pt
+
 
 
 
