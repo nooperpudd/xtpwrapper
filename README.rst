@@ -19,12 +19,13 @@ Before you install xtpwrapper package, you need to make sure you have
 already install cython package.
 
     >>>pip install cython --upgrade
+
     >>>pip install xtpwrapper --upgrade
 
 Donate [捐助]
 ============
 
-  <img src="img/alipay.png" width="250" height="250"><img src="img/wechat.jpg" width="250" height="250">
+|alipay| |wechat|
 
 Contact
 =======
@@ -51,7 +52,10 @@ Email: 365504029@qq.com
 .. |pyversion| image:: https://img.shields.io/pypi/pyversions/xtpwrapper.svg
     :target: https://pypi.python.org/pypi/xtpwrapper
 
-
+.. |alipay| image:: img/alipay.png
+    :width: 250
+.. |wechat| image:: img/wechat.jpg
+    :width: 250
 
 
 
