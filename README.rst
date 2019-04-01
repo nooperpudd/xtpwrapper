@@ -25,10 +25,7 @@ already install cython package.
 Donate [捐助]
 ============
 
-.. raw:: html
-    <img width="250" height="250" src="img/alipay.png">
-
-|wechat|
+|alipay| |wechat|
 
 Contact
 =======
@@ -56,11 +53,6 @@ Email: 365504029@qq.com
     :target: https://pypi.python.org/pypi/xtpwrapper
 
 .. |alipay| image:: img/alipay.png
-    :width: 250pt
-    :height: 250pt
-
-.. raw:: html
-
 .. |wechat| image:: img/wechat.jpg
 
 
