@@ -37,8 +37,7 @@ class Mixin(object):
         return "<%s>" % (",".join(items))
 
 
-
-class StructBase(ctypes.Structure,Mixin):
+class StructBase(ctypes.Structure, Mixin):
     _enum_ = {}
 
     def _to_bytes(self, value):
@@ -65,6 +64,7 @@ class StructBase(ctypes.Structure,Mixin):
         else:
 
             return value
+
 
 class UnionBase(ctypes.Union, Mixin):
     """
