@@ -53,11 +53,11 @@ Email: 365504029@qq.com
     :target: https://pypi.python.org/pypi/xtpwrapper
 
 .. |alipay| image:: img/alipay.png
-    :width: 250px
-    :height: 250px
+    :width: 250pt
+    :height: 250pt
 .. |wechat| image:: img/wechat.jpg
-    :width: 250px
-    :height: 250px
+    :width: 250pt
+    :height: 250pt
 
 
 
