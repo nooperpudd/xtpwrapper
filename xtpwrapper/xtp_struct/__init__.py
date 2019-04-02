@@ -34,7 +34,7 @@ class Mixin(object):
                 items.append("%s:(%s)" % (item, ",".join([str(x) for x in getattr(self, item)])))
             else:
                 items.append("%s:%s" % (item, getattr(self, item)))
-        return "<%s>" % (",".join(items))
+        return "%s<%s>" % (self.__class__.__name__, ",".join(items))
 
 
 class StructBase(ctypes.Structure, Mixin):
@@ -62,7 +62,6 @@ class StructBase(ctypes.Structure, Mixin):
             enum_cls = _enum[name]
             return enum_cls(value)
         else:
-
             return value
 
 

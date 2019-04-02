@@ -18,10 +18,7 @@ class _CommonStruct(StructBase):
         ("reserved1", ctypes.c_uint8),  # 预留字段1
         ("reserved2", ctypes.c_uint8)  # 预留字段2
     ]
-    _enum_ = {
-        "side": XTP_SIDE_TYPE,
-        "position_effect": XTP_POSITION_EFFECT_TYPE
-    }
+
 
 
 class _CommonUion(UnionBase):
@@ -75,7 +72,7 @@ class XTPOrderInsertInfoStruct(StructBase):
                  business_type: XTP_BUSINESS_TYPE, u32, side: XTP_SIDE_TYPE,
                  position_effect: XTP_POSITION_EFFECT_TYPE, reserved1=0, reserved2=0):
         super().__init__()
-        self.order_xtp_id = int(order_xtp_id)
+        self.order_xtp_id = order_xtp_id
         self.order_client_id = int(order_client_id)
         self.ticker = self._to_bytes(ticker)
         self.market = market

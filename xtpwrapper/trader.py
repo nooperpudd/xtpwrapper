@@ -261,7 +261,7 @@ class TraderApi(TraderWrapper):
         :param request_id:
         :return:
         """
-        return super().QueryPosition(ticker, session_id, request_id)
+        return super().QueryPosition(ticker.encode(), session_id, request_id)
 
     def QueryAsset(self, session_id: int, request_id: int):
         """
