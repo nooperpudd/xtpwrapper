@@ -26,7 +26,7 @@ class _CommonUion(UnionBase):
         ("u32", ctypes.c_uint32),
         ("_struct", _CommonStruct),
     ]
-    _anonymous_ = ('_struct',)
+    _anonymous_ = '_struct',
 
 
 class XTPOrderInsertInfoStruct(StructBase):
@@ -58,9 +58,9 @@ class XTPOrderInsertInfoStruct(StructBase):
         # XTP_PRICE_TYPE_UNKNOWN, // / < 未知或者无效价格类型
         ('price_type', ctypes.c_int),  # 报单价格
         ('business_type', ctypes.c_int),  # 业务类型
-        ('_u', _CommonUion)
+        ('_union', _CommonUion)
     ]
-    _anonymous_ = ('_u',)
+    _anonymous_ = '_union',
     _enum_ = {
         "business_type": XTP_BUSINESS_TYPE,
         "market": XTP_MARKET_TYPE,

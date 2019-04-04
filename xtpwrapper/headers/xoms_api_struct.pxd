@@ -29,12 +29,6 @@ from .xtp_api_data_type cimport (
 
 
 cdef extern from "xoms_api_struct.h" nogil:
-    cdef union Common_Union:
-        uint32_t u32
-        XTP_SIDE_TYPE side  # 买卖方向
-        XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
-        uint8_t reserved1  # 预留字段1
-        uint8_t reserved2  # 预留字段2
 
     # 新订单请求
     cdef struct XTPOrderInsertInfo:
@@ -55,7 +49,13 @@ cdef extern from "xoms_api_struct.h" nogil:
         # 报单价格
         XTP_PRICE_TYPE price_type
         # union
-        Common_Union inner_union
+
+        uint32_t u32
+        XTP_SIDE_TYPE side  # 买卖方向
+        XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
+        uint8_t reserved1  # 预留字段1
+        uint8_t reserved2  # 预留字段2
+
         # 业务类型
         XTP_BUSINESS_TYPE business_type
 
@@ -86,8 +86,13 @@ cdef extern from "xoms_api_struct.h" nogil:
         int64_t quantity
         #  	# 报单价格条件
         XTP_PRICE_TYPE price_type
+
         #  union
-        Common_Union inner_union
+        uint32_t u32
+        XTP_SIDE_TYPE side  # 买卖方向
+        XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
+        uint8_t reserved1  # 预留字段1
+        uint8_t reserved2  # 预留字段2
         #  	# 业务类型
         XTP_BUSINESS_TYPE business_type
         #  	# 今成交数量，为此订单累计成交数量
@@ -143,7 +148,11 @@ cdef extern from "xoms_api_struct.h" nogil:
         # 成交类型  --成交回报中的执行类型
         TXTPTradeTypeType trade_type
         #  union
-        Common_Union inner_union
+        uint32_t u32
+        XTP_SIDE_TYPE side  # 买卖方向
+        XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
+        uint8_t reserved1  # 预留字段1
+        uint8_t reserved2  # 预留字段2
         # 业务类型
         XTP_BUSINESS_TYPE business_type
         # 交易所交易员代码
