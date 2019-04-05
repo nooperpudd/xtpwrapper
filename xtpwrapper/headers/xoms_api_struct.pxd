@@ -28,7 +28,7 @@ from .xtp_api_data_type cimport (
 
 
 
-cdef extern from "xoms_api_struct.h" nogil:
+cdef extern from "xoms_api_struct.h":
 
     # 新订单请求
     cdef struct XTPOrderInsertInfo:

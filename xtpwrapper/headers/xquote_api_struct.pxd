@@ -6,7 +6,7 @@ from libc.stdint cimport int64_t, int32_t
 from .xtp_api_data_type cimport XTP_EXCHANGE_TYPE, XTP_TICKER_TYPE, XTP_TBT_TYPE
 
 
-cdef extern from "xquote_api_struct.h" nogil:
+cdef extern from "xquote_api_struct.h":
     # 指定的合约
     cdef struct XTPSpecificTickerStruct:
         # 交易所代码
@@ -96,10 +96,6 @@ cdef extern from "xquote_api_struct.h" nogil:
         XTP_MARKETDATA_ACTUAL = 0  # 现货(股票/基金/债券等)
         XTP_MARKETDATA_OPTION = 1  # 期权
 
-    cdef union XTPMarketDataStruct_Union:
-        XTPMarketDataStockExData stk
-        XTPMarketDataOptionExData opt
-
     # 行情
     cdef struct XTPMarketDataStruct:
         # 代码
@@ -168,7 +164,9 @@ cdef extern from "xquote_api_struct.h" nogil:
         # 当前交易状态说明
         char ticker_status[8]
 
-        XTPMarketDataStruct_Union inner_union
+        # union
+        XTPMarketDataStockExData stk
+        XTPMarketDataOptionExData opt
 
         # 决定了union是哪种数据类型
         XTP_MARKETDATA_TYPE data_type
@@ -265,9 +263,6 @@ cdef extern from "xquote_api_struct.h" nogil:
         # SZ: 成交标识('4':撤 'F':成交)
         char trade_flag
 
-    cdef union XTPTickByTickStruct_Union:
-        XTPTickByTickEntrust entrust
-        XTPTickByTickTrade trade
 
     # 逐笔数据信息
     cdef struct XTPTickByTickStruct:
@@ -281,8 +276,10 @@ cdef extern from "xquote_api_struct.h" nogil:
         int64_t data_time
         #委托 or 成交
         XTP_TBT_TYPE type
+
         # union
-        XTPTickByTickStruct_Union inner_union
+        XTPTickByTickEntrust entrust
+        XTPTickByTickTrade trade
 
     ctypedef XTPTickByTickStruct XTPTBT
 

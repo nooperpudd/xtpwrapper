@@ -2,7 +2,7 @@
 # distutils: language=c++
 from libc.stdint cimport uint8_t
 
-cdef extern from "xtp_api_struct.h" nogil:
+cdef extern from "xtp_api_struct.h":
     # XTP_LOG_LEVEL是日志输出级别类型
     cdef enum XTP_LOG_LEVEL:
         XTP_LOG_LEVEL_FATAL  # 严重错误级别
