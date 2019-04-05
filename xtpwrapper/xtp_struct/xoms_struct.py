@@ -20,13 +20,12 @@ class _CommonStruct(StructBase):
     ]
 
 
-
 class _CommonUion(UnionBase):
     _fields_ = [
         ("u32", ctypes.c_uint32),
         ("_struct", _CommonStruct),
     ]
-    _anonymous_ = '_struct',
+    _anonymous_ = ('_struct',)
 
 
 class XTPOrderInsertInfoStruct(StructBase):
@@ -60,32 +59,37 @@ class XTPOrderInsertInfoStruct(StructBase):
         ('business_type', ctypes.c_int),  # 业务类型
         ('_union', _CommonUion)
     ]
-    _anonymous_ = '_union',
+    _anonymous_ = ('_union',)
     _enum_ = {
         "business_type": XTP_BUSINESS_TYPE,
         "market": XTP_MARKET_TYPE,
         "price_type": XTP_PRICE_TYPE
     }
 
-    def __init__(self, order_xtp_id, order_client_id, ticker, market: XTP_MARKET_TYPE, price,
-                 stop_price, quantity, price_type: XTP_PRICE_TYPE,
-                 business_type: XTP_BUSINESS_TYPE, u32, side: XTP_SIDE_TYPE,
-                 position_effect: XTP_POSITION_EFFECT_TYPE, reserved1=0, reserved2=0):
+    def __init__(self, order_client_id,
+                 ticker,
+                 price,
+                 quantity,
+                 market: XTP_MARKET_TYPE,
+                 side: XTP_SIDE_TYPE,
+                 position_effect: XTP_POSITION_EFFECT_TYPE,
+                 price_type: XTP_PRICE_TYPE = XTP_PRICE_TYPE.XTP_PRICE_LIMIT,
+                 business_type: XTP_BUSINESS_TYPE = XTP_BUSINESS_TYPE.XTP_BUSINESS_TYPE_CASH):
         super().__init__()
-        self.order_xtp_id = order_xtp_id
+        # self.order_xtp_id = order_xtp_id
         self.order_client_id = int(order_client_id)
         self.ticker = self._to_bytes(ticker)
         self.market = market
         self.price = float(price)
-        self.stop_price = float(stop_price)
+        # self.stop_price = float(stop_price)
         self.quantity = int(quantity)
         self.price_type = price_type
         self.business_type = business_type
-        self.u32 = u32
+        # self.u32 = u32
         self.side = side
         self.position_effect = position_effect
-        self.reserved1 = reserved1
-        self.reserved2 = reserved2
+        # self.reserved1 = reserved1
+        # self.reserved2 = reserved2
 
 
 class XTPOrderCancelInfoStruct(StructBase):
