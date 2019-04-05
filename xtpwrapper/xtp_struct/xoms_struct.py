@@ -1,13 +1,15 @@
 # encoding=utf-8
 import ctypes
+import enum
 
-from xtpwrapper.xtp_enum import (XTP_MARKET_TYPE,
-                                 XTP_EXCHANGE_TYPE,
-                                 XTP_BUSINESS_TYPE,
-                                 XTP_PRICE_TYPE,
-                                 XTP_SIDE_TYPE,
-                                 XTP_POSITION_EFFECT_TYPE
-                                 )
+from xtpwrapper.xtp_enum import (
+    XTP_MARKET_TYPE,
+    XTP_EXCHANGE_TYPE,
+    XTP_BUSINESS_TYPE,
+    XTP_PRICE_TYPE,
+    XTP_SIDE_TYPE,
+    XTP_POSITION_EFFECT_TYPE
+)
 from . import StructBase, UnionBase
 
 
@@ -86,8 +88,14 @@ class XTPOrderInsertInfoStruct(StructBase):
         self.price_type = price_type
         self.business_type = business_type
         # self.u32 = u32
-        self.side = side
-        self.position_effect = position_effect
+        if isinstance(side, enum.Enum):
+            self.side = getattr(side, "value")
+        else:
+            self.side = side
+        if isinstance(position_effect, enum.Enum):
+            self.position_effect = getattr(position_effect, "value")
+        else:
+            self.position_effect = position_effect
         # self.reserved1 = reserved1
         # self.reserved2 = reserved2
 

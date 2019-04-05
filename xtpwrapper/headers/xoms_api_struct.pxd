@@ -48,8 +48,8 @@ cdef extern from "xoms_api_struct.h":
         int64_t quantity
         # 报单价格
         XTP_PRICE_TYPE price_type
-        # union
 
+        # union
         uint32_t u32
         XTP_SIDE_TYPE side  # 买卖方向
         XTP_POSITION_EFFECT_TYPE position_effect  # 开平标志
