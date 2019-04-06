@@ -105,10 +105,13 @@ class XTPMarketDataStruct(StructBase):
         ('ask_qty', ctypes.c_int64 * 10),  # 十档申卖量
         ('trades_count', ctypes.c_int64),  # 成交笔数
         ('ticker_status', ctypes.c_char * 8),  # 当前交易状态说明
+
+        ("_u", _XTPMarketUion),
+
         ('data_type', ctypes.c_int),  # 决定了union是哪种数据类型
         ('r4', ctypes.c_int32),  # 预留
 
-        ("_u", _XTPMarketUion)
+
     ]
     _anonymous_ = ("_u",)
 

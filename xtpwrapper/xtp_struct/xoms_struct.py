@@ -38,24 +38,24 @@ class XTPOrderInsertInfoStruct(StructBase):
         ('order_client_id', ctypes.c_uint32),  # 报单引用，由客户自定义
         ('ticker', ctypes.c_char * 16),  # 合约代码客户端请求不带空格，以'\0'结尾
 
-        # XTP_MKT_INIT = 0,///<初始化值或者未知
-        # XTP_MKT_SZ_A = 1,///<深圳A股
-        # XTP_MKT_SH_A,    ///<上海A股
-        # XTP_MKT_UNKNOWN   ///<未知交易市场类型
+        # XTP_MKT_INIT = 0,初始化值或者未知
+        # XTP_MKT_SZ_A = 1,深圳A股
+        # XTP_MKT_SH_A,    上海A股
+        # XTP_MKT_UNKNOWN   未知交易市场类型
         ('market', ctypes.c_int),  # 交易市场
         ('price', ctypes.c_double),  # 价格
         ('stop_price', ctypes.c_double),  # 止损价（保留字段）
         ('quantity', ctypes.c_int64),  # 数量(股票单位为股，逆回购单位为张)
 
-        # XTP_PRICE_LIMIT = 1, // / < 限价单 - 沪 / 深 / 沪期权（除普通股票业务外，其余业务均使用此种类型）
-        # XTP_PRICE_BEST_OR_CANCEL, // / < 即时成交剩余转撤销，市价单 - 深 / 沪期权
-        # XTP_PRICE_BEST5_OR_LIMIT, // / < 最优五档即时成交剩余转限价，市价单 - 沪
-        # XTP_PRICE_BEST5_OR_CANCEL, // / < 最优5档即时成交剩余转撤销，市价单 - 沪深
-        # XTP_PRICE_ALL_OR_CANCEL, // / < 全部成交或撤销, 市价单 - 深 / 沪期权
-        # XTP_PRICE_FORWARD_BEST, // / < 本方最优，市价单 - 深
-        # XTP_PRICE_REVERSE_BEST_LIMIT, // / < 对方最优剩余转限价，市价单 - 深 / 沪期权
-        # XTP_PRICE_LIMIT_OR_CANCEL, // / < 期权限价申报FOK
-        # XTP_PRICE_TYPE_UNKNOWN, // / < 未知或者无效价格类型
+        # XTP_PRICE_LIMIT = 1,  限价单 - 沪 / 深 / 沪期权（除普通股票业务外，其余业务均使用此种类型）
+        # XTP_PRICE_BEST_OR_CANCEL,  即时成交剩余转撤销，市价单 - 深 / 沪期权
+        # XTP_PRICE_BEST5_OR_LIMIT,  最优五档即时成交剩余转限价，市价单 - 沪
+        # XTP_PRICE_BEST5_OR_CANCEL,  最优5档即时成交剩余转撤销，市价单 - 沪深
+        # XTP_PRICE_ALL_OR_CANCEL,  全部成交或撤销, 市价单 - 深 / 沪期权
+        # XTP_PRICE_FORWARD_BEST,  本方最优，市价单 - 深
+        # XTP_PRICE_REVERSE_BEST_LIMIT,  对方最优剩余转限价，市价单 - 深 / 沪期权
+        # XTP_PRICE_LIMIT_OR_CANCEL,  期权限价申报FOK
+        # XTP_PRICE_TYPE_UNKNOWN,  未知或者无效价格类型
         ('price_type', ctypes.c_int),  # 报单价格
         ('_union', _CommonUion),
 
@@ -124,6 +124,9 @@ class XTPOrderInfoStruct(StructBase):
         ('price', ctypes.c_double),  # 价格
         ('quantity', ctypes.c_int64),  # 数量，此订单的报单数量
         ('price_type', ctypes.c_int),  # 报单价格条件
+
+        ("_u", _CommonUion),
+
         ('business_type', ctypes.c_int),  # 业务类型
         ('qty_traded', ctypes.c_int64),  # 今成交数量，为此订单累计成交数量
         ('qty_left', ctypes.c_int64),  # 剩余数量，当撤单成功时，表示撤单数量
@@ -136,7 +139,7 @@ class XTPOrderInfoStruct(StructBase):
         ('order_submit_status', ctypes.c_int),  # 报单提交状态，OMS内部使用，用户无需关心
         ('order_type', ctypes.c_char),  # 报单类型
 
-        ("_u", _CommonUion)
+
     ]
     _anonymous_ = ('_u',)
 
@@ -159,9 +162,12 @@ class XTPTradeReportStruct(StructBase):
         ('report_index', ctypes.c_uint64),  # 成交序号 --回报记录号，每个交易所唯一,report_index+market字段可以组成唯一标识表示成交回报
         ('order_exch_id', ctypes.c_char * 17),  # 报单编号 --交易所单号，上交所为空，深交所有此字段
         ('trade_type', ctypes.c_char),  # 成交类型  --成交回报中的执行类型
+
+        ("_u", _CommonUion),
+        
         ('business_type', ctypes.c_int),  # 业务类型
         ('branch_pbu', ctypes.c_char * 7),  # 交易所交易员代码
-        ("_u", _CommonUion)  #
+
     ]
 
     _anonymous_ = ('_u',)
@@ -300,9 +306,9 @@ class XTPQueryStructuredFundInfoReqStruct(StructBase):
     查询分级基金信息结构体
     """
     _fields_ = [
-        # XTP_EXCHANGE_SH = 1, // / < 上证
-        # XTP_EXCHANGE_SZ, // / < 深证
-        # XTP_EXCHANGE_UNKNOWN // / < 不存在的交易所类型
+        # XTP_EXCHANGE_SH = 1,  上证
+        # XTP_EXCHANGE_SZ,  深证
+        # XTP_EXCHANGE_UNKNOWN  不存在的交易所类型
         ('exchange_id', ctypes.c_int),  # 交易所代码，不可为空
         ('sf_ticker', ctypes.c_char * 16),  # 分级基金母基金代码，可以为空，如果为空，则默认查询所有的分级基金
     ]
