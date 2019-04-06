@@ -21,7 +21,6 @@ class _CommonStruct(StructBase):
         ("reserved2", ctypes.c_uint8)  # 预留字段2
     ]
 
-
 class _CommonUion(UnionBase):
     _fields_ = [
         ("u32", ctypes.c_uint32),
@@ -58,8 +57,9 @@ class XTPOrderInsertInfoStruct(StructBase):
         # XTP_PRICE_LIMIT_OR_CANCEL, // / < 期权限价申报FOK
         # XTP_PRICE_TYPE_UNKNOWN, // / < 未知或者无效价格类型
         ('price_type', ctypes.c_int),  # 报单价格
+        ('_union', _CommonUion),
+
         ('business_type', ctypes.c_int),  # 业务类型
-        ('_union', _CommonUion)
     ]
     _anonymous_ = ('_union',)
     _enum_ = {
