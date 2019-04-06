@@ -1,7 +1,7 @@
 # encoding:utf-8
 # distutils: language=c++
 from cpython cimport PyObject
-from libc.stdint cimport uint32_t, uint64_t
+from libc.stdint cimport uint32_t, uint64_t, uint8_t
 from libc.string cimport const_char
 from libcpp cimport bool as cbool
 
@@ -105,8 +105,8 @@ cdef class TraderWrapper:
         :return:
         """
         cdef const_char *result
-
         if self._spi is not NULL:
+
             with nogil:
                 result = self._api.GetTradingDay()
             return result
@@ -120,6 +120,7 @@ cdef class TraderWrapper:
         """
         cdef XTPRI *err
         if self._spi is not NULL:
+
             with nogil:
                 err = self._api.GetApiLastError()
             return XTPRspInfoStruct.from_address(<size_t> err)
@@ -132,6 +133,7 @@ cdef class TraderWrapper:
         """
         cdef const_char *result
         if self._api is not NULL:
+
             result = self._api.GetApiVersion()
             return result
 
@@ -144,9 +146,10 @@ cdef class TraderWrapper:
         :param order_xtp_id:
         :return:
         """
-        cdef unsigned char result
+        cdef uint8_t result
 
         if self._spi is not NULL:
+
             with nogil:
                 result = self._api.GetClientIDByXTPID(order_xtp_id)
             return result
@@ -161,8 +164,8 @@ cdef class TraderWrapper:
         :return:
         """
         cdef const_char *result
-
         if self._spi is not NULL:
+
             with nogil:
                 result = self._api.GetAccountByXTPID(order_xtp_id)
             return result
@@ -241,6 +244,7 @@ cdef class TraderWrapper:
         cdef uint64_t result
 
         if self._spi is not NULL:
+
             with nogil:
                 result = self._api.Login(ip, port, user, password, sock_type)
             return result
@@ -255,7 +259,9 @@ cdef class TraderWrapper:
         :return:
         """
         cdef int result
+
         if self._spi is not NULL:
+
             with nogil:
                 result = self._api.Logout(session_id)
             return result
@@ -274,7 +280,6 @@ cdef class TraderWrapper:
         """
         cdef uint64_t result
         cdef size_t address
-
         if self._spi is not NULL:
             address = ctypes.addressof(order)
             with nogil:

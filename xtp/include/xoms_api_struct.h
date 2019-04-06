@@ -148,6 +148,7 @@ struct XTPTradeReport
     char                     order_exch_id[XTP_ORDER_EXCH_LEN];
     ///成交类型  --成交回报中的执行类型
     TXTPTradeTypeType        trade_type;
+
     union{
         uint32_t            u32;
         struct {
