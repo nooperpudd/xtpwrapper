@@ -65,7 +65,7 @@ elif sys.platform == "win32":
 
 elif sys.platform == "darwin":
     lib_dir = os.path.join(xtp_dir, "macosx")
-    package_data.extend(["*.so", "*.dylib"])
+    package_data.extend(["*.dylib"])
     extra_compile_args = ["-Wall"]
     extra_link_args = ['-Wl,-rpath,' + project_dir]
 
