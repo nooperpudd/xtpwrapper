@@ -4,7 +4,7 @@ XTP-Wrapper (Chinese Stock Market Quote and Trade Python API)
 
 Chinese Stock Market Quote and Trade API by dealer, Python Wrapper C++ Interface.
 
-|travis| |appveyor| |codacy| |pypi| |status| |pyversion|
+|travis| |appveyor| |codacy| |pypi| |status| |pyversion| |download|
 
 Version: v1.1.18.13
 
@@ -52,6 +52,8 @@ Email: 365504029@qq.com
 .. |pyversion| image:: https://img.shields.io/pypi/pyversions/xtpwrapper.svg
     :target: https://pypi.python.org/pypi/xtpwrapper
 
+.. |download| image:: https://pepy.tech/badge/xtpwrapper
+	:target: https://pepy.tech/project/xtpwrapper
 .. |alipay| image:: img/alipay.png
 .. |wechat| image:: img/wechat.jpg
 
