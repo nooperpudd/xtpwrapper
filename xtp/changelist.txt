@@ -1,3 +1,14 @@
+version 1.1.18.19
+（1）优化行情UDP接收
+
+version 1.1.18.18
+（1）TradeAPI支持一账号两中心节点之间的资金划拨
+（2）XTP_FUND_TRANSFER_TYPE增加节点之间的资金划拨方向枚举值
+
+version 1.1.18.14
+（1）TXTPTradeTypeType 新增跨市场资金成交枚举值 XTP_TRDT_CROSS_MKT_CASH
+（2）TradeAPI新增跨市场ETF业务支持
+
 version 1.1.18.13
 （1）修复QuoteAPI在linux下使用UDP连接会crash的bug
 

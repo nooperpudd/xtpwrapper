@@ -148,7 +148,6 @@ struct XTPTradeReport
     char                     order_exch_id[XTP_ORDER_EXCH_LEN];
     ///成交类型  --成交回报中的执行类型
     TXTPTradeTypeType        trade_type;
-
     union{
         uint32_t            u32;
         struct {
@@ -265,8 +264,14 @@ struct XTPQueryAssetRsp
     ///可取资金
     double preferred_amount;
 
+    // 信用业务新增字段开始（数量1）
+    // 融券卖出所得资金余额（只能用于买券还券）
+    double repay_stock_aval_banlance;
+
+    // 信用业务新增字段结束（数量1）
+
     ///(保留字段)
-    uint64_t unknown[43 - 12];
+    uint64_t unknown[43 - 12 - 1];
 };
 
 
@@ -537,6 +542,97 @@ struct XTPQueryOptionAuctionInfoRsp {
 
     uint64_t            unknown[20];                        ///<（保留字段）
 };
+
+
+//////////////////////////////////////////////////////////////////////////
+///融资融券直接还款响应信息
+//////////////////////////////////////////////////////////////////////////
+struct XTPCrdCashRepayRsp
+{
+    int64_t xtp_id;             ///< 直接还款操作的XTPID
+    double  request_amount;     ///< 直接还款的申请金额
+    double  cash_repay_amount;  ///< 实际还款使用金额
+};
+
+//////////////////////////////////////////////////////////////////////////
+///单条融资融券直接还款记录信息
+//////////////////////////////////////////////////////////////////////////
+struct XTPCrdCashRepayInfo
+{
+    int64_t                     xtp_id;             ///< 直接还款操作的XTPID
+    XTP_CRD_CR_STATUS           status;             ///< 直接还款处理状态
+    double                      request_amount;     ///< 直接还款的申请金额
+    double                      cash_repay_amount;  ///< 实际还款使用金额
+    XTP_POSITION_EFFECT_TYPE    position_effect;    ///< 强平标志
+};
+
+//////////////////////////////////////////////////////////////////////////
+///单条融资融券负债记录信息
+//////////////////////////////////////////////////////////////////////////
+typedef struct XTPCrdDebtInfo
+{
+    int32_t             debt_type;              ///< 负债合约类型
+    char                debt_id[33];            ///< 负债合约编号
+    int64_t             position_id;            ///< 负债对应两融头寸编号
+    uint64_t            order_xtp_id;           ///< 生成负债的订单编号，非当日负债无此项
+    int32_t             debt_status;            ///< 负债合约状态
+    XTP_MARKET_TYPE     market;                 ///< 市场
+    char                ticker[XTP_TICKER_LEN]; ///< 证券代码
+    uint64_t            order_date;             ///< 委托日期
+    uint64_t            end_date;               ///< 负债截止日期
+    uint64_t            orig_end_date;          ///< 负债原始截止日期
+    bool                is_extended;            ///< 当日是否接收到展期请求
+    double              remain_amt;             ///< 未偿还金额
+    int64_t             remain_qty;             ///< 未偿还数量
+    double              remain_principal;       ///< 未偿还本金金额
+}XTPCrdDebtInfo;
+
+//////////////////////////////////////////////////////////////////////////
+///融资融券特有帐户数据
+//////////////////////////////////////////////////////////////////////////
+typedef struct XTPCrdFundInfo
+{
+    double maintenance_ratio;       ///< 维持担保品比例
+    double line_of_credit;          ///< 两融授信额度
+    double guaranty;                ///< 两融保证金可用数
+    double position_amount;         ///< 融资头寸可用金额，内部接口，正式版本需要删除
+}XTPCrdFundInfo;
+
+//////////////////////////////////////////////////////////////////////////
+///融资融券指定证券上的负债未还数量
+//////////////////////////////////////////////////////////////////////////
+typedef struct XTPClientQueryCrdDebtStockReq
+{
+    XTP_MARKET_TYPE market;                 ///< 市场
+    char            ticker[XTP_TICKER_LEN]; ///< 证券代码
+}XTPClientQueryCrdDebtStockReq;
+
+typedef struct XTPCrdDebtStockInfo
+{
+    XTP_MARKET_TYPE market;                     ///< 市场
+    char            ticker[XTP_TICKER_LEN];     ///< 证券代码
+    int64_t         remain_quantity;            ///< 负债未还数量
+    int64_t         order_withhold_quantity;    ///< 挂单未成还券数量
+}XTPCrdDebtStockInfo;
+
+//////////////////////////////////////////////////////////////////////////
+///融券头寸证券查询
+//////////////////////////////////////////////////////////////////////////
+typedef struct XTPClientQueryCrdPositionStockReq
+{
+    XTP_MARKET_TYPE market;                 ///< 证券市场
+    char            ticker[XTP_TICKER_LEN]; ///< 证券代码
+}XTPClientQueryCrdPositionStockReq;
+
+typedef struct XTPClientQueryCrdPositionStkInfo {
+
+    XTP_MARKET_TYPE market;                 ///< 证券市场
+    char            ticker[XTP_TICKER_LEN]; ///< 证券代码
+    int64_t         limit_qty;              ///< 融券限量
+    int64_t         yesterday_qty;          ///< 昨日日融券数量
+    int64_t         left_qty;               ///< 剩余可融券数量
+    int64_t         frozen_qty;             ///< 冻结融券数量
+}XTPClientQueryCrdPositionStkInfo;
 
 
 #pragma pack()

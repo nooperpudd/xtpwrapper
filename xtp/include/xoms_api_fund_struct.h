@@ -39,5 +39,4 @@ typedef struct XTPFundTransferNotice XTPFundTransferAck ;
 
 #pragma pack()
 
-
 #endif
